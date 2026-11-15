@@ -102,6 +102,93 @@
     .khand-thumb-shadow {
       text-shadow: 0 4px 14px rgba(0, 0, 0, 0.95), 0 2px 4px rgba(0, 0, 0, 1);
     }
+  
+    /* ==================== LIGHT MODE THEME OVERRIDES ==================== */
+    html.light-mode body { background-color: #f3f5f9 !important; color: #0f172a !important; }
+    html.light-mode .bg-surface,
+    html.light-mode .bg-surface\/95 { background-color: #f3f5f9 !important; }
+    html.light-mode .bg-surface-container-lowest,
+    html.light-mode .bg-surface-container-lowest\/95 { background-color: #ffffff !important; }
+    html.light-mode .bg-surface-container-low { background-color: #f8fafc !important; }
+    html.light-mode .bg-surface-container { background-color: #eef2f6 !important; }
+    html.light-mode .bg-surface-container-high,
+    html.light-mode .bg-surface-container-highest { background-color: #e2e8f0 !important; }
+    html.light-mode .bg-slate-900,
+    html.light-mode .bg-slate-950,
+    html.light-mode .bg-black\/40,
+    html.light-mode .bg-black\/50,
+    html.light-mode .bg-black\/60 { background-color: #f1f5f9 !important; color: #1e293b !important; }
+
+    html.light-mode .text-white,
+    html.light-mode .text-on-surface { color: #0f172a !important; }
+    html.light-mode .text-on-surface-variant,
+    html.light-mode .text-slate-100,
+    html.light-mode .text-slate-200,
+    html.light-mode .text-slate-300,
+    html.light-mode .text-gray-200,
+    html.light-mode .text-gray-300,
+    html.light-mode pre,
+    html.light-mode code { color: #1e293b !important; }
+    html.light-mode .text-outline,
+    html.light-mode .text-slate-400,
+    html.light-mode .text-gray-400 { color: #475569 !important; }
+
+    html.light-mode .text-primary { color: #4338ca !important; }
+    html.light-mode .text-secondary { color: #047857 !important; }
+    html.light-mode .text-tertiary { color: #b45309 !important; }
+    html.light-mode .text-error { color: #b91c1c !important; }
+    html.light-mode .text-amber-300,
+    html.light-mode .text-amber-200 { color: #92400e !important; }
+
+    html.light-mode .bg-primary\/10,
+    html.light-mode .bg-primary\/15,
+    html.light-mode .bg-primary\/20 { background-color: #e0e7ff !important; }
+    html.light-mode .bg-secondary\/10,
+    html.light-mode .bg-secondary\/15,
+    html.light-mode .bg-secondary\/20 { background-color: #d1fae5 !important; }
+    html.light-mode .bg-tertiary\/10,
+    html.light-mode .bg-tertiary\/15,
+    html.light-mode .bg-tertiary\/20 { background-color: #fef3c7 !important; }
+    html.light-mode .bg-tertiary { background-color: #f59e0b !important; }
+    html.light-mode .text-on-tertiary { color: #ffffff !important; }
+
+    html.light-mode .border-outline-variant\/50,
+    html.light-mode .border-outline-variant\/40,
+    html.light-mode .border-outline-variant\/60,
+    html.light-mode .border-outline-variant\/30 { border-color: #cbd5e1 !important; }
+
+    html.light-mode input,
+    html.light-mode textarea,
+    html.light-mode select {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+    html.light-mode header {
+      background-color: rgba(255, 255, 255, 0.96) !important;
+      border-color: #cbd5e1 !important;
+    }
+    html.light-mode nav.fixed.bottom-0 {
+      background-color: rgba(255, 255, 255, 0.97) !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08) !important;
+    }
+    html.light-mode .mob-tab-btn.bg-tertiary { color: #ffffff !important; }
+    html.light-mode .mob-tab-btn:not(.bg-tertiary) { color: #334155 !important; }
+    html.light-mode #stitchSidebar { background-color: #ffffff !important; border-color: #cbd5e1 !important; }
+    html.light-mode .khand-thumb-shadow { color: #ffffff !important; }
+    html.light-mode #liveKhandLine1 { color: #FFD700 !important; }
+    html.light-mode #desktopThumbCanvas .text-white,
+    html.light-mode #mobileThumbCanvas .text-white { color: #ffffff !important; }
+    html.light-mode #desktopThumbCanvas .text-amber-300,
+    html.light-mode #mobileThumbCanvas .text-amber-300 { color: #fcd34d !important; }
+    html.light-mode #desktopThumbCanvas .bg-black\/70,
+    html.light-mode #mobileThumbCanvas .bg-black\/70 { background-color: rgba(0, 0, 0, 0.72) !important; color: #fcd34d !important; }
+    html.light-mode #desktopThumbCanvas .bg-black\/90,
+    html.light-mode #mobileThumbCanvas .bg-black\/90 { background-color: rgba(0, 0, 0, 0.92) !important; color: #ffffff !important; }
+    html.light-mode section.bg-surface-container-low { box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05) !important; }
+
+
   </style>
 </head>
 <body class="bg-surface font-sans text-on-surface antialiased pb-24 lg:pb-8">
@@ -373,6 +460,10 @@
           ● Ready
         </span>
 
+        <button type="button" id="themeToggleBtn" onclick="toggleThemeMode()" title="Switch Dark / Light Mode" class="flex items-center justify-center p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 font-mono text-xs transition">
+          <span id="themeToggleIcon" class="material-symbols-outlined text-[16px]">light_mode</span>
+        </button>
+
         <button type="button" onclick="lockAppNow()" title="Lock App with PIN" class="flex items-center justify-center p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 font-mono text-xs transition">
           <span class="material-symbols-outlined text-[16px]">lock</span>
         </button>
@@ -421,17 +512,46 @@
             </h2>
           </div>
 
-          <div class="w-full sm:w-64 shrink-0">
-            <label for="mobilePresetMirror" class="block font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold mb-1">Select Video Category (All Algorithms Auto-Shift):</label>
-            <select id="mobilePresetMirror" aria-label="Select Video Category" onchange="switchAlgorithmCategory(this.value)" class="w-full bg-surface-container text-white text-xs font-semibold rounded-xl px-3 py-2 border border-outline-variant/50 focus:outline-none focus:border-tertiary">
-              <option value="history">🏛️ History &amp; Archaeology (इतिहास / पुरातत्व)</option>
-              <option value="tech">💻 Tech, AI &amp; Gadgets (टेक / AI / गैजेट्स)</option>
-              <option value="dharma">🕉️ Dharma &amp; Spirituality (धर्म / अध्यात्म)</option>
-              <option value="science">🔬 Science &amp; Space (विज्ञान / अंतरिक्ष)</option>
-              <option value="finance">💰 Finance &amp; Case Studies (बिज़नेस / फाइनेंस)</option>
-              <option value="mystery">🕵️ Mystery &amp; Documentary (रहस्य / डॉक्यूमेंट्री)</option>
-              <option value="education">📚 Education &amp; Books (शिक्षा / साहित्य)</option>
-              <option value="gaming">🎮 Gaming &amp; Pop Culture (गेमिंग / ट्रेंड्स)</option>
+          <div class="w-full lg:w-auto lg:min-w-[420px] shrink-0">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold">Select Category (Auto-Shifts All Algorithms)</span>
+              <span id="activeCategoryPillBadge" class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/30 font-bold">History</span>
+            </div>
+            <div id="premiumCategoryGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+              <button type="button" data-cat="history" onclick="switchAlgorithmCategory('history')" class="cat-pill-btn px-2.5 py-2 rounded-xl bg-tertiary text-on-tertiary font-display text-[11px] font-bold flex items-center gap-1.5 shadow-sm transition">
+                <span>🏛️</span><span class="truncate">History</span>
+              </button>
+              <button type="button" data-cat="tech" onclick="switchAlgorithmCategory('tech')" class="cat-pill-btn px-2.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] font-semibold flex items-center gap-1.5 transition">
+                <span>💻</span><span class="truncate">Tech &amp; AI</span>
+              </button>
+              <button type="button" data-cat="dharma" onclick="switchAlgorithmCategory('dharma')" class="cat-pill-btn px-2.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] font-semibold flex items-center gap-1.5 transition">
+                <span>🕉️</span><span class="truncate">Dharma</span>
+              </button>
+              <button type="button" data-cat="science" onclick="switchAlgorithmCategory('science')" class="cat-pill-btn px-2.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] font-semibold flex items-center gap-1.5 transition">
+                <span>🔬</span><span class="truncate">Science</span>
+              </button>
+              <button type="button" data-cat="finance" onclick="switchAlgorithmCategory('finance')" class="cat-pill-btn px-2.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] font-semibold flex items-center gap-1.5 transition">
+                <span>💰</span><span class="truncate">Finance</span>
+              </button>
+              <button type="button" data-cat="mystery" onclick="switchAlgorithmCategory('mystery')" class="cat-pill-btn px-2.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] font-semibold flex items-center gap-1.5 transition">
+                <span>🕵️</span><span class="truncate">Mystery</span>
+              </button>
+              <button type="button" data-cat="education" onclick="switchAlgorithmCategory('education')" class="cat-pill-btn px-2.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] font-semibold flex items-center gap-1.5 transition">
+                <span>📚</span><span class="truncate">Education</span>
+              </button>
+              <button type="button" data-cat="gaming" onclick="switchAlgorithmCategory('gaming')" class="cat-pill-btn px-2.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] font-semibold flex items-center gap-1.5 transition">
+                <span>🎮</span><span class="truncate">Gaming</span>
+              </button>
+            </div>
+            <select id="mobilePresetMirror" aria-label="Select Video Category" onchange="switchAlgorithmCategory(this.value)" class="hidden">
+              <option value="history">History &amp; Archaeology</option>
+              <option value="tech">Tech, AI &amp; Gadgets</option>
+              <option value="dharma">Dharma &amp; Spirituality</option>
+              <option value="science">Science &amp; Space</option>
+              <option value="finance">Finance &amp; Case Studies</option>
+              <option value="mystery">Mystery &amp; Documentary</option>
+              <option value="education">Education &amp; Books</option>
+              <option value="gaming">Gaming &amp; Pop Culture</option>
             </select>
           </div>
         </div>
@@ -461,6 +581,10 @@
             >
               <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
               <span id="generateBtnText">Generate Complete Pack</span>
+            </button>
+            <button type="button" onclick="resetWorkspaceFresh(true)" title="Clear Workspace & Temp Data" class="px-3.5 py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/60 font-mono text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 transition">
+              <span class="material-symbols-outlined text-[16px]">cleaning_services</span>
+              <span>Fresh</span>
             </button>
           </div>
         </div>
@@ -533,7 +657,7 @@
             <div class="flex flex-wrap items-center justify-between gap-2">
               <h2 class="font-display text-base font-bold text-white">1B. High-Ranking Video Title</h2>
               <div class="flex items-center gap-1.5">
-                <button type="button" onclick="generateSmartTitleIdeas()" class="px-3 py-1.5 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-bold">✨ 8 Viral Title Ideas</button>
+                <button type="button" onclick="generateSmartTitleIdeas()" class="px-3 py-1.5 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-bold">✨ 3 Human Titles</button>
                 <button type="button" onclick="copyTextFromElement('videoTitleInput', 'Title copied!')" class="px-2.5 py-1.5 rounded-xl bg-surface-container text-white font-mono text-xs">Copy</button>
               </div>
             </div>
@@ -586,6 +710,14 @@
             </div>
 
             <textarea id="videoDescInput" rows="9" maxlength="5000" oninput="runLiveSEOAudit()" class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-3 font-mono text-xs text-white leading-relaxed focus:outline-none focus:border-tertiary custom-scroll"></textarea>
+            <div class="mt-2.5 p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 space-y-2">
+              <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">Social Links (Auto-Saved for Every Description)</span>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <input id="socialFbInput" type="url" placeholder="Facebook Link (https://facebook.com/...)" oninput="saveSocialLinksAndRefresh()" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-tertiary" />
+                <input id="socialXInput" type="url" placeholder="X (Twitter) Link (https://x.com/...)" oninput="saveSocialLinksAndRefresh()" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-tertiary" />
+                <input id="socialIgInput" type="url" placeholder="Instagram Link (https://instagram.com/...)" oninput="saveSocialLinksAndRefresh()" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-tertiary" />
+              </div>
+            </div>
 
             <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] text-outline">
               <div class="flex flex-wrap items-center gap-2.5">
@@ -781,36 +913,34 @@
               </span>
             </div>
 
-            <div class="relative aspect-video w-full rounded-xl overflow-hidden bg-gradient-to-r from-black via-slate-900/95 to-amber-950/80 border-2 border-tertiary/40 p-4 flex flex-col justify-between shadow-2xl select-none">
-              <div class="absolute inset-0 bg-[radial-gradient(circle_at_75%_50%,rgba(250,204,21,0.18),transparent_60%)] pointer-events-none"></div>
-              <div class="relative z-10 flex items-center justify-between">
-                <span id="livePromptCardBadge" class="px-2.5 py-0.5 rounded bg-red-600 text-white font-khand font-bold text-xs tracking-wider uppercase shadow">
-                  CONCEPT A • HINDI
-                </span>
-                <span class="px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-amber-300 border border-amber-400/30">
-                  PHOTOSHOP COMPOSITE
-                </span>
-              </div>
-              <div class="relative z-10 my-auto max-w-[82%] space-y-1">
-                <p id="liveKhandLine1" class="font-khand text-2xl sm:text-3xl font-bold uppercase text-[#FFD700] leading-none tracking-wide khand-thumb-shadow">
-                  1276 ई. का रहस्य!
-                </p>
-                <p id="liveKhandLine2" class="font-khand text-xl sm:text-2xl font-bold uppercase text-white leading-tight tracking-wide khand-thumb-shadow">
-                  असली ऐतिहासिक प्रमाण
-                </p>
-              </div>
-              <div class="relative z-10 flex items-center justify-between text-[11px]">
-                <span class="font-mono text-slate-300 bg-black/60 px-2 py-0.5 rounded">Ref Image + Auto-Fallback Locked</span>
-                <span class="px-1.5 py-0.5 rounded bg-black/90 text-white font-mono font-bold">14:28</span>
+            <div class="relative aspect-video w-full rounded-xl overflow-hidden bg-black border-2 border-tertiary/40 shadow-2xl select-none">
+              <canvas id="thumbMockupCanvas" width="1280" height="720" class="w-full h-full object-cover block"></canvas>
+              <div class="sr-only">
+                <span id="livePromptCardBadge">CONCEPT A • HINDI</span>
+                <p id="liveKhandLine1">1276 ई. का रहस्य!</p>
+                <p id="liveKhandLine2">असली ऐतिहासिक प्रमाण</p>
               </div>
             </div>
 
-            <!-- Quick Preview Switcher for A / B / C / D Titles -->
+            <!-- Quick Preview Switcher for A / B / C / D Mockups -->
             <div class="grid grid-cols-4 gap-1.5 pt-1">
-              <button type="button" onclick="previewConceptTitleOnCanvas('A')" class="px-2 py-1.5 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-bold">A: Hindi 1</button>
-              <button type="button" onclick="previewConceptTitleOnCanvas('B')" class="px-2 py-1.5 rounded-lg bg-surface-container text-white font-mono text-[10px]">B: Hindi 2</button>
-              <button type="button" onclick="previewConceptTitleOnCanvas('C')" class="px-2 py-1.5 rounded-lg bg-surface-container text-white font-mono text-[10px]">C: Hinglish</button>
-              <button type="button" onclick="previewConceptTitleOnCanvas('D')" class="px-2 py-1.5 rounded-lg bg-surface-container text-white font-mono text-[10px]">D: English</button>
+              <button type="button" id="mockupBtnA" onclick="previewConceptTitleOnCanvas('A')" class="mockup-switch-btn px-2 py-1.5 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-bold">A: Hindi 1</button>
+              <button type="button" id="mockupBtnB" onclick="previewConceptTitleOnCanvas('B')" class="mockup-switch-btn px-2 py-1.5 rounded-lg bg-surface-container text-white font-mono text-[10px]">B: Hindi 2</button>
+              <button type="button" id="mockupBtnC" onclick="previewConceptTitleOnCanvas('C')" class="mockup-switch-btn px-2 py-1.5 rounded-lg bg-surface-container text-white font-mono text-[10px]">C: Hinglish</button>
+              <button type="button" id="mockupBtnD" onclick="previewConceptTitleOnCanvas('D')" class="mockup-switch-btn px-2 py-1.5 rounded-lg bg-surface-container text-white font-mono text-[10px]">D: English</button>
+            </div>
+
+            <!-- Reference Photo Upload + Download Mockup PNG -->
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <label class="flex-1 min-w-[140px] cursor-pointer flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/60 text-xs font-mono font-bold text-white transition">
+                <span class="material-symbols-outlined text-[16px] text-tertiary">add_photo_alternate</span>
+                <span>Upload Ref Photo(s)</span>
+                <input id="refMockupUpload" type="file" accept="image/*" multiple onchange="handleRefMockupUpload(event)" class="hidden" />
+              </label>
+              <button type="button" onclick="downloadThumbMockupPNG()" class="flex-1 min-w-[150px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-secondary/20 hover:bg-secondary/30 border border-secondary/40 text-xs font-mono font-bold text-secondary transition">
+                <span class="material-symbols-outlined text-[16px]">download</span>
+                <span>Download Mockup PNG</span>
+              </button>
             </div>
           </div>
 
@@ -892,7 +1022,76 @@
           </div>
         </div>
 
+        
         <div id="aiPromptsCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+        <!-- ==================== A/B/C/D THUMBNAIL CTR SCORER & RANKER (#1 - #4) ==================== -->
+        <div class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <span class="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold block">Thumbnail A/B/C/D Ranker</span>
+              <h3 class="font-display text-base font-bold text-white">Compare &amp; Rank Your 4 Generated Thumbnails (#1 – #4)</h3>
+              <p class="text-xs text-on-surface-variant">Upload your 4 ChatGPT/Gemini thumbnails (or generate via API above) to get instant CTR scores &amp; #1 Winner Rank.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+              <label class="cursor-pointer px-3 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/60 text-xs font-mono font-bold text-white flex items-center gap-1.5 transition">
+                <span class="material-symbols-outlined text-[16px] text-tertiary">upload_file</span>
+                <span>Upload 1–4 Thumbnails</span>
+                <input id="rankerMultiUpload" type="file" accept="image/*" multiple onchange="handleRankerMultiUpload(event)" class="hidden" />
+              </label>
+              <button type="button" onclick="scoreAndRankThumbnails()" class="px-3.5 py-2 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold shadow hover:brightness-110 transition">
+                🏆 Score &amp; Rank #1–#4
+              </button>
+            </div>
+          </div>
+
+          <div id="rankerSlotsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 space-y-2">
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span class="font-bold text-tertiary">Slot A</span>
+                <span id="rankBadgeA" class="px-2 py-0.5 rounded bg-surface-container text-outline text-[10px]">Waiting</span>
+              </div>
+              <div class="aspect-video rounded-lg bg-surface-container overflow-hidden flex items-center justify-center">
+                <img id="rankImgA" src="" alt="Thumbnail A" class="hidden w-full h-full object-cover" />
+                <span id="rankEmptyA" class="text-[11px] text-outline font-mono">No Image</span>
+              </div>
+              <p id="rankReasonA" class="text-[11px] text-on-surface-variant min-h-[28px]">Upload or generate Concept A</p>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 space-y-2">
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span class="font-bold text-tertiary">Slot B</span>
+                <span id="rankBadgeB" class="px-2 py-0.5 rounded bg-surface-container text-outline text-[10px]">Waiting</span>
+              </div>
+              <div class="aspect-video rounded-lg bg-surface-container overflow-hidden flex items-center justify-center">
+                <img id="rankImgB" src="" alt="Thumbnail B" class="hidden w-full h-full object-cover" />
+                <span id="rankEmptyB" class="text-[11px] text-outline font-mono">No Image</span>
+              </div>
+              <p id="rankReasonB" class="text-[11px] text-on-surface-variant min-h-[28px]">Upload or generate Concept B</p>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 space-y-2">
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span class="font-bold text-tertiary">Slot C</span>
+                <span id="rankBadgeC" class="px-2 py-0.5 rounded bg-surface-container text-outline text-[10px]">Waiting</span>
+              </div>
+              <div class="aspect-video rounded-lg bg-surface-container overflow-hidden flex items-center justify-center">
+                <img id="rankImgC" src="" alt="Thumbnail C" class="hidden w-full h-full object-cover" />
+                <span id="rankEmptyC" class="text-[11px] text-outline font-mono">No Image</span>
+              </div>
+              <p id="rankReasonC" class="text-[11px] text-on-surface-variant min-h-[28px]">Upload or generate Concept C</p>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 space-y-2">
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span class="font-bold text-tertiary">Slot D</span>
+                <span id="rankBadgeD" class="px-2 py-0.5 rounded bg-surface-container text-outline text-[10px]">Waiting</span>
+              </div>
+              <div class="aspect-video rounded-lg bg-surface-container overflow-hidden flex items-center justify-center">
+                <img id="rankImgD" src="" alt="Thumbnail D" class="hidden w-full h-full object-cover" />
+                <span id="rankEmptyD" class="text-[11px] text-outline font-mono">No Image</span>
+              </div>
+              <p id="rankReasonD" class="text-[11px] text-on-surface-variant min-h-[28px]">Upload or generate Concept D</p>
+            </div>
+          </div>
+        </div>
         <div class="hidden"><span id="zone1Desc"></span><span id="zone2Desc"></span><span id="zone3Desc"></span></div>
       </section>
 
@@ -1430,7 +1629,7 @@
     <button type="button" onclick="executeOneCommandAutopilot()">auto_awesome Generate All 7 Steps</button>
     <button type="button" onclick="executeOneCommandAutopilot()">auto_awesome Generate Complete Pack</button>
     <button type="button" onclick="generateSmartTitleIdeas()">✨ Show 8 Viral Title Variations</button>
-    <button type="button" onclick="generateSmartTitleIdeas()">✨ 8 Viral Title Ideas</button>
+    <button type="button" onclick="generateSmartTitleIdeas()">✨ 3 Human Titles</button>
     <button type="button" onclick="injectSmartHashtags()">+ Add Viral Hashtags</button>
     <button type="button" onclick="autoFixAllFixableIssues()">🔧 1-Click Fix All</button>
     <button type="button" onclick="refineUserScriptAndBuildScenes()">✨ Refine My Script &amp; Create Scene Prompts</button>
@@ -1454,7 +1653,7 @@
     <button type="button" onclick="switchTab('keywords')">sell 4. Viral Tags &amp; Script</button>
     <button type="button" onclick="switchTab('competitors')">radar 5. Competitor Research</button>
     <button type="button" onclick="generateThumbnailPrompts()">🔄 Refresh Prompts</button>
-    <button type="button" onclick="generateSmartTitleIdeas()">✨ 8 Title Ideas</button>
+    <button type="button" onclick="generateSmartTitleIdeas()">✨ 3 Pro Titles</button>
     <button type="button" onclick="appendPowerWordToTitle('[Primary Proof]')">+ [Primary Proof]</button>
     <button type="button" onclick="toggleElementVisibility('generatedTitlesContainer')">Close ×</button>
     <button type="button" onclick="autoGenerateSEODescription()">Auto-Write Description</button>
@@ -1528,9 +1727,9 @@
     <button type="button" onclick="switchTab('prompts')">Open Thumbnail Prompt Studio</button>
     <button type="button" onclick="generateThumbnailPrompts()">Regenerate</button>
     <button type="button" onclick="generateThumbnailPrompts()">Synthesize</button>
-    <button type="button" onclick="generateSmartTitleIdeas()">8 वायरल टाइटल आइडिया बनाएं</button>
-    <button type="button" onclick="generateSmartTitleIdeas()">Generate 8 Viral Titles</button>
-    <button type="button" onclick="generateSmartTitleIdeas()">✨ Generate 8 Viral Titles</button>
+    <button type="button" onclick="generateSmartTitleIdeas()">3 बेहतरीन टाइटल बनाएं</button>
+    <button type="button" onclick="generateSmartTitleIdeas()">Generate 3 Pro Titles</button>
+    <button type="button" onclick="generateSmartTitleIdeas()">✨ Generate 3 Pro Titles</button>
     <button type="button" onclick="generateSmartTitleIdeas()">✨ 8 Viral Titles</button>
     <button type="button" onclick="appendPowerWordToTitle('[Real Benchmark]')">+ [Real Benchmark]</button>
     <button type="button" onclick="appendPowerWordToTitle('(Primary Evidence)')">+ (Primary Evidence)</button>
@@ -2110,6 +2309,445 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       showToast('Private PIN updated!');
     }
 
+
+    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+
+    // ==================== DARK / LIGHT MODE TOGGLE ====================
+    function toggleThemeMode() {
+      const root = document.documentElement;
+      const isLight = root.classList.toggle('light-mode');
+      const icon = document.getElementById('themeToggleIcon');
+      if (icon) icon.textContent = isLight ? 'dark_mode' : 'light_mode';
+      try { localStorage.setItem('yt_seo_ssiro_theme', isLight ? 'light' : 'dark'); } catch (e) {}
+      showToast(isLight ? 'Switched to Light Mode!' : 'Switched to Dark Mode!');
+    }
+
+    function initThemeMode() {
+      try {
+        const saved = localStorage.getItem('yt_seo_ssiro_theme');
+        if (saved === 'light') {
+          document.documentElement.classList.add('light-mode');
+          const icon = document.getElementById('themeToggleIcon');
+          if (icon) icon.textContent = 'dark_mode';
+        }
+      } catch (e) {}
+    }
+
+    // ==================== 1280x720 A/B/C/D REFERENCE MOCKUP RENDERER ====================
+    let activeMockupConcept = 'A';
+    let uploadedRefImages = [];
+
+    function handleRefMockupUpload(ev) {
+      const files = Array.from(ev?.target?.files || []);
+      if (!files.length) return;
+      uploadedRefImages = [];
+      let loaded = 0;
+      files.slice(0, 3).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            uploadedRefImages.push(img);
+            loaded++;
+            if (loaded === Math.min(files.length, 3)) {
+              renderThumbMockupCanvas(activeMockupConcept);
+              showToast(`${uploadedRefImages.length} Reference photo(s) placed into Mockup!`);
+            }
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderThumbMockupCanvas(conceptKey) {
+      activeMockupConcept = conceptKey || activeMockupConcept || 'A';
+      const canvas = document.getElementById('thumbMockupCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = 1280, H = 720;
+
+      const l1 = (document.getElementById('liveKhandLine1')?.textContent || 'इतिहास का रहस्य!').trim();
+      const l2 = (document.getElementById('liveKhandLine2')?.textContent || 'असली सबूत').trim();
+
+      ctx.clearRect(0, 0, W, H);
+
+      // Rich Pro Backgrounds per Concept A / B / C / D
+      if (activeMockupConcept === 'A') {
+        const g = ctx.createLinearGradient(0, 0, W, H);
+        g.addColorStop(0, '#07090f'); g.addColorStop(0.55, '#111827'); g.addColorStop(1, '#3b1806');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        const glow = ctx.createRadialGradient(930, 340, 30, 930, 340, 420);
+        glow.addColorStop(0, 'rgba(255, 195, 0, 0.32)'); glow.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+      } else if (activeMockupConcept === 'B') {
+        const g = ctx.createLinearGradient(0, 0, W, H);
+        g.addColorStop(0, '#040f13'); g.addColorStop(0.6, '#0b2229'); g.addColorStop(1, '#064e3b');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        ctx.strokeStyle = 'rgba(78, 222, 163, 0.08)'; ctx.lineWidth = 2;
+        for (let x = 0; x < W; x += 64) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+        for (let y = 0; y < H; y += 64) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+      } else if (activeMockupConcept === 'C') {
+        ctx.fillStyle = '#330812'; ctx.fillRect(0, 0, W / 2, H);
+        ctx.fillStyle = '#052920'; ctx.fillRect(W / 2, 0, W / 2, H);
+        ctx.fillStyle = '#FFD700';
+        ctx.beginPath(); ctx.moveTo(W / 2 - 6, 0); ctx.lineTo(W / 2 + 6, 0); ctx.lineTo(W / 2 - 22, H); ctx.lineTo(W / 2 - 34, H); ctx.closePath(); ctx.fill();
+      } else {
+        const g = ctx.createRadialGradient(640, 260, 50, 640, 360, 720);
+        g.addColorStop(0, '#1e1b4b'); g.addColorStop(0.55, '#0f172a'); g.addColorStop(1, '#020617');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      }
+
+      // Draw Visual Layout Zones & ALL Uploaded Reference Photos cleanly
+      ctx.save();
+      if (activeMockupConcept === 'B') {
+        // Right Magnifying Lens + Investigative Red Arrow
+        ctx.beginPath(); ctx.arc(935, 360, 210, 0, Math.PI * 2); ctx.closePath();
+        ctx.fillStyle = '#0a141d'; ctx.fill();
+        ctx.lineWidth = 10; ctx.strokeStyle = '#FFD700'; ctx.stroke();
+        ctx.save();
+        ctx.clip();
+        if (uploadedRefImages[0]) {
+          ctx.drawImage(uploadedRefImages[0], 725, 150, 420, 420);
+        } else {
+          ctx.fillStyle = 'rgba(255, 215, 0, 0.10)'; ctx.fillRect(725, 150, 420, 420);
+          ctx.fillStyle = '#FFD700'; ctx.font = 'bold 28px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText('ZOOMED PROOF', 935, 345);
+          ctx.fillStyle = '#cbd5e1'; ctx.font = '20px sans-serif';
+          ctx.fillText('Ref Photo Zone', 935, 385);
+        }
+        ctx.restore();
+        if (uploadedRefImages[1]) {
+          ctx.drawImage(uploadedRefImages[1], 560, 420, 190, 220);
+        }
+        // Red pointer arrow toward lens
+        ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 10; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(640, 240); ctx.lineTo(745, 305); ctx.stroke();
+      } else if (activeMockupConcept === 'C') {
+        if (uploadedRefImages[0]) {
+          ctx.globalAlpha = 0.85; ctx.drawImage(uploadedRefImages[0], 60, 140, 480, 420); ctx.globalAlpha = 1;
+        }
+        if (uploadedRefImages[1]) {
+          ctx.globalAlpha = 0.90; ctx.drawImage(uploadedRefImages[1], 730, 140, 480, 420); ctx.globalAlpha = 1;
+        }
+        ctx.fillStyle = '#dc2626'; ctx.fillRect(46, 40, 180, 46);
+        ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 24px sans-serif'; ctx.textAlign = 'left'; ctx.fillText('MYTH / भ्रम', 64, 71);
+        ctx.fillStyle = '#10b981'; ctx.fillRect(1034, 40, 200, 46);
+        ctx.fillStyle = '#022c22'; ctx.fillText('REAL PROOF', 1058, 71);
+      } else if (activeMockupConcept === 'D') {
+        if (uploadedRefImages[0]) {
+          ctx.globalAlpha = 0.80; ctx.drawImage(uploadedRefImages[0], 340, 35, 600, 410); ctx.globalAlpha = 1;
+        } else {
+          ctx.strokeStyle = 'rgba(255,215,0,0.45)'; ctx.lineWidth = 3;
+          ctx.strokeRect(390, 50, 500, 360);
+          ctx.fillStyle = '#cbd5e1'; ctx.font = 'bold 26px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText('CINEMA SUBJECT / POSTER', 640, 240);
+        }
+      } else {
+        // Concept A: Clean Right-Side Portrait + Evidence Card
+        if (uploadedRefImages[0]) {
+          ctx.drawImage(uploadedRefImages[0], 730, 60, 490, 600);
+          if (uploadedRefImages[1]) {
+            ctx.strokeStyle = '#FFD700'; ctx.lineWidth = 5;
+            ctx.drawImage(uploadedRefImages[1], 590, 390, 230, 240);
+            ctx.strokeRect(590, 390, 230, 240);
+          }
+        } else {
+          ctx.fillStyle = 'rgba(255, 215, 0, 0.08)';
+          ctx.strokeStyle = 'rgba(255, 215, 0, 0.45)'; ctx.lineWidth = 3;
+          ctx.fillRect(745, 75, 465, 570); ctx.strokeRect(745, 75, 465, 570);
+          ctx.fillStyle = '#FFD700'; ctx.font = 'bold 26px sans-serif'; ctx.textAlign = 'center';
+          ctx.fillText('HERO PHOTO +', 977, 340);
+          ctx.fillStyle = '#FFFFFF'; ctx.font = '22px sans-serif';
+          ctx.fillText('TOPIC ARTIFACT ZONE', 977, 380);
+        }
+      }
+      ctx.restore();
+
+      // Smooth Scrim behind text so headline pops cleanly without overpowering
+      const scrim = ctx.createLinearGradient(0, 0, W * 0.68, 0);
+      scrim.addColorStop(0, 'rgba(0,0,0,0.86)'); scrim.addColorStop(1, 'rgba(0,0,0,0)');
+      if (activeMockupConcept !== 'D') { ctx.fillStyle = scrim; ctx.fillRect(0, 0, W, H); }
+
+      // Balanced Pro Typography (62px Yellow + 54px White — clean, readable, never bloated)
+      ctx.shadowColor = 'rgba(0,0,0,0.95)';
+      ctx.shadowBlur = 14;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 5;
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#000000';
+
+      const isCentered = activeMockupConcept === 'D' || activeMockupConcept === 'C';
+      const textX = isCentered ? W / 2 : 56;
+      const textY1 = activeMockupConcept === 'D' ? 535 : (activeMockupConcept === 'C' ? 530 : 320);
+      const textY2 = activeMockupConcept === 'D' ? 612 : (activeMockupConcept === 'C' ? 605 : 398);
+      const maxW = isCentered ? 1100 : 620;
+      ctx.textAlign = isCentered ? 'center' : 'left';
+
+      ctx.font = '700 62px "Khand", "Noto Sans Devanagari", sans-serif';
+      ctx.strokeText(l1, textX, textY1, maxW);
+      ctx.fillStyle = '#FFD700';
+      ctx.fillText(l1, textX, textY1, maxW);
+
+      ctx.font = '700 54px "Khand", "Noto Sans Devanagari", sans-serif';
+      ctx.strokeText(l2, textX, textY2, maxW);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(l2, textX, textY2, maxW);
+
+      ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
+    }
+
+    function downloadThumbMockupPNG() {
+      const canvas = document.getElementById('thumbMockupCanvas');
+      if (!canvas) return;
+      const a = document.createElement('a');
+      a.download = `YT_SEO_Mockup_${activeMockupConcept}.png`;
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+      showToast(`Downloaded Mockup ${activeMockupConcept} (1280x720 PNG)!`);
+    }
+
+
+    // ==================== AUTO STORAGE CLEANER & FRESH WORKSPACE ====================
+    const ESSENTIAL_STORAGE_KEYS = new Set([
+      'yt_seo_ssrio_gemini_key',
+      'yt_seo_ssrio_gemini_model',
+      'yt_seo_ssiro_fb',
+      'yt_seo_ssiro_x',
+      'yt_seo_ssiro_ig',
+      'yt_seo_ssiro_pin',
+      'yt_seo_ssiro_unlocked',
+      'yt_seo_ssiro_theme',
+      'yt_seo_ssiro_last_clean'
+    ]);
+
+    function autoCleanUnusedStorage() {
+      try {
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && !ESSENTIAL_STORAGE_KEYS.has(k)) {
+            keysToRemove.push(k);
+          }
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+        localStorage.setItem('yt_seo_ssiro_last_clean', String(Date.now()));
+      } catch (e) {}
+    }
+
+    function resetWorkspaceFresh(notify) {
+      const clearIds = [
+        'topic-prompt-input', 'oneCommandInput', 'primaryKeywordInput', 'secondaryKeywordsInput',
+        'videoTitleInput', 'videoDescInput', 'seedKeywordExplorerInput', 'scriptAnalyzerTextarea',
+        'thumbHookHindi1', 'thumbHookHindi2', 'thumbHookHinglish', 'thumbHookEnglish',
+        'promptHookTextOverlay', 'thumbOverlayHeadline', 'promptTopicSubject'
+      ];
+      clearIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      const topicEl = document.getElementById('topic-prompt-input');
+      if (topicEl) topicEl.placeholder = 'Enter your video topic or idea (e.g. Ancient Temple Mystery, iPhone 17 Review)...';
+      const titleEl = document.getElementById('videoTitleInput');
+      if (titleEl) titleEl.placeholder = 'Your 50-65 char high-CTR YouTube title will appear here...';
+
+      appState.activeTags = [];
+      appState.chapters = [];
+      appState.generatedKeywordPool = [];
+      appState.scenesList = [];
+      appState.customThumbDataUrl = null;
+      uploadedRefImages = [];
+      window.__latestGeneratedTitles = [];
+
+      const genTitlesBox = document.getElementById('generatedTitlesContainer');
+      if (genTitlesBox) genTitlesBox.classList.add('hidden');
+
+      const emptyStateHtml = '<div class="col-span-full p-5 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-center text-xs text-outline font-mono">Fresh workspace ready. Enter your video topic above and click <strong>Generate Complete Pack</strong>.</div>';
+      ['aiPromptsCardsContainer', 'sceneBySceneCardsContainer', 'retentionHooksGrid'].forEach(cid => {
+        const el = document.getElementById(cid);
+        if (el) el.innerHTML = emptyStateHtml;
+      });
+      const vSys = document.getElementById('voiceSystemPromptBox');
+      if (vSys) vSys.textContent = 'Enter your topic above and click Generate Complete Pack to build your human-like AI voiceover director prompt.';
+      const vAnn = document.getElementById('voiceAnnotatedScriptBox');
+      if (vAnn) vAnn.textContent = 'Your emotion-annotated voiceover script with breathing pauses and word emphasis will appear here.';
+
+      const kwBody = document.getElementById('keywordExplorerTableBody');
+      if (kwBody) kwBody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-xs text-outline font-mono">Enter a topic above to generate English searchable keywords.</td></tr>';
+      const compBody = document.getElementById('competitorTableBody');
+      if (compBody) compBody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-xs text-outline font-mono">Enter a topic above to load category benchmarks.</td></tr>';
+
+      const l1 = document.getElementById('liveKhandLine1');
+      if (l1) l1.textContent = 'YOUR TOPIC HOOK';
+      const l2 = document.getElementById('liveKhandLine2');
+      if (l2) l2.textContent = 'KHAND BOLD PREVIEW';
+
+      renderActiveTagsWorkspace();
+      calculateScriptMetrics();
+      runLiveSEOAudit();
+      updateCtrSimulator();
+      renderThumbMockupCanvas('A');
+      autoCleanUnusedStorage();
+      if (notify) showToast('Workspace reset completely fresh & temporary cache cleaned!');
+    }
+
+
+    // ==================== 1-TAP COPY & OPEN CHATGPT / GEMINI + API IMAGE GEN + A/B/C/D RANKER ====================
+    const rankerImages = { A: null, B: null, C: null, D: null };
+
+    async function copyAndOpenTool(target, idx) {
+      const promptText = (window.__latestThumbnailPrompts && window.__latestThumbnailPrompts[idx]) || '';
+      if (!promptText) {
+        showToast('Generate your topic first to build prompts!');
+        return;
+      }
+      try { await navigator.clipboard.writeText(promptText); } catch (e) {}
+      const url = target === 'chatgpt' ? 'https://chatgpt.com/' : 'https://gemini.google.com/app';
+      window.open(url, '_blank', 'noopener');
+      showToast(`Prompt copied! Paste directly in ${target === 'chatgpt' ? 'ChatGPT' : 'Gemini'}.`);
+    }
+
+    async function generateThumbnailImageWithAPI(idx) {
+      const letters = ['A', 'B', 'C', 'D'];
+      const slot = letters[idx] || 'A';
+      const promptText = (window.__latestThumbnailPrompts && window.__latestThumbnailPrompts[idx]) || '';
+      if (!promptText) {
+        showToast('Generate your topic first to build prompts!');
+        return;
+      }
+      if (!appState.geminiApiKey) {
+        showToast('Connect your Gemini API Key at the top first (or use ChatGPT/Gemini buttons)!');
+        return;
+      }
+      showToast(`Generating Concept ${slot} image via Gemini API...`);
+      try {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptText }] }],
+            generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
+          })
+        });
+        if (!res.ok) throw new Error('Image model unavailable on this key');
+        const data = await res.json();
+        const parts = data?.candidates?.[0]?.content?.parts || [];
+        const imgPart = parts.find(p => p.inlineData && p.inlineData.data);
+        if (!imgPart) throw new Error('No image returned');
+        const dataUrl = `data:${imgPart.inlineData.mimeType || 'image/png'};base64,${imgPart.inlineData.data}`;
+        setRankerSlotImage(slot, dataUrl);
+        showToast(`Concept ${slot} image generated & added to Ranker!`);
+      } catch (err) {
+        showToast('Image generation unavailable on this API tier — use 🚀 ChatGPT or ✨ Gemini button!');
+      }
+    }
+
+    function setRankerSlotImage(slot, dataUrl) {
+      rankerImages[slot] = dataUrl;
+      const img = document.getElementById('rankImg' + slot);
+      const empty = document.getElementById('rankEmpty' + slot);
+      const badge = document.getElementById('rankBadge' + slot);
+      if (img) { img.src = dataUrl; img.classList.remove('hidden'); }
+      if (empty) empty.classList.add('hidden');
+      if (badge) { badge.textContent = 'Ready'; badge.className = 'px-2 py-0.5 rounded bg-secondary/20 text-secondary text-[10px] font-bold'; }
+    }
+
+    function handleRankerMultiUpload(ev) {
+      const files = Array.from(ev?.target?.files || []).slice(0, 4);
+      const slots = ['A', 'B', 'C', 'D'];
+      files.forEach((file, i) => {
+        const reader = new FileReader();
+        reader.onload = (e) => setRankerSlotImage(slots[i], e.target.result);
+        reader.readAsDataURL(file);
+      });
+      if (files.length) showToast(`Loaded ${files.length} thumbnail(s) into Ranker! Click Score & Rank.`);
+    }
+
+    function analyzeThumbPixels(dataUrl) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => {
+          const c = document.createElement('canvas');
+          c.width = 160; c.height = 90;
+          const ctx = c.getContext('2d');
+          ctx.drawImage(img, 0, 0, 160, 90);
+          const d = ctx.getImageData(0, 0, 160, 90).data;
+          let sumL = 0, sumL2 = 0, satSum = 0, goldPixels = 0, edgeSum = 0;
+          const N = d.length / 4;
+          const lum = new Float32Array(N);
+          for (let i = 0; i < N; i++) {
+            const r = d[i * 4], g = d[i * 4 + 1], b = d[i * 4 + 2];
+            const l = 0.299 * r + 0.587 * g + 0.114 * b;
+            lum[i] = l;
+            sumL += l; sumL2 += l * l;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            satSum += max === 0 ? 0 : (max - min) / max;
+            if (r > 190 && g > 150 && b < 110) goldPixels++;
+          }
+          for (let y = 1; y < 89; y++) {
+            for (let x = 1; x < 159; x++) {
+              const idx = y * 160 + x;
+              edgeSum += Math.abs(lum[idx] - lum[idx - 1]) + Math.abs(lum[idx] - lum[idx - 160]);
+            }
+          }
+          const meanL = sumL / N;
+          const stdL = Math.sqrt(Math.max(0, sumL2 / N - meanL * meanL));
+          const avgSat = satSum / N;
+          const goldRatio = goldPixels / N;
+          const clarity = Math.min(1, (edgeSum / N) / 45);
+
+          const contrastScore = Math.min(35, (stdL / 75) * 35);
+          const vibrancyScore = Math.min(25, (avgSat / 0.55) * 25);
+          const clarityScore = Math.min(25, clarity * 25);
+          const goldPopBonus = Math.min(15, (goldRatio > 0.01 && goldRatio < 0.28) ? 15 : 7);
+          const total = Math.round(Math.min(99, Math.max(45, contrastScore + vibrancyScore + clarityScore + goldPopBonus)));
+
+          const notes = [];
+          if (stdL > 55) notes.push('High contrast');
+          if (goldRatio > 0.015) notes.push('Strong yellow/gold pop');
+          if (clarity > 0.55) notes.push('Crisp mobile readability');
+          resolve({ score: total, reason: notes.length ? notes.join(' • ') : 'Balanced composition' });
+        };
+        img.src = dataUrl;
+      });
+    }
+
+    async function scoreAndRankThumbnails() {
+      const slots = ['A', 'B', 'C', 'D'].filter(s => !!rankerImages[s]);
+      if (slots.length === 0) {
+        showToast('Please upload at least 1–4 thumbnails first!');
+        return;
+      }
+      const results = [];
+      for (const s of slots) {
+        const res = await analyzeThumbPixels(rankerImages[s]);
+        results.push({ slot: s, score: res.score, reason: res.reason });
+      }
+      results.sort((a, b) => b.score - a.score);
+
+      results.forEach((item, idx) => {
+        const rankNum = idx + 1;
+        const badge = document.getElementById('rankBadge' + item.slot);
+        const reasonEl = document.getElementById('rankReason' + item.slot);
+        if (badge) {
+          badge.textContent = rankNum === 1 ? `🏆 #1 (${item.score}/100)` : `#${rankNum} (${item.score}/100)`;
+          badge.className = rankNum === 1
+            ? 'px-2 py-0.5 rounded bg-tertiary text-on-tertiary text-[10px] font-extrabold'
+            : 'px-2 py-0.5 rounded bg-surface-container-high text-white text-[10px] font-bold';
+        }
+        if (reasonEl) {
+          reasonEl.textContent = rankNum === 1 ? `Best CTR Pick: ${item.reason}` : item.reason;
+        }
+      });
+      showToast(`Ranked ${results.length} thumbnails! Winner: Slot ${results[0].slot} (${results[0].score}/100)`);
+    }
+
     // ==================== INITIALIZATION ====================
     window.addEventListener('DOMContentLoaded', () => {
       try {
@@ -2128,8 +2766,13 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
         }
       } catch (e) {}
 
+      initThemeMode();
       initPinLock();
-      loadPresetTemplate('history', true);
+      loadSavedSocialLinks();
+      autoCleanUnusedStorage();
+      resetWorkspaceFresh(false);
+      renderThumbMockupCanvas('A');
+      setTimeout(() => renderThumbMockupCanvas(activeMockupConcept), 400);
       renderSopChecklist();
       switchTab('audit');
     });
@@ -2383,6 +3026,74 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       document.getElementById('oneCommandInput').value = cmdText;
       executeOneCommandAutopilot();
     }
+    // ==================== SMART DEVANAGARI-TO-ENGLISH KEYWORD & TOPIC EXTRACTOR ====================
+    function devanagariToRoman(input) {
+      const specialWords = {
+        'छठ': 'Chhath', 'पूजा': 'Puja', 'हिंदू': 'Hindu', 'हिंदुओं': 'Hindu', 'बौद्ध': 'Buddhist', 'बौद्धों': 'Buddhist',
+        'इतिहास': 'History', 'विज्ञान': 'Science', 'धर्म': 'Dharma', 'सनातन': 'Sanatan', 'मंदिर': 'Temple',
+        'भारत': 'India', 'वेद': 'Veda', 'पुराण': 'Puran', 'रामायण': 'Ramayan', 'महाभारत': 'Mahabharat',
+        'भगवान': 'Bhagwan', 'सूर्य': 'Surya', 'शिव': 'Shiva', 'कृष्ण': 'Krishna', 'राम': 'Ram', 'बुद्ध': 'Buddha',
+        'रहस्य': 'Mystery', 'सच': 'Truth', 'सत्य': 'Satya', 'कल्पना': 'Kalpana', 'प्रमाण': 'Proof', 'टेक': 'Tech', 'अंतरिक्ष': 'Space', 'काशी': 'Kashi', 'अयोध्या': 'Ayodhya', 'हनुमान': 'Hanuman', 'गीता': 'Gita', 'उपनिषद': 'Upanishad', 'गंगा': 'Ganga', 'यमुना': 'Yamuna'
+      };
+      const consonants = {
+        'क':'k','ख':'kh','ग':'g','घ':'gh','ङ':'ng','च':'ch','छ':'chh','ज':'j','झ':'jh','ञ':'ny',
+        'ट':'t','ठ':'th','ड':'d','ढ':'dh','ण':'n','त':'t','थ':'th','द':'d','ध':'dh','न':'n',
+        'प':'p','फ':'ph','ब':'b','भ':'bh','म':'m','य':'y','र':'r','ल':'l','व':'v',
+        'श':'sh','ष':'sh','स':'s','ह':'h','क्ष':'ksh','त्र':'tr','ज्ञ':'gy'
+      };
+      const vowels = {
+        'अ':'a','आ':'aa','इ':'i','ई':'ee','उ':'u','ऊ':'oo','ऋ':'ri','ए':'e','ऐ':'ai','ओ':'o','औ':'au','अं':'an','अः':'ah'
+      };
+      const matras = {
+        'ा':'a','ि':'i','ी':'ee','ु':'u','ू':'oo','ृ':'ri','े':'e','ै':'ai','ो':'o','ौ':'au','ं':'n','ँ':'n','ः':'h','्':''
+      };
+      return (input || '').split(/\s+/).map(word => {
+        const cleanW = word.replace(/[?।!.,;:"'()\[\]]/g, '');
+        if (!cleanW) return '';
+        if (specialWords[cleanW]) return specialWords[cleanW];
+        if (!/[\u0900-\u097F]/.test(cleanW)) return cleanW;
+        let out = '';
+        for (let i = 0; i < cleanW.length; i++) {
+          const ch = cleanW[i];
+          const next = cleanW[i + 1];
+          if (vowels[ch]) {
+            out += vowels[ch];
+          } else if (consonants[ch]) {
+            out += consonants[ch];
+            if (next && matras[next] !== undefined) {
+              out += matras[next];
+              i++;
+            } else if (next && next !== '्' && i < cleanW.length - 1) {
+              out += 'a';
+            }
+          } else if (matras[ch] !== undefined) {
+            out += matras[ch];
+          } else {
+            out += ch;
+          }
+        }
+        return out.charAt(0).toUpperCase() + out.slice(1);
+      }).filter(Boolean).join(' ');
+    }
+
+    function extractCleanCoreTopic(rawInput) {
+      const text = (rawInput || '').trim();
+      const isHindi = /[\u0900-\u097F]/.test(text);
+      const stopWords = new Set([
+        'किसकी', 'किसका', 'किसके', 'क्या', 'क्यों', 'कैसे', 'कब', 'कौन', 'कहाँ', 'है', 'हैं', 'था', 'थे', 'थी',
+        'की', 'का', 'के', 'को', 'में', 'से', 'पर', 'और', 'या', 'तथा', 'एक', 'यह', 'वह', 'इस', 'उस', 'बनाम',
+        'सत्य', 'कल्पना', 'असली', 'नकली', 'सच', 'झूठ', 'सही', 'गलत', 'who', 'what', 'why', 'how', 'when', 'where', 'is', 'are', 'was', 'were', 'the', 'a', 'an', 'of', 'in', 'on', 'and', 'or', 'to', 'for', 'about', 'vs', 'reality', 'myth', 'fact', 'fake', 'real'
+      ]);
+      const cleanedWords = text
+        .replace(/[?।!.,;:"'()\[\]\-—|]/g, ' ')
+        .split(/\s+/)
+        .map(w => w.trim())
+        .filter(w => w.length > 0 && !stopWords.has(w.toLowerCase()));
+      const core = cleanedWords.slice(0, 3).join(' ') || text.split(/[?:।]/)[0].trim().slice(0, 32);
+      const englishKw = isHindi ? devanagariToRoman(core) : core;
+      return { core, englishKw: englishKw || core, isHindi, fullQuestion: text };
+    }
+
 
     async function executeOneCommandAutopilot() {
       // Check if user pasted key in inline box without clicking Connect yet
@@ -2405,45 +3116,55 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       const btnText = document.getElementById('generateBtnText');
       if (btnText) btnText.textContent = appState.geminiApiKey ? '⚡ Gemini AI Researching...' : 'Generating...';
 
-      const cleanTopic = rawCmd
-        .replace(/^(how to|the untold story of|the forgotten|why|what is)\s+/i, '')
-        .split(':')[0]
-        .trim()
-        .slice(0, 55);
+      const { core, englishKw, isHindi } = extractCleanCoreTopic(rawCmd);
+      const activeCat = CATEGORY_ALGORITHMS[appState.activeCategory] || CATEGORY_ALGORITHMS.history;
 
-      let primaryKw = cleanTopic || rawCmd.slice(0, 45);
-      let secondaryKws = [
-        `${primaryKw} Explained`,
-        `${primaryKw} Primary Evidence`,
-        `${primaryKw} Historical Proof`,
-        `${primaryKw} Full Documentary`,
-        `Truth About ${primaryKw}`
-      ].join(', ');
+      let primaryKw = englishKw || core || rawCmd.slice(0, 30);
+      let secondaryKws = `${primaryKw} History, ${primaryKw} Origin, ${primaryKw} Real Truth, ${primaryKw} Documentary Hindi, ${primaryKw} Facts`;
 
       document.getElementById('primaryKeywordInput').value = primaryKw;
       document.getElementById('secondaryKeywordsInput').value = secondaryKws;
       document.getElementById('seedKeywordExplorerInput').value = primaryKw;
 
-      const baseTopic = rawCmd.split(':')[0].trim().slice(0, 38);
-      const activeCat = CATEGORY_ALGORITHMS[appState.activeCategory] || CATEGORY_ALGORITHMS.history;
-      const highCtrTitle = `${baseTopic}: ${activeCat.powerWords[0]} ${activeCat.titleTag}`.slice(0, 65);
+      const isDebateCmd = /(या|बनाम|vs|versus|or|किसकी|किसका|सत्य|कल्पना)/i.test(rawCmd);
+      const highCtrTitle = isHindi
+        ? (isDebateCmd
+            ? `${primaryKw}: तथ्य, दावे और असली प्रमाण क्या कहते हैं?`.slice(0, 65)
+            : `${primaryKw} — अनसुने तथ्य और पूरा इतिहास हिंदी में`.slice(0, 65))
+        : `${primaryKw}: What the Evidence Actually Shows`.slice(0, 65);
       document.getElementById('videoTitleInput').value = highCtrTitle;
 
-      const shortWords = primaryKw.toUpperCase().split(/\s+/).slice(0, 2).join(' ');
-      document.getElementById('thumbHookHindi1').value = `${shortWords} का रहस्य! | असली सच`;
-      document.getElementById('thumbHookHindi2').value = `अनदेखा सच! | पक्का प्रमाण`;
-      document.getElementById('thumbHookHinglish').value = `${shortWords} KA SACH! | ASLI PROOF`;
-      document.getElementById('thumbHookEnglish').value = `${shortWords} SECRET! | REAL PROOF`;
-      document.getElementById('promptHookTextOverlay').value = `${shortWords} का रहस्य! | असली सच`;
-      document.getElementById('thumbOverlayHeadline').value = `${shortWords} का रहस्य! | असली सच`;
+      const catHooksMap = {
+        history: { h1: `${core ? core.split(/\s+/)[0] : 'इतिहास'} का रहस्य! | असली सबूत`, h2: `छुपाया गया सच?! | 100% प्रमाण`, hg: `ASLI ITIHAS?! | CHHUPA SACH`, en: `UNTOLD ORIGIN! | REAL PROOF` },
+        tech: { h1: `सब कुछ बदल गया! | असली टेस्ट`, h2: `लेने से पहले देखें! | चौंकाने वाला सच`, hg: `SABSE TEZ?! | ASLI REALITY`, en: `GAME CHANGER?! | REAL TEST` },
+        dharma: { h1: `किसका है सच?! | प्राचीन प्रमाण`, h2: `अनसुना रहस्य! | शास्त्रों का सच`, hg: `ASLI RAHASYA! | PRACHIN PROOF`, en: `SACRED SECRET! | TRUE ORIGIN` },
+        science: { h1: `विज्ञान भी हैरान! | असंभव सच`, h2: `अंतरिक्ष का राज! | नया खुलासा`, hg: `IMPOSSIBLE?! | ASLI SCIENCE`, en: `COSMIC SECRET! | REAL PHYSICS` },
+        finance: { h1: `करोड़ों का खेल! | असली राज़`, h2: `सब हैरान हैं! | बिज़नेस सच`, hg: `PAISE KA KHEL! | ASLI MODEL`, en: `HIDDEN EMPIRE! | REAL TRUTH` },
+        mystery: { h1: `अनसुलझा रहस्य! | गायब सबूत`, h2: `रातों-रात गायब?! | चौंकाने वाला सच`, hg: `RAHASYA KHULA! | ASLI SABOOT`, en: `CLASSIFIED?! | HIDDEN PROOF` },
+        education: { h1: `99% नहीं जानते! | असली ज्ञान`, h2: `दिमाग हिला देगा! | पूरा सच`, hg: `YEH KOI NAHI JANATA! | SACH`, en: `MIND BLOWN! | HIDDEN TRUTH` },
+        gaming: { h1: `सीक्रेट एंडिंग?! | छिपा राज़`, h2: `सबने मिस किया! | असली लोर`, hg: `SECRET UNLOCKED! | ASLI LORE`, en: `HIDDEN ENDING! | EXPLAINED` }
+      };
+      const ch = catHooksMap[activeCat.id] || catHooksMap.history;
+      document.getElementById('thumbHookHindi1').value = ch.h1;
+      document.getElementById('thumbHookHindi2').value = ch.h2;
+      document.getElementById('thumbHookHinglish').value = ch.hg;
+      document.getElementById('thumbHookEnglish').value = ch.en;
+      document.getElementById('promptHookTextOverlay').value = ch.h1;
+      document.getElementById('thumbOverlayHeadline').value = ch.h1;
 
-      appState.chapters = [
-        { time: '00:00', title: `${primaryKw}: Opening Hook & Core Question` },
-        { time: '02:20', title: `Primary Archival Evidence of ${primaryKw}` },
-        { time: '05:45', title: `What Popular Accounts Missed` },
-        { time: '09:15', title: `Line-by-Line Breakdown & Visual Proof` },
-        { time: '12:40', title: `Final Conclusion & Primary Sources` }
-      ];
+      appState.chapters = isHindi
+        ? [
+            { time: '00:00', title: `${primaryKw}: मुख्य सवाल और परिचय` },
+            { time: '02:15', title: `प्रचलित मान्यताएं बनाम ऐतिहासिक तथ्य` },
+            { time: '05:30', title: `प्राचीन ग्रंथों और अभिलेखों के प्रमाण` },
+            { time: '09:00', title: `इतिहासकारों और शोधकर्ताओं का निष्कर्ष` }
+          ]
+        : [
+            { time: '00:00', title: `${primaryKw}: The Core Question` },
+            { time: '02:15', title: `Popular Claims vs. Historical Context` },
+            { time: '05:30', title: `What Primary Sources Actually Say` },
+            { time: '09:00', title: `Final Verdict & Key Takeaways` }
+          ];
 
       let usedLiveGemini = false;
       if (appState.geminiApiKey) {
@@ -2451,14 +3172,14 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
 Analyze this video topic deeply for the YouTube category "${activeCat.name}": "${rawCmd}".\nMatch the exact tone, vocabulary, hashtags, and thumbnail visual style of ${activeCat.name} (${activeCat.voiceTone}).
 Return a valid JSON object with the following exact keys:
 {
-  "primaryKeyword": "Best high-search primary keyword (3-5 words)",
-  "secondaryKeywords": "8 comma-separated high-search related keywords and subtopics",
-  "title": "High-CTR YouTube title (strictly 50-65 chars, primary keyword first, zero mobile truncation)",
-  "hookHindi1": "2-part pure Hindi Devanagari thumbnail title separated by | (strictly 2-3 punchy words per part, e.g. 1276 का रहस्य! | असली सच)",
+  "primaryKeyword": "Clean 2-3 word English/Roman searchable keyword (ALWAYS in English/Roman script even if topic is Hindi, e.g. Chhath Puja History)",
+  "secondaryKeywords": "6 comma-separated English/Roman YouTube search keywords (how Indian viewers search in English)",
+  "title": "Human-sounding high-CTR YouTube title (48-62 chars) with the English primaryKeyword placed first for search + natural Hindi/English curiosity hook",
+  "hookHindi1": "Ultra-catchy curiosity/mystery Hindi Devanagari thumbnail hook separated by | (strictly 2-3 short punchy words per part, evokes mystery/shock/curiosity for the category)",
   "hookHindi2": "Second distinct 2-part pure Hindi Devanagari thumbnail title separated by | (strictly 2-3 punchy words per part)",
   "hookHinglish": "2-part catchy Hinglish (Hindi in Roman script) thumbnail title separated by | (strictly 2-3 punchy words per part, uppercase)",
   "hookEnglish": "2-part pure English thumbnail title separated by | (strictly 2-3 punchy words per part, uppercase)",
-  "tags": ["array of 14 high-search low-competition YouTube tags related to the topic"],
+  "tags": ["array of 14 high-search YouTube tags strictly in English/Roman script matching how viewers search"],
   "chapters": [
     {"time": "00:00", "title": "Chapter 1 title"},
     {"time": "02:15", "title": "Chapter 2 title"},
@@ -2544,17 +3265,21 @@ Return a valid JSON object with the following exact keys:
         const el = document.getElementById(id);
         if (el) el.value = cat.id;
       });
+      const badgeEl = document.getElementById('activeCategoryPillBadge');
+      if (badgeEl) badgeEl.textContent = cat.name;
+      document.querySelectorAll('.cat-pill-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat.id) {
+          btn.className = 'cat-pill-btn px-2.5 py-2 rounded-xl bg-tertiary text-on-tertiary font-display text-[11px] font-bold flex items-center gap-1.5 shadow-sm transition';
+        } else {
+          btn.className = 'cat-pill-btn px-2.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] font-semibold flex items-center gap-1.5 transition';
+        }
+      });
 
       const currentTopic = (document.getElementById('topic-prompt-input').value || '').trim();
-      const allPresets = { ...PRESET_PROJECTS, ...EXTRA_CATEGORY_PRESETS };
-      const knownDefaultTitles = Object.values(allPresets).map(p => (p.title.split('[')[0].trim()));
-      const isDefaultOrEmpty = !currentTopic || knownDefaultTitles.includes(currentTopic);
-
-      if (isDefaultOrEmpty && allPresets[cat.id]) {
-        loadPresetTemplate(cat.id, true);
-        showToast(`Algorithm shifted to ${cat.name}!`);
+      if (!currentTopic) {
+        showToast(`Algorithm set to ${cat.name}! Enter your topic to generate.`);
       } else {
-        runMasterAutopilot();
+        executeOneCommandAutopilot();
         showToast(`Shifted all algorithms to ${cat.name} for your topic!`);
       }
     }
@@ -2613,7 +3338,7 @@ Return a valid JSON object with the following exact keys:
 
     // ==================== STEP 3: 4 DISTINCT A/B/C/D THUMBNAIL PROMPTS (2 HINDI, 1 HINGLISH, 1 ENGLISH + REF IMAGE ASK) ====================
     function splitHookIntoTwoLines(rawHook) {
-      const cleaned = (rawHook || '1276 ई. का रहस्य! | असली ऐतिहासिक प्रमाण').trim();
+      const cleaned = (rawHook || 'YOUR HOOK | REAL PROOF').trim();
       if (cleaned.includes('|')) {
         const parts = cleaned.split('|').map(s => s.trim());
         return {
@@ -2645,10 +3370,20 @@ Return a valid JSON object with the following exact keys:
       document.getElementById('thumbOverlayHeadline').value = val;
       const badgeEl = document.getElementById('livePromptCardBadge');
       if (badgeEl) badgeEl.textContent = item.badge;
+      ['A', 'B', 'C', 'D'].forEach(k => {
+        const b = document.getElementById('mockupBtn' + k);
+        if (!b) return;
+        if (k === conceptLetter) {
+          b.className = 'mockup-switch-btn px-2 py-1.5 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-bold';
+        } else {
+          b.className = 'mockup-switch-btn px-2 py-1.5 rounded-lg bg-surface-container text-white font-mono text-[10px]';
+        }
+      });
       const { line1, line2 } = splitHookIntoTwoLines(val);
       document.getElementById('liveKhandLine1').textContent = line1;
       document.getElementById('liveKhandLine2').textContent = line2;
       updateCtrSimulator();
+      renderThumbMockupCanvas(conceptLetter);
     }
 
     function syncHookTextFromPromptStudio() {
@@ -2667,10 +3402,11 @@ Return a valid JSON object with the following exact keys:
     }
 
     function generateThumbnailPrompts(silent) {
-      const topic = (document.getElementById('topic-prompt-input').value || document.getElementById('primaryKeywordInput').value || 'The 1276 CE Palam Baoli Inscription').trim();
+      renderThumbMockupCanvas(activeMockupConcept);
+      const topic = (document.getElementById('topic-prompt-input').value || document.getElementById('primaryKeywordInput').value || 'Your Video Topic').trim();
 
-      const h1 = splitHookIntoTwoLines(document.getElementById('thumbHookHindi1').value || '1276 ई. का रहस्य! | असली ऐतिहासिक प्रमाण');
-      const h2 = splitHookIntoTwoLines(document.getElementById('thumbHookHindi2').value || 'इतिहास का अनदेखा सच! | मूल शिलालेख का खुलासा');
+      const h1 = splitHookIntoTwoLines(document.getElementById('thumbHookHindi1').value || 'YOUR HOOK | REAL PROOF');
+      const h2 = splitHookIntoTwoLines(document.getElementById('thumbHookHindi2').value || 'HIDDEN TRUTH | FULL PROOF');
       const h3 = splitHookIntoTwoLines(document.getElementById('thumbHookHinglish').value || '1276 CE KA ASLI SACH! | SABSE BADA PROOF');
       const h4 = splitHookIntoTwoLines(document.getElementById('thumbHookEnglish').value || 'THE 1276 CE SECRET! | UNTOLD ARCHIVAL PROOF');
 
@@ -2699,11 +3435,11 @@ Return a valid JSON object with the following exact keys:
       const camSpec = cameraRealismMap[styleKey] || cameraRealismMap.cinematic;
       const colSpec = colorGradeMap[colorKey] || colorGradeMap.tealamber;
 
-      const referenceImageProtocol = `STEP 1 — MANDATORY REFERENCE IMAGE CHECK (ASK ME FIRST OR AUTO-GENERATE):
-• Before generating the image, if I have NOT attached or uploaded a reference photo in this message, first ask me:
-  "Would you like to upload any reference image(s)—such as your own portrait photo, an inscription/manuscript scan, or a topic photo—to place on the thumbnail, or should I generate the complete scene automatically?"
-• IF I upload or attach reference image(s): Use my uploaded photo(s) as the hero subject/artifact layer! Perform a clean, professional Photoshop-style cutout with warm rim lighting, color-match it to the background, and blend it seamlessly into the composition below.
-• IF I reply "No" / "Auto" / "Generate" (or tell you to proceed without a reference image): Automatically analyze the topic "${topic}" deeply and generate a 100% photorealistic, historically/contextually accurate hero subject and scene on your own.`;
+      const referenceImageProtocol = `STEP 1 — MANDATORY REFERENCE IMAGE RULE (INCLUDE EVERY ATTACHED PHOTO):
+• Before generating the final thumbnail, check if I have attached reference image(s). If I have NOT attached any image yet, first ask me:
+  "Please upload ALL reference images you want included on this thumbnail (e.g. your portrait photo, topic object, historical monument, screenshot, or evidence photo)—or reply 'skip' to let me design it automatically."
+• CRITICAL COMPOSITING RULE: If I upload 1, 2, or MULTIPLE reference photos, you MUST use and composite EVERY SINGLE uploaded photo cleanly into this thumbnail design—NEVER skip, ignore, or leave out any photo I gave you. Cut out each subject cleanly, match perspective, shadows, color grading, and dramatic rim-lighting like a senior YouTube Photoshop artist.
+• AUTO-FALLBACK: Only if I say 'skip' or upload zero images, design the full scene automatically around the category (${catProfile.name}) and topic ("${topicSubject}").`;
 
       const buildTypeBlock = (lineA, lineB, langLabel) => `STEP 3 — MANDATORY TYPOGRAPHY & COLOR LOCK (${langLabel}):
 • Font Family: Strictly use "Khand Bold" / "Khand ExtraBold" style (tall, ultra-bold, condensed geometric strokes, crystal-clear readability on mobile).
@@ -2809,11 +3545,24 @@ ${buildTypeBlock(h4.line1.toUpperCase(), h4.line2.toUpperCase(), 'PURE ENGLISH �
               <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 font-mono text-[11px] text-slate-200 leading-relaxed whitespace-pre-wrap break-anywhere max-h-64 overflow-y-auto custom-scroll select-all">${escapeHtml(p.prompt)}</div>
             </div>
 
-            <div class="flex items-center justify-between pt-1 border-t border-outline-variant/30 text-[11px] text-outline">
-              <span>✓ Asks for Ref Image First + Auto-Fallback</span>
-              <button type="button" onclick="copyGeneratedPrompt(${idx})" class="text-tertiary font-semibold hover:underline">
-                Copy for ChatGPT / Gemini →
-              </button>
+            <div class="space-y-2 pt-2 border-t border-outline-variant/30 text-[11px]">
+              <div class="flex flex-wrap items-center justify-between gap-2 text-outline">
+                <span>✓ Uses ALL Ref Photos + Auto-Fallback</span>
+                <button type="button" onclick="copyGeneratedPrompt(${idx})" class="text-tertiary font-semibold hover:underline">
+                  Copy Prompt Only
+                </button>
+              </div>
+              <div class="grid grid-cols-3 gap-1.5">
+                <button type="button" onclick="copyAndOpenTool('chatgpt', ${idx})" class="px-2 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-white font-mono text-[10px] font-bold flex items-center justify-center gap-1 transition">
+                  <span>🚀</span><span>ChatGPT</span>
+                </button>
+                <button type="button" onclick="copyAndOpenTool('gemini', ${idx})" class="px-2 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-white font-mono text-[10px] font-bold flex items-center justify-center gap-1 transition">
+                  <span>✨</span><span>Gemini</span>
+                </button>
+                <button type="button" onclick="generateThumbnailImageWithAPI(${idx})" class="px-2 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary/30 border border-tertiary/40 text-tertiary font-mono text-[10px] font-bold flex items-center justify-center gap-1 transition">
+                  <span>🎨</span><span>API Image</span>
+                </button>
+              </div>
             </div>
           </div>
         `).join('');
@@ -2939,7 +3688,7 @@ Include at least 6 detailed scenes.`);
     }
 
     function buildSceneBySceneStoryboard(silent) {
-      const kw = (document.getElementById('primaryKeywordInput').value || document.getElementById('topic-prompt-input').value || 'The 1276 CE Palam Baoli Inscription').trim();
+      const kw = (document.getElementById('primaryKeywordInput').value || document.getElementById('topic-prompt-input').value || 'Your Video Topic').trim();
       const sec = (document.getElementById('secondaryKeywordsInput').value || 'Primary Archival Evidence').split(',')[0].trim();
       const durationKey = document.getElementById('sceneScriptDurationSelect').value;
       const aspect = document.getElementById('sceneAspectRatioSelect').value;
@@ -3037,7 +3786,7 @@ Include at least 6 detailed scenes.`);
 
     // ==================== STEP 6: HUMAN-LIKE AI VOICEOVER DIRECTOR ====================
     function buildHumanVoiceoverPackage(silent) {
-      const kw = (document.getElementById('primaryKeywordInput').value || document.getElementById('topic-prompt-input').value || 'The 1276 CE Palam Baoli Inscription').trim();
+      const kw = (document.getElementById('primaryKeywordInput').value || document.getElementById('topic-prompt-input').value || 'Your Video Topic').trim();
       const persona = document.getElementById('voicePersonaSelect').value;
       const platform = document.getElementById('voicePlatformSelect').value;
       const pacing = document.getElementById('voiceLanguageStyleSelect').value;
@@ -3590,39 +4339,94 @@ ${platformNote}`;
       }
     }
 
-    function generateSmartTitleIdeas() {
-      const kw = (document.getElementById('primaryKeywordInput').value || 'Palam Baoli Inscription').trim();
-      const sec = (document.getElementById('secondaryKeywordsInput').value || 'Primary Proof').split(',')[0].trim();
-
-      const shortKw = kw.slice(0, 34);
-      const shortSec = sec.slice(0, 18);
-      const formulas = [
-        { tag: '🔥 Curiosity + Proof', text: `${shortKw}: The Untold Proof [Explained]`.slice(0, 65) },
-        { tag: '📚 Documentary', text: `The Hidden Truth of ${shortKw} (${shortSec})`.slice(0, 65) },
-        { tag: '⚡ Question Hook', text: `Why ${shortKw} Changes Everything? Full Proof`.slice(0, 65) },
-        { tag: '🎯 Search + Browse', text: `${shortKw} Explained: ${shortSec} (2026 Guide)`.slice(0, 65) },
-        { tag: '📊 Listicle CTR', text: `5 Shocking Facts Inside ${shortKw} [Verified]`.slice(0, 65) },
-        { tag: '🔍 Deep Breakdown', text: `${shortKw}: Complete Evidence & Source Guide`.slice(0, 65) },
-        { tag: '⚔️ Myth vs Reality', text: `${shortKw} Decoded: Myth vs. Real Evidence`.slice(0, 65) },
-        { tag: '📱 Mobile Golden', text: `Inside ${shortKw}: The Secret Record Revealed`.slice(0, 65) }
-      ];
+    async function generateSmartTitleIdeas() {
+      const rawTopic = (document.getElementById('topic-prompt-input').value || '').trim();
+      const rawKw = (document.getElementById('primaryKeywordInput').value || rawTopic || 'Palam Baoli Inscription').trim();
+      const { core, englishKw } = extractCleanCoreTopic(rawTopic || rawKw);
+      const isHindi = /[\u0900-\u097F]/.test(rawTopic) || /[\u0900-\u097F]/.test(rawKw);
+      const kw = englishKw || rawKw.slice(0, 26);
+      const hiCore = core || kw;
+      const cat = CATEGORY_ALGORITHMS[appState.activeCategory] || CATEGORY_ALGORITHMS.history;
+      const isDebate = /(या|बनाम|vs|versus|or|किसकी|किसका)/i.test(rawTopic);
 
       const container = document.getElementById('generatedTitlesContainer');
       const list = document.getElementById('generatedTitlesList');
       container.classList.remove('hidden');
 
-      list.innerHTML = formulas.map((f, idx) => `
-        <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/40 flex items-center justify-between gap-2.5">
+      let threeTitles = null;
+
+      // If Gemini API Key is connected, fetch 3 deeply researched, human-sounding titles live
+      if (appState.geminiApiKey) {
+        list.innerHTML = '<p class="text-xs font-mono text-tertiary py-2">⚡ Researching 3 human-crafted, high-CTR titles...</p>';
+        const aiRes = await callGeminiJsonAPI(`You are an elite YouTube title strategist for the category "${cat.name}".
+Topic: "${rawTopic || rawKw}"
+Primary English Searching Keyword: "${kw}"
+Write EXACTLY 3 deeply researched, human-sounding, emotionally compelling YouTube titles (strictly 48-62 chars each, zero robotic brackets, natural curiosity + English keyword upfront).
+${isHindi ? 'Write the titles in natural Hindi/Hinglish with the English searching keyword included naturally.' : 'Write the titles in crisp natural English.'}
+Return JSON: { "titles": [ { "tag": "Angle 1 label", "text": "Title 1" }, { "tag": "Angle 2 label", "text": "Title 2" }, { "tag": "Angle 3 label", "text": "Title 3" } ] }`);
+        if (aiRes && Array.isArray(aiRes.titles) && aiRes.titles.length >= 3) {
+          threeTitles = aiRes.titles.slice(0, 3);
+        }
+      }
+
+      // Context-aware, soulful human-touch local fallback (exactly 3 tailored titles)
+      if (!threeTitles) {
+        if (isHindi) {
+          if (isDebate) {
+            threeTitles = [
+              { tag: '🔍 Search + Fact Check', text: `${kw} Real Truth: इतिहास और प्रमाण क्या कहते हैं?`.slice(0, 65) },
+              { tag: '🔥 Deep Documentary', text: `${hiCore}: दावे, तथ्य और असली ऐतिहासिक सच`.slice(0, 65) },
+              { tag: '⚡ Balanced Curiosity', text: `${kw} — सिर्फ आस्था या ठोस सबूत? जानें पूरा सच`.slice(0, 65) }
+            ];
+          } else if (cat.id === 'tech') {
+            threeTitles = [
+              { tag: '🎯 Search + Real Test', text: `${kw} Review: लेने से पहले यह असली सच जान लें`.slice(0, 65) },
+              { tag: '🔥 Honest Verdict', text: `${hiCore} ने सब बदल दिया? देखें पूरा रियल टेस्ट`.slice(0, 65) },
+              { tag: '⚡ Smart Comparison', text: `${kw} Worth It? फायदे, कमियाँ और सही फैसला`.slice(0, 65) }
+            ];
+          } else if (cat.id === 'dharma') {
+            threeTitles = [
+              { tag: '🕉️ Search + Scriptural', text: `${kw} का गूढ़ रहस्य: वेद और पुराण क्या कहते हैं?`.slice(0, 65) },
+              { tag: '🔥 Devotional Story', text: `${hiCore} की अद्भुत कहानी जो बहुत कम लोग जानते हैं`.slice(0, 65) },
+              { tag: '⚡ Authentic Proof', text: `${kw} Origin: सनातन परंपरा का सबसे पुराना प्रमाण`.slice(0, 65) }
+            ];
+          } else if (cat.id === 'science') {
+            threeTitles = [
+              { tag: '🔬 Search + Discovery', text: `${kw} Explained: विज्ञान भी इस सच से हैरान है!`.slice(0, 65) },
+              { tag: '🔥 Mind-Bending Hook', text: `${hiCore} के पीछे का असली विज्ञान और अनसुलझे राज़`.slice(0, 65) },
+              { tag: '⚡ Real Physics', text: `कैसे काम करता है ${kw}? आसान भाषा में पूरा सच`.slice(0, 65) }
+            ];
+          } else {
+            threeTitles = [
+              { tag: '🔥 Search + Curiosity', text: `${kw} का अनसुना सच: प्राचीन प्रमाण क्या कहते हैं?`.slice(0, 65) },
+              { tag: '📚 Documentary Tone', text: `${hiCore} की पूरी कहानी: शुरुआत से आज तक का सफर`.slice(0, 65) },
+              { tag: '⚡ Investigative Hook', text: `आखिर ${kw} में क्या छिपा है? देखें चौंकाने वाले तथ्य`.slice(0, 65) }
+            ];
+          }
+        } else {
+          threeTitles = [
+            { tag: '🔥 Search + Curiosity', text: `${kw}: The Real Story Nobody Told You`.slice(0, 65) },
+            { tag: '📚 Documentary Tone', text: `How ${kw} Actually Started — Primary Evidence`.slice(0, 65) },
+            { tag: '⚡ Deep Fact-Check', text: `What Primary Records Reveal About ${kw}`.slice(0, 65) }
+          ];
+        }
+      }
+
+      list.innerHTML = threeTitles.map((f, idx) => `
+        <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 flex items-center justify-between gap-2.5">
           <div class="min-w-0">
-            <span class="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-tertiary/15 text-tertiary">${f.tag}</span>
-            <p class="text-xs font-medium text-white mt-1 break-anywhere">${f.text}</p>
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-tertiary/15 text-tertiary font-bold">${f.tag}</span>
+              <span class="font-mono text-[10px] text-secondary">${f.text.length}c</span>
+            </div>
+            <p class="text-xs sm:text-sm font-semibold text-white mt-1 break-anywhere">${f.text}</p>
           </div>
           <button type="button" onclick="applyGeneratedTitle(${idx})" class="shrink-0 px-3 py-1.5 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-bold">Use</button>
         </div>
       `).join('');
 
-      window.__latestGeneratedTitles = formulas.map(f => f.text);
-      showToast('8 viral title ideas generated!');
+      window.__latestGeneratedTitles = threeTitles.map(f => f.text);
+      showToast('3 human-crafted titles ready!');
     }
 
     function applyGeneratedTitle(idx) {
@@ -3633,40 +4437,86 @@ ${platformNote}`;
     }
 
     function autoGenerateSEODescription(silent) {
-      const kw = (document.getElementById('primaryKeywordInput').value || 'Palam Baoli Inscription').trim();
-      const sec = (document.getElementById('secondaryKeywordsInput').value || 'Primary Evidence, Historical Research').trim();
-      const chapterBlock = appState.chapters.length > 0
-        ? appState.chapters.map(c => `${c.time} ${c.title}`).join('\n')
-        : `00:00 ${kw}: Opening Hook & Context\n02:30 Primary Evidence & Source Breakdown\n06:15 Detailed Analysis & Key Findings\n10:00 Final Verdict & References`;
+      const rawTopic = (document.getElementById('topic-prompt-input').value || document.getElementById('primaryKeywordInput').value || 'Palam Baoli Inscription').trim();
+      const rawKw = (document.getElementById('primaryKeywordInput').value || rawTopic).trim();
+      const { englishKw } = extractCleanCoreTopic(rawKw);
+      const isHindi = /[\u0900-\u097F]/.test(rawTopic) || /[\u0900-\u097F]/.test(rawKw);
+      const kw = englishKw || rawKw.slice(0, 28);
+      const cat = CATEGORY_ALGORITHMS[appState.activeCategory] || CATEGORY_ALGORITHMS.history;
 
-      const cleanTag = kw.replace(/[^a-zA-Z0-9\u0900-\u097F]/g, '');
-      const secList = sec.split(',').map(s => s.trim()).filter(Boolean);
-      const secBullets = secList.slice(0, 4).map(s => `• ${s} — verified breakdown & primary context`).join('\n');
-      const template = `${kw} — Discover the verified facts, primary sources, and untold insights behind ${kw} in this complete breakdown. Covering ${sec}, this video separates real evidence from popular myths so you get the full, accurate picture in one place.
+      const fbLink = (document.getElementById('socialFbInput')?.value || '').trim() || 'https://facebook.com/yourpage';
+      const xLink = (document.getElementById('socialXInput')?.value || '').trim() || 'https://x.com/yourhandle';
+      const igLink = (document.getElementById('socialIgInput')?.value || '').trim() || 'https://instagram.com/yourhandle';
 
-If you are searching for ${kw} explained clearly with step-by-step visual proof, make sure to watch till the final chapter and share your thoughts in the comments!
+      const shortHashtag = '#' + kw.split(/\s+/).slice(0, 2).join('').replace(/[^a-zA-Z0-9]/g, '');
+      const catTags = cat.hashtags.split(/\s+/).slice(0, 3).join(' ');
 
-⏱️ Video Chapters & Timestamps:
-${chapterBlock}
+      const template = isHindi
+        ? `${kw} History & Real Facts (${rawTopic}) — इस वीडियो में हम ${kw} से जुड़े ऐतिहासिक तथ्यों, प्राचीन ग्रंथों और प्रामाणिक स्रोतों के आधार पर इस पूरे विषय को सरल और निष्पक्ष ढंग से समझेंगे।
 
-📌 What You Will Learn in This Video:
-• Complete background and primary context of ${kw}
-${secBullets || `• Detailed analysis of ${sec}`}
-• Side-by-side comparison of popular claims vs. verified evidence
-• Key takeaways and reference summary for deeper research
+अक्सर सोशल मीडिया पर अधूरी जानकारी के कारण भ्रम फैलता है, इसलिए हमने सभी प्रमुख पहलुओं और स्रोतों को एक साथ रखा है ताकि आप खुद सही निष्कर्ष पर पहुंच सकें। वीडियो को अंत तक देखें और अपनी राय कमेंट में जरूर साझा करें।
 
-🔎 Related Topics Covered:
-${kw}, ${sec}
+📌 इस वीडियो में मुख्य चर्चा:
+• ${kw} Origin और वास्तविक ऐतिहासिक शुरुआत
+• प्रचलित मान्यताओं और लिखित प्रमाणों की तुलनात्मक पड़ताल
+• शोध और संदर्भों के आधार पर स्पष्ट निष्कर्ष
 
-#${cleanTag || 'YouTubeSEO'} ${(CATEGORY_ALGORITHMS[appState.activeCategory] || CATEGORY_ALGORITHMS.history).hashtags}`;
+❤️ हमारे शोध और काम को सपोर्ट करें:
+अगर आपको हमारा यह प्रयास और गहन शोध पसंद आता है, तो वीडियो को लाइक व शेयर करें। आप **Super Thanks** के माध्यम से हमारा सहयोग कर सकते हैं या चैनल के **Join बटन** से जुड़कर हमारे परिवार का हिस्सा बन सकते हैं। आपका हर छोटा सहयोग हमें ऐसे ही प्रामाणिक वीडियो बनाने की प्रेरणा देता है।
+
+🌐 हमसे जुड़ें (Follow Us):
+• Facebook: ${fbLink}
+• X (Twitter): ${xLink}
+• Instagram: ${igLink}
+
+${shortHashtag.length > 2 ? shortHashtag : '#HindiDocumentary'} ${catTags}`
+        : `${kw} — In this video, we examine the primary sources, historical context, and verified records behind ${kw} so you get a clear, evidence-based picture in one place.
+
+Instead of repeating surface-level claims, this breakdown looks closely at documented timelines and original references. Watch through the end and share your perspective in the comments below.
+
+📌 Key Highlights:
+• Clear background and documented origin of ${kw}
+• Popular claims compared side by side with primary evidence
+• Key takeaways and reference context for further reading
+
+❤️ Support Our Research & Work:
+If you value independent research and authentic content, please like, share, and subscribe. You can also support us directly via **Super Thanks** or become a member by clicking the **Join button** on our channel!
+
+🌐 Connect With Us:
+• Facebook: ${fbLink}
+• X (Twitter): ${xLink}
+• Instagram: ${igLink}
+
+${shortHashtag.length > 2 ? shortHashtag : '#Documentary'} ${catTags}`;
 
       document.getElementById('videoDescInput').value = template;
       runLiveSEOAudit();
       if (!silent) showToast('Smart SEO Description generated!');
     }
 
+    function saveSocialLinksAndRefresh() {
+      try {
+        localStorage.setItem('yt_seo_ssiro_fb', document.getElementById('socialFbInput').value || '');
+        localStorage.setItem('yt_seo_ssiro_x', document.getElementById('socialXInput').value || '');
+        localStorage.setItem('yt_seo_ssiro_ig', document.getElementById('socialIgInput').value || '');
+      } catch (e) {}
+      autoGenerateSEODescription(true);
+    }
+
+    function loadSavedSocialLinks() {
+      try {
+        const fb = localStorage.getItem('yt_seo_ssiro_fb');
+        const x = localStorage.getItem('yt_seo_ssiro_x');
+        const ig = localStorage.getItem('yt_seo_ssiro_ig');
+        if (fb && document.getElementById('socialFbInput')) document.getElementById('socialFbInput').value = fb;
+        if (x && document.getElementById('socialXInput')) document.getElementById('socialXInput').value = x;
+        if (ig && document.getElementById('socialIgInput')) document.getElementById('socialIgInput').value = ig;
+      } catch (e) {}
+    }
+
     function injectSmartHashtags() {
-      const kw = (document.getElementById('primaryKeywordInput').value || 'Documentary').trim().replace(/[^a-zA-Z0-9]/g, '');
+      const rawK = (document.getElementById('primaryKeywordInput').value || 'Documentary').trim();
+      const kw = extractCleanCoreTopic(rawK).englishKw.replace(/[^a-zA-Z0-9]/g, '');
       const descEl = document.getElementById('videoDescInput');
       const tagsToAdd = `\n\n#${kw || 'VideoTopic'} #Documentary #DeepDive #Explained #Research`;
       if (!descEl.value.includes('#' + kw)) {
@@ -3678,7 +4528,8 @@ ${kw}, ${sec}
 
     // ==================== TAGS & KEYWORDS ====================
     function generateKeywordResearchMatrix(silent) {
-      const seed = (document.getElementById('seedKeywordExplorerInput').value || document.getElementById('primaryKeywordInput').value || 'Palam Baoli Inscription').trim();
+      const rawSeed = (document.getElementById('seedKeywordExplorerInput').value || document.getElementById('primaryKeywordInput').value || '').trim();
+      const seed = rawSeed ? extractCleanCoreTopic(rawSeed).englishKw : 'YouTube Topic';
       const secRaw = (document.getElementById('secondaryKeywordsInput').value || '').split(',').map(s => s.trim()).filter(Boolean);
 
       const generated = [
@@ -3912,7 +4763,7 @@ ${kw}, ${sec}
     function updateCtrSimulator() {
       const title = (document.getElementById('videoTitleInput').value || 'Enter your video title').trim();
       const desc = (document.getElementById('videoDescInput').value || '').trim();
-      const rawHook = (document.getElementById('thumbOverlayHeadline').value || '1276 ई. का रहस्य! | असली ऐतिहासिक प्रमाण').trim();
+      const rawHook = (document.getElementById('thumbOverlayHeadline').value || 'YOUR HOOK | REAL PROOF').trim();
       const { line1, line2 } = splitHookIntoTwoLines(rawHook);
       const badge = (document.getElementById('thumbOverlayBadge').value || 'PRIMARY PROOF').trim();
       const channel = (document.getElementById('simChannelName').value || 'Chronicle Research').trim();
@@ -4132,20 +4983,29 @@ ${kw}, ${sec}
     }
 
     function generateFullAutomationScript(silent) {
-      const kw = (document.getElementById('primaryKeywordInput').value || 'Palam Baoli Inscription').trim();
-      const sec = (document.getElementById('secondaryKeywordsInput').value || 'Primary Evidence').split(',')[0].trim();
+      const rawTopic = (document.getElementById('topic-prompt-input').value || '').trim();
+      const rawKw = (document.getElementById('primaryKeywordInput').value || rawTopic || 'Your Topic').trim();
+      const { core, englishKw } = extractCleanCoreTopic(rawTopic || rawKw);
+      const isHindi = /[\u0900-\u097F]/.test(rawTopic) || /[\u0900-\u097F]/.test(rawKw);
+      const topicLabel = isHindi ? (core || rawTopic) : (englishKw || rawKw);
 
-      const script = `Almost everything repeated online about ${kw} leaves out one crucial piece of primary evidence. Today, we examine the exact record of ${kw} and ${sec} to uncover what was preserved in the original sources.
+      const script = isHindi
+        ? `${topicLabel} को लेकर इंटरनेट पर कई तरह के दावे किए जाते हैं—लेकिन जब हम मूल स्रोतों और तथ्यों को करीब से देखते हैं, तो पूरी तस्वीर बदल जाती है।
 
-To understand why ${kw} matters, look closely at the historical environment in which it was created and how the primary documentation records ${sec}.
+इस वीडियो में हम बिना किसी पक्षपात के, बिल्कुल आसान भाषा में समझेंगे कि ${topicLabel} की वास्तविक शुरुआत कहाँ से हुई और इसके पीछे के ठोस प्रमाण क्या कहते हैं।
 
-When we compare the original lines of ${kw} against popular secondary accounts, three major insights stand out immediately. Let us know your thoughts in the comments below.`;
+सबसे पहले उस मुख्य सवाल पर नज़र डालते हैं जिसे लेकर लोगों में सबसे ज़्यादा भ्रम रहता है, और फिर एक-एक करके सभी पहलुओं को परखते हैं।`
+        : `Most discussions around ${topicLabel} skip the primary record that explains how everything actually started.
+
+In this breakdown, we look past surface-level claims and examine the verified timeline, context, and evidence behind ${topicLabel} step by step.
+
+By connecting the original sources directly, you get the complete, unbiased picture in one clear narrative.`;
 
       document.getElementById('scriptAnalyzerTextarea').value = script;
       calculateScriptMetrics();
       buildSceneBySceneStoryboard(true);
       buildHumanVoiceoverPackage(true);
-      if (!silent) showToast('New Script & Scene Video Prompts generated!');
+      if (!silent) showToast('Human-style script & scene prompts generated!');
     }
 
     function calculateScriptMetrics() {
