@@ -483,13 +483,33 @@
 
       <!-- ==================== INLINE API KEY QUICK-CONNECT BAR + MASTER VIDEO TOPIC INPUT ==================== -->
       <section class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
-        <!-- Quick Inline Gemini API Key Bar (So user can paste their key right on the main screen without hunting!) -->
-        <div class="p-3 rounded-xl bg-surface-container-lowest border border-tertiary/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <!-- Compact AI Status + Limit Bar (Shown once API Key is connected — zero password dots clutter!) -->
+        <div id="aiKeyCompactStatusBar" class="hidden px-3 py-2 rounded-xl bg-surface-container-lowest border border-secondary/35 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <button type="button" onclick="toggleAiKeySetupBar()" title="Manage / Change API Key" class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-on-surface-variant hover:text-white flex items-center justify-center shrink-0 transition">
+              <span class="material-symbols-outlined text-[16px]">settings</span>
+            </button>
+            <button type="button" onclick="forceAppUpdate()" title="Check & Install Latest App Update" class="px-2 py-1 rounded-lg bg-tertiary/15 hover:bg-tertiary/25 border border-tertiary/40 text-tertiary font-mono text-[10px] font-bold flex items-center gap-1 shrink-0 transition">
+              <span class="material-symbols-outlined text-[14px]">system_update</span>
+              <span>Update</span>
+            </button>
+            <div class="flex items-center gap-1.5 min-w-0">
+              <span class="w-2 h-2 rounded-full bg-secondary animate-pulse shrink-0"></span>
+              <span id="aiCompactStatusLabel" class="font-mono text-[11px] font-bold text-secondary truncate">Gemini AI Active</span>
+            </div>
+          </div>
+          <span id="aiDailyUsageBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 whitespace-nowrap shrink-0">
+            Calls Today: 0 / 1,500
+          </span>
+        </div>
+
+        <!-- Inline Gemini API Key Setup Bar (Auto-hides once key is connected) -->
+        <div id="aiKeySetupBar" class="p-3 rounded-xl bg-surface-container-lowest border border-tertiary/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <div class="flex items-center gap-2 min-w-0">
             <span class="material-symbols-outlined text-tertiary text-[18px] shrink-0">bolt</span>
             <div class="min-w-0">
               <span class="font-mono text-[11px] font-bold text-white block truncate">Live Gemini AI Engine (Google AI Studio Free Key)</span>
-              <span id="inlineApiStatusSub" class="text-[11px] text-outline block truncate">Paste your Gemini API Key to fetch live AI research, titles, tags, scripts &amp; A/B/C/D prompts</span>
+              <span id="inlineApiStatusSub" class="text-[11px] text-outline block truncate">Paste your Gemini API Key to enable live Google Search &amp; AI research</span>
             </div>
           </div>
           <div class="flex items-center gap-2 shrink-0">
@@ -2519,6 +2539,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
     // ==================== AUTO STORAGE CLEANER & FRESH WORKSPACE ====================
     const ESSENTIAL_STORAGE_KEYS = new Set([
       'yt_seo_ssrio_gemini_key',
+      'yt_seo_ssiro_ai_usage',
       'yt_seo_ssrio_gemini_model',
       'yt_seo_ssiro_fb',
       'yt_seo_ssiro_x',
@@ -2785,28 +2806,74 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       if (m) m.classList.toggle('hidden');
     }
 
+
+    // ==================== 1-TAP IN-APP LIVE UPDATE (NO UNINSTALL NEEDED) ====================
+    async function forceAppUpdate() {
+      showToast('Checking GitHub for latest app update...');
+      try {
+        if ('caches' in window) {
+          const names = await caches.keys();
+          await Promise.all(names.map(n => caches.delete(n)));
+        }
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const r of regs) {
+            await r.update().catch(() => {});
+          }
+        }
+      } catch (e) {}
+      const cleanUrl = window.location.origin + window.location.pathname + '?updated=' + Date.now();
+      window.location.replace(cleanUrl);
+    }
+
+    function toggleAiKeySetupBar() {
+      const setupBar = document.getElementById('aiKeySetupBar');
+      if (setupBar) setupBar.classList.toggle('hidden');
+    }
+
+    function getTodayUsageCount(increment) {
+      const todayStr = new Date().toISOString().slice(0, 10);
+      let count = 0;
+      try {
+        const raw = JSON.parse(localStorage.getItem('yt_seo_ssiro_ai_usage') || '{}');
+        if (raw.date === todayStr) count = Number(raw.count || 0);
+        if (increment) {
+          count += 1;
+          localStorage.setItem('yt_seo_ssiro_ai_usage', JSON.stringify({ date: todayStr, count }));
+        }
+      } catch (e) {}
+      const badgeEl = document.getElementById('aiDailyUsageBadge');
+      if (badgeEl) badgeEl.textContent = `Calls Today: ${count} / 1,500`;
+      return count;
+    }
+
     function updateEngineBadgeUI(isLiveAi) {
       const badge = document.getElementById('engineBadgeHeader');
       const statusText = document.getElementById('apiModalStatusText');
       const inlineSub = document.getElementById('inlineApiStatusSub');
+      const setupBar = document.getElementById('aiKeySetupBar');
+      const compactBar = document.getElementById('aiKeyCompactStatusBar');
+      const compactLabel = document.getElementById('aiCompactStatusLabel');
       if (isLiveAi) {
+        if (setupBar) setupBar.classList.add('hidden');
+        if (compactBar) compactBar.classList.remove('hidden');
+        if (compactLabel) compactLabel.textContent = `Gemini AI Active (${appState.geminiModel || '2.5-flash'})`;
+        getTodayUsageCount(false);
         if (badge) {
           badge.textContent = '⚡ GEMINI AI LIVE';
-          badge.className = 'cursor-pointer font-mono text-[9px] sm:text-[10px] px-2 py-0.5 rounded-md bg-tertiary/20 text-tertiary border border-tertiary/40 font-bold whitespace-nowrap';
+          badge.className = 'hidden sm:inline-block cursor-pointer font-mono text-[10px] px-2 py-0.5 rounded-md bg-tertiary/20 text-tertiary border border-tertiary/40 font-bold whitespace-nowrap';
         }
         if (statusText) statusText.textContent = '✓ Connected to Live Gemini AI (' + appState.geminiModel + ')';
-        if (inlineSub) {
-          inlineSub.textContent = '✓ Live Gemini AI Active! Clicking Generate fetches real-time AI research, scripts & Hindi/Hinglish/English prompts.';
-          inlineSub.className = 'text-[11px] text-secondary font-semibold block truncate';
-        }
       } else {
+        if (setupBar) setupBar.classList.remove('hidden');
+        if (compactBar) compactBar.classList.add('hidden');
         if (badge) {
           badge.textContent = 'SMART ENGINE';
-          badge.className = 'cursor-pointer font-mono text-[9px] sm:text-[10px] px-2 py-0.5 rounded-md bg-secondary/15 text-secondary border border-secondary/30 font-bold whitespace-nowrap';
+          badge.className = 'hidden sm:inline-block cursor-pointer font-mono text-[10px] px-2 py-0.5 rounded-md bg-secondary/15 text-secondary border border-secondary/30 font-bold whitespace-nowrap';
         }
-        if (statusText) statusText.textContent = 'Using Smart Built-in Engine (Add Key for Live AI)';
+        if (statusText) statusText.textContent = 'Using Built-in Smart Engine (Free • No Key Needed)';
         if (inlineSub) {
-          inlineSub.textContent = 'Paste your Gemini API Key to fetch live AI research, titles, tags, scripts & A/B/C/D prompts';
+          inlineSub.textContent = 'Paste your Gemini API Key to enable live Google Search & AI research';
           inlineSub.className = 'text-[11px] text-outline block truncate';
         }
       }
@@ -2820,7 +2887,8 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       }
       document.getElementById('geminiApiKeyInput').value = val;
       appState.geminiApiKey = val;
-      try { localStorage.setItem('yt_seo_ssrio_gemini_key', val); } catch (e) {}
+      try { localStorage.setItem('yt_seo_ssrio_gemini_key',
+      'yt_seo_ssiro_ai_usage', val); } catch (e) {}
       updateEngineBadgeUI(true);
       showToast('⚡ Gemini API Key connected! Click "Generate Complete Pack" to run live AI research.');
     }
@@ -2833,7 +2901,8 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       const inlineEl = document.getElementById('inlineGeminiKeyInput');
       if (inlineEl) inlineEl.value = val;
       try {
-        if (val) localStorage.setItem('yt_seo_ssrio_gemini_key', val);
+        if (val) localStorage.setItem('yt_seo_ssrio_gemini_key',
+      'yt_seo_ssiro_ai_usage', val);
         else localStorage.removeItem('yt_seo_ssrio_gemini_key');
         localStorage.setItem('yt_seo_ssrio_gemini_model', mod);
       } catch (e) {}
@@ -2883,28 +2952,53 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
     async function callGeminiJsonAPI(promptText) {
       if (!appState.geminiApiKey) return null;
       const modelsToTry = [appState.geminiModel || 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+      let lastErrMsg = '';
       for (const modelName of modelsToTry) {
-        try {
-          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
-          const res = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: promptText }] }],
-              generationConfig: { responseMimeType: 'application/json' }
-            })
-          });
-          if (res.ok) {
-            const data = await res.json();
-            const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (rawText) {
-              const cleaned = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
-              return JSON.parse(cleaned);
-            }
+        // First attempt: Live Google Search Grounding enabled (searches real web & YouTube competitors!)
+        const attempts = [
+          {
+            contents: [{ parts: [{ text: promptText + '\n\nIMPORTANT: Return ONLY valid raw JSON (no markdown fences, no commentary).' }] }],
+            tools: [{ google_search: {} }]
+          },
+          {
+            contents: [{ parts: [{ text: promptText }] }],
+            generationConfig: { responseMimeType: 'application/json' }
           }
-        } catch (err) {
-          // Try next model in fallback chain
+        ];
+        for (const bodyObj of attempts) {
+          try {
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(bodyObj)
+            });
+            if (res.ok) {
+              const data = await res.json();
+              const parts = data?.candidates?.[0]?.content?.parts || [];
+              const rawText = parts.map(pt => pt.text || '').join('\n').trim();
+              if (rawText) {
+                const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+                const toParse = jsonMatch ? jsonMatch[0] : rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+                const parsed = JSON.parse(toParse);
+                getTodayUsageCount(true);
+                return parsed;
+              }
+            } else {
+              const errJson = await res.json().catch(() => ({}));
+              lastErrMsg = errJson?.error?.message || `HTTP ${res.status}`;
+            }
+          } catch (err) {
+            lastErrMsg = err?.message || 'Network/Parse error';
+          }
         }
+      }
+      if (lastErrMsg) {
+        const subEl = document.getElementById('inlineApiStatusSub');
+        if (subEl) subEl.textContent = `⚠️ Gemini API Error: ${lastErrMsg.slice(0, 90)}`;
+        const cLbl = document.getElementById('aiCompactStatusLabel');
+        if (cLbl) cLbl.textContent = `⚠️ API Error: ${lastErrMsg.slice(0, 40)}`;
+        showToast(`Gemini API Error: ${lastErrMsg.slice(0, 70)}`);
       }
       return null;
     }
@@ -3104,7 +3198,8 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       if (inlineKey && !appState.geminiApiKey) {
         appState.geminiApiKey = inlineKey;
         document.getElementById('geminiApiKeyInput').value = inlineKey;
-        try { localStorage.setItem('yt_seo_ssrio_gemini_key', inlineKey); } catch (e) {}
+        try { localStorage.setItem('yt_seo_ssrio_gemini_key',
+      'yt_seo_ssiro_ai_usage', inlineKey); } catch (e) {}
         updateEngineBadgeUI(true);
       }
 
@@ -3172,25 +3267,25 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       let usedLiveGemini = false;
       if (appState.geminiApiKey) {
         const aiPayload = await callGeminiJsonAPI(`You are an expert YouTube SEO strategist, documentary scriptwriter, and thumbnail art director.
-Analyze this video topic deeply for the YouTube category "${activeCat.name}": "${rawCmd}".\nMatch the exact tone, vocabulary, hashtags, and thumbnail visual style of ${activeCat.name} (${activeCat.voiceTone}).
-Return a valid JSON object with the following exact keys:
+Analyze this YouTube video topic deeply using live Google Search to check what top-ranking competitor videos and real viewer search queries exist for: "${rawCmd}".
+Category: "${activeCat.name}" (${activeCat.voiceTone}).
+Write everything with genuine human emotion, curiosity, and real storytelling—NEVER use robotic templates or keyword stuffing.
+Return a valid JSON object with these exact keys:
 {
-  "primaryKeyword": "Clean 2-3 word English/Roman searchable keyword (ALWAYS in English/Roman script even if topic is Hindi, e.g. Chhath Puja History)",
-  "secondaryKeywords": "6 comma-separated English/Roman YouTube search keywords (how Indian viewers search in English)",
-  "title": "Human-sounding high-CTR YouTube title (48-62 chars) with the English primaryKeyword placed first for search + natural Hindi/English curiosity hook",
-  "hookHindi1": "Ultra-catchy curiosity/mystery Hindi Devanagari thumbnail hook separated by | (strictly 2-3 short punchy words per part, evokes mystery/shock/curiosity for the category)",
-  "hookHindi2": "Second distinct 2-part pure Hindi Devanagari thumbnail title separated by | (strictly 2-3 punchy words per part)",
-  "hookHinglish": "2-part catchy Hinglish (Hindi in Roman script) thumbnail title separated by | (strictly 2-3 punchy words per part, uppercase)",
-  "hookEnglish": "2-part pure English thumbnail title separated by | (strictly 2-3 punchy words per part, uppercase)",
-  "tags": ["array of 14 high-search YouTube tags strictly in English/Roman script matching how viewers search"],
-  "chapters": [
-    {"time": "00:00", "title": "Chapter 1 title"},
-    {"time": "02:15", "title": "Chapter 2 title"},
-    {"time": "05:30", "title": "Chapter 3 title"},
-    {"time": "08:45", "title": "Chapter 4 title"},
-    {"time": "12:10", "title": "Chapter 5 title"}
+  "primaryKeyword": "Clean 2-3 word English/Roman searchable keyword (ALWAYS English/Roman script even if topic is Hindi, e.g. Ravan 10 Heads Mystery)",
+  "secondaryKeywords": "6 comma-separated high-search English/Roman YouTube search phrases",
+  "title": "Best researched, human-crafted high-CTR YouTube title (48-62 chars, same language as topic, natural curiosity + English keyword, zero robotic brackets)",
+  "threeTitles": [
+    {"tag": "Curiosity / Mystery", "text": "Compelling human-written title 1 (48-62 chars)"},
+    {"tag": "Story / Documentary", "text": "Compelling human-written title 2 (48-62 chars)"},
+    {"tag": "Debate / Fact-Check", "text": "Compelling human-written title 3 (48-62 chars)"}
   ],
-  "script": "A rich, deeply researched 5-paragraph documentary voiceover script (separated by double newlines) explaining the topic with primary facts and engaging storytelling."
+  "hookHindi1": "Ultra-catchy curiosity/mystery Hindi Devanagari thumbnail hook separated by | (strictly 2-3 punchy words per part)",
+  "hookHindi2": "Second distinct Hindi Devanagari thumbnail hook separated by | (strictly 2-3 punchy words per part)",
+  "hookHinglish": "Catchy Hinglish thumbnail hook separated by | (strictly 2-3 punchy words per part, uppercase)",
+  "hookEnglish": "Pure English thumbnail hook separated by | (strictly 2-3 punchy words per part, uppercase)",
+  "tags": ["array of 14 high-search YouTube tags strictly in English/Roman script"],
+  "script": "A deeply researched, human-sounding 4-paragraph documentary voiceover script (separated by double newlines) in the topic's language with real facts and emotional storytelling."
 }`);
         if (aiPayload) {
           usedLiveGemini = true;
@@ -3201,6 +3296,26 @@ Return a valid JSON object with the following exact keys:
           }
           if (aiPayload.secondaryKeywords) {
             document.getElementById('secondaryKeywordsInput').value = aiPayload.secondaryKeywords;
+          }
+          if (Array.isArray(aiPayload.threeTitles) && aiPayload.threeTitles.length >= 3) {
+            const cBox = document.getElementById('generatedTitlesContainer');
+            const cList = document.getElementById('generatedTitlesList');
+            if (cBox && cList) {
+              cBox.classList.remove('hidden');
+              window.__latestGeneratedTitles = aiPayload.threeTitles.slice(0, 3).map(t => t.text);
+              cList.innerHTML = aiPayload.threeTitles.slice(0, 3).map((f, idx) => `
+                <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 flex items-center justify-between gap-2.5">
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <span class="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-tertiary/15 text-tertiary font-bold">${f.tag}</span>
+                      <span class="font-mono text-[10px] text-secondary">${(f.text || '').length}c</span>
+                    </div>
+                    <p class="text-xs sm:text-sm font-semibold text-white mt-1 break-anywhere">${f.text}</p>
+                  </div>
+                  <button type="button" onclick="applyGeneratedTitle(${idx})" class="shrink-0 px-3 py-1.5 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-bold">Use</button>
+                </div>
+              `).join('');
+            }
           }
           if (aiPayload.title) {
             document.getElementById('videoTitleInput').value = aiPayload.title.slice(0, 99);
