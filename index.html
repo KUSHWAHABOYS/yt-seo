@@ -7,7 +7,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v1.3 | Live Gemini AI YouTube SEO, Thumbnail, Scene Video &amp; Voice Studio</title>
+  <title>YT SEO — Powered by SSIRO • v1.4 | Live Gemini AI YouTube SEO, Thumbnail, Scene Video &amp; Voice Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -2799,7 +2799,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
           localStorage.setItem('yt_seo_ssrio_gemini_model', 'gemini-2.5-flash');
           appState.geminiModel = 'gemini-2.5-flash';
         }
-        if (savedKey) {
+        if (savedKey && savedKey !== 'yt_seo_ssiro_ai_usage') {
           appState.geminiApiKey = savedKey;
           document.getElementById('geminiApiKeyInput').value = savedKey;
           document.getElementById('inlineGeminiKeyInput').value = savedKey;
@@ -2809,6 +2809,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       } catch (e) {}
 
       initThemeMode();
+      if (window.location.search.includes('updated=')) { setTimeout(() => showToast(`✅ App Updated Successfully to ${CURRENT_APP_VERSION}!`), 500); }
       initPinLock();
       loadSavedSocialLinks();
       autoCleanUnusedStorage();
@@ -2826,8 +2827,10 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
 
 
     // ==================== 1-TAP IN-APP LIVE UPDATE (NO UNINSTALL NEEDED) ====================
+    const CURRENT_APP_VERSION = 'v1.4';
+
     async function forceAppUpdate() {
-      showToast('Fetching latest version from GitHub...');
+      showToast('Checking GitHub for new update...');
       try {
         if ('caches' in window) {
           const names = await caches.keys();
@@ -2839,9 +2842,18 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
             await r.unregister().catch(() => {});
           }
         }
-        await fetch(window.location.pathname + '?nocache=' + Date.now(), { cache: 'no-store' }).catch(() => {});
+        const res = await fetch(window.location.pathname + '?nocache=' + Date.now(), { cache: 'no-store' });
+        if (res.ok) {
+          const htmlText = await res.text();
+          const m = htmlText.match(/Powered by SSIRO\s*•\s*(v[0-9.]+)/i);
+          const remoteVer = m ? m[1] : '';
+          if (remoteVer && remoteVer === CURRENT_APP_VERSION) {
+            showToast(`ℹ️ Already on latest (${CURRENT_APP_VERSION}). If just uploaded, wait 30s & try again.`);
+            return;
+          }
+        }
       } catch (e) {}
-      const cleanUrl = window.location.origin + window.location.pathname + '?v=' + Date.now();
+      const cleanUrl = window.location.origin + window.location.pathname + '?updated=' + Date.now();
       window.location.replace(cleanUrl);
     }
 
@@ -2906,8 +2918,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       }
       document.getElementById('geminiApiKeyInput').value = val;
       appState.geminiApiKey = val;
-      try { localStorage.setItem('yt_seo_ssrio_gemini_key',
-      'yt_seo_ssiro_ai_usage', val); } catch (e) {}
+      try { localStorage.setItem('yt_seo_ssrio_gemini_key', val); } catch (e) {}
       updateEngineBadgeUI(true);
       showToast('⚡ Gemini API Key connected! Click "Generate Complete Pack" to run live AI research.');
     }
@@ -2920,8 +2931,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       const inlineEl = document.getElementById('inlineGeminiKeyInput');
       if (inlineEl) inlineEl.value = val;
       try {
-        if (val) localStorage.setItem('yt_seo_ssrio_gemini_key',
-      'yt_seo_ssiro_ai_usage', val);
+        if (val) localStorage.setItem('yt_seo_ssrio_gemini_key', val);
         else localStorage.removeItem('yt_seo_ssrio_gemini_key');
         localStorage.setItem('yt_seo_ssrio_gemini_model', mod);
       } catch (e) {}
@@ -3276,8 +3286,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       if (inlineKey && !appState.geminiApiKey) {
         appState.geminiApiKey = inlineKey;
         document.getElementById('geminiApiKeyInput').value = inlineKey;
-        try { localStorage.setItem('yt_seo_ssrio_gemini_key',
-      'yt_seo_ssiro_ai_usage', inlineKey); } catch (e) {}
+        try { localStorage.setItem('yt_seo_ssrio_gemini_key', inlineKey); } catch (e) {}
         updateEngineBadgeUI(true);
       }
 
