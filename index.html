@@ -285,7 +285,7 @@
             <select id="geminiModelSelect" class="w-full bg-surface-container border border-outline-variant/50 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
               <option value="gemini-2.5-flash">⚡ gemini-2.5-flash (Recommended • Fast + Google Search Grounding)</option>
               <option value="gemini-2.0-flash">🚀 gemini-2.0-flash (High-Speed Free Tier)</option>
-              <option value="gemini-1.5-flash">💎 gemini-1.5-flash (Universal Compatibility)</option>
+              <option value="gemini-2.5-flash-lite">⚡ gemini-2.5-flash-lite (Fast Free Tier)</option>
             </select>
           </div>
 
@@ -923,52 +923,16 @@
 
       <!-- ==================== STEP 3: CHATGPT & GEMINI PHOTOSHOP-GRADE A/B/C/D THUMBNAIL PROMPTS (2 HINDI, 1 HINGLISH, 1 ENGLISH + REF IMAGE RULE) ==================== -->
       <section id="tab-prompts" class="tab-panel hidden space-y-5">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5">
-          <!-- Left 5 Cols: Live Khand Bold + Yellow/White Thumbnail Preview -->
-          <div class="lg:col-span-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="font-mono text-[11px] uppercase tracking-wider text-tertiary font-bold flex items-center gap-1">
-                <span class="material-symbols-outlined text-[15px]">preview</span>
-                Live Khand Bold Preview (16:9)
-              </span>
-              <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant">
-                Khand Bold • #FFD700 + #FFFFFF
-              </span>
-            </div>
-
-            <div class="relative aspect-video w-full rounded-xl overflow-hidden bg-black border-2 border-tertiary/40 shadow-2xl select-none">
-              <canvas id="thumbMockupCanvas" width="1280" height="720" class="w-full h-full object-cover block"></canvas>
-              <div class="sr-only">
-                <span id="livePromptCardBadge">CONCEPT A • HINDI</span>
-                <p id="liveKhandLine1">1276 ई. का रहस्य!</p>
-                <p id="liveKhandLine2">असली ऐतिहासिक प्रमाण</p>
-              </div>
-            </div>
-
-            <!-- Quick Preview Switcher for A / B / C / D Mockups -->
-            <div class="grid grid-cols-4 gap-1.5 pt-1">
-              <button type="button" id="mockupBtnA" onclick="previewConceptTitleOnCanvas('A')" class="mockup-switch-btn px-2 py-1.5 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-bold">A: Hindi 1</button>
-              <button type="button" id="mockupBtnB" onclick="previewConceptTitleOnCanvas('B')" class="mockup-switch-btn px-2 py-1.5 rounded-lg bg-surface-container text-white font-mono text-[10px]">B: Hindi 2</button>
-              <button type="button" id="mockupBtnC" onclick="previewConceptTitleOnCanvas('C')" class="mockup-switch-btn px-2 py-1.5 rounded-lg bg-surface-container text-white font-mono text-[10px]">C: Hinglish</button>
-              <button type="button" id="mockupBtnD" onclick="previewConceptTitleOnCanvas('D')" class="mockup-switch-btn px-2 py-1.5 rounded-lg bg-surface-container text-white font-mono text-[10px]">D: English</button>
-            </div>
-
-            <!-- Reference Photo Upload + Download Mockup PNG -->
-            <div class="flex flex-wrap items-center gap-2 pt-1">
-              <label class="flex-1 min-w-[140px] cursor-pointer flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/60 text-xs font-mono font-bold text-white transition">
-                <span class="material-symbols-outlined text-[16px] text-tertiary">add_photo_alternate</span>
-                <span>Upload Ref Photo(s)</span>
-                <input id="refMockupUpload" type="file" accept="image/*" multiple onchange="handleRefMockupUpload(event)" class="hidden" />
-              </label>
-              <button type="button" onclick="downloadThumbMockupPNG()" class="flex-1 min-w-[150px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-secondary/20 hover:bg-secondary/30 border border-secondary/40 text-xs font-mono font-bold text-secondary transition">
-                <span class="material-symbols-outlined text-[16px]">download</span>
-                <span>Download Mockup PNG</span>
-              </button>
-            </div>
+          <div class="hidden">
+            <canvas id="thumbMockupCanvas" width="1280" height="720"></canvas>
+            <span id="livePromptCardBadge"></span>
+            <p id="liveKhandLine1"></p>
+            <p id="liveKhandLine2"></p>
+            <input id="promptTopicSubject" type="hidden" value="" />
           </div>
-
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5">
           <!-- Right 7 Cols: 4 Title Hooks (2 Hindi, 1 Hinglish, 1 English) + Reference Image Rule -->
-          <div class="lg:col-span-7 flex flex-col justify-between space-y-3.5">
+          <div class="lg:col-span-12 flex flex-col justify-between space-y-3.5">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div>
                 <h2 class="font-display text-base sm:text-lg font-bold text-white">
@@ -1046,6 +1010,23 @@
         </div>
 
         
+                <!-- ==================== TOP NICHE CREATORS & VIRAL THUMBNAIL DNA ==================== -->
+        <div class="bg-surface-container-low border border-secondary/40 rounded-2xl p-4 space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary text-[18px]">trending_up</span>
+              <h3 class="font-display text-sm font-bold text-white">Top Niche Creators &amp; Viral Thumbnail Inspiration</h3>
+            </div>
+            <button type="button" onclick="researchNicheCreatorsForThumbnails()" class="px-3 py-1.5 rounded-xl bg-secondary/20 hover:bg-secondary/30 border border-secondary/40 text-secondary font-mono text-[11px] font-bold flex items-center gap-1.5 transition">
+              <span class="material-symbols-outlined text-[15px]">search</span>
+              <span>Research Top Creators</span>
+            </button>
+          </div>
+          <p id="viralCreatorDnaBox" class="text-xs text-on-surface-variant leading-relaxed">
+            Click <strong>Generate Complete Pack</strong> or <strong>Research Top Creators</strong> to scan top YouTube creators in your selected category and model your A/B/C/D prompts on their viral thumbnail designs.
+          </p>
+        </div>
+
         <div id="aiPromptsCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 
         <!-- ==================== A/B/C/D THUMBNAIL CTR SCORER & RANKER (#1 - #4) ==================== -->
@@ -2227,6 +2208,8 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
     const appState = {
       activeTab: 'audit',
       activeCategory: 'history',
+      creatorThumbDna: '',
+      creatorScenes: { A: '', B: '', C: '', D: '' },
       geminiApiKey: '',
       geminiModel: 'gemini-2.5-flash',
       activeTags: [],
@@ -2378,7 +2361,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
             uploadedRefImages.push(img);
             loaded++;
             if (loaded === Math.min(files.length, 3)) {
-              renderThumbMockupCanvas(activeMockupConcept);
+              
               showToast(`${uploadedRefImages.length} Reference photo(s) placed into Mockup!`);
             }
           };
@@ -2585,6 +2568,10 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       appState.generatedKeywordPool = [];
       appState.scenesList = [];
       appState.customThumbDataUrl = null;
+      appState.creatorThumbDna = '';
+      appState.creatorScenes = { A: '', B: '', C: '', D: '' };
+      const dnaB = document.getElementById('viralCreatorDnaBox');
+      if (dnaB) dnaB.textContent = 'Click Generate Complete Pack or Research Top Creators to scan top YouTube creators in your selected category and model your A/B/C/D prompts on their viral thumbnail designs.';
       uploadedRefImages = [];
       window.__latestGeneratedTitles = [];
 
@@ -2615,7 +2602,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       calculateScriptMetrics();
       runLiveSEOAudit();
       updateCtrSimulator();
-      renderThumbMockupCanvas('A');
+      
       autoCleanUnusedStorage();
       if (notify) showToast('Workspace reset completely fresh & temporary cache cleaned!');
     }
@@ -2787,6 +2774,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
           document.getElementById('geminiApiKeyInput').value = savedKey;
           document.getElementById('inlineGeminiKeyInput').value = savedKey;
           updateEngineBadgeUI(true);
+          autoDiscoverWorkingGeminiModel();
         }
       } catch (e) {}
 
@@ -2795,8 +2783,8 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       loadSavedSocialLinks();
       autoCleanUnusedStorage();
       resetWorkspaceFresh(false);
-      renderThumbMockupCanvas('A');
-      setTimeout(() => renderThumbMockupCanvas(activeMockupConcept), 400);
+      
+      
       renderSopChecklist();
       switchTab('audit');
     });
@@ -2931,7 +2919,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
           if (statusText) statusText.textContent = `✓ Verified! ${mod} responded successfully.`;
           showToast('✓ Gemini API Key is valid and working!');
         } else {
-          if (statusText) statusText.textContent = `⚠️ Key check returned HTTP ${res.status}. Check key or try gemini-1.5-flash.`;
+          if (statusText) statusText.textContent = `⚠️ Key check returned HTTP ${res.status}. Check key or try gemini-2.5-flash-lite.`;
         }
       } catch (err) {
         if (statusText) statusText.textContent = '⚠️ Network check failed. Key saved for execution.';
@@ -2949,15 +2937,65 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
     }
 
     // ==================== HELPER: CALL GEMINI API WITH AUTOMATIC MODEL FALLBACK ====================
+    
+    // ==================== AUTO-DISCOVER WORKING GEMINI MODEL ====================
+    let __discoveredModelsCache = null;
+
+    async function autoDiscoverWorkingGeminiModel() {
+      if (!appState.geminiApiKey) return null;
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(appState.geminiApiKey)}`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        const valid = (data.models || [])
+          .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
+          .map(m => (m.name || '').replace(/^models\//, ''))
+          .filter(n => n && !n.includes('embedding') && !n.includes('aqa') && !n.includes('imagen'));
+
+        if (!valid.length) return null;
+        __discoveredModelsCache = valid;
+
+        const priority = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-2.5-pro'];
+        let chosen = priority.find(p => valid.includes(p))
+          || valid.find(n => n.includes('flash') && !n.includes('thinking') && !n.includes('image'))
+          || valid[0];
+
+        if (chosen) {
+          appState.geminiModel = chosen;
+          try { localStorage.setItem('yt_seo_ssrio_gemini_model', chosen); } catch (e) {}
+          const mSel = document.getElementById('geminiModelSelect');
+          if (mSel) {
+            if (!Array.from(mSel.options).some(o => o.value === chosen)) {
+              const opt = document.createElement('option');
+              opt.value = chosen;
+              opt.textContent = `✨ ${chosen} (Auto-Detected)`;
+              mSel.prepend(opt);
+            }
+            mSel.value = chosen;
+          }
+          updateEngineBadgeUI(true);
+        }
+        return valid;
+      } catch (e) {
+        return null;
+      }
+    }
+
     async function callGeminiJsonAPI(promptText) {
       if (!appState.geminiApiKey) return null;
-      const modelsToTry = [appState.geminiModel || 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
-      let lastErrMsg = '';
+      if (!__discoveredModelsCache) {
+        await autoDiscoverWorkingGeminiModel();
+      }
+      const preferred = (appState.geminiModel && appState.geminiModel !== 'gemini-1.5-flash') ? appState.geminiModel : 'gemini-2.5-flash';
+      const basePool = __discoveredModelsCache && __discoveredModelsCache.length
+        ? __discoveredModelsCache.slice(0, 4)
+        : ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
+      const modelsToTry = Array.from(new Set([preferred, ...basePool]));
+      let firstErrMsg = '';
       for (const modelName of modelsToTry) {
-        // First attempt: Live Google Search Grounding enabled (searches real web & YouTube competitors!)
         const attempts = [
           {
-            contents: [{ parts: [{ text: promptText + '\n\nIMPORTANT: Return ONLY valid raw JSON (no markdown fences, no commentary).' }] }],
+            contents: [{ parts: [{ text: promptText + '\n\nReturn ONLY a valid raw JSON object (no markdown fences, no extra text).' }] }],
             tools: [{ google_search: {} }]
           },
           {
@@ -2978,27 +3016,29 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
               const parts = data?.candidates?.[0]?.content?.parts || [];
               const rawText = parts.map(pt => pt.text || '').join('\n').trim();
               if (rawText) {
-                const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-                const toParse = jsonMatch ? jsonMatch[0] : rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+                const noFence = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+                const jsonMatch = noFence.match(/\{[\s\S]*\}/);
+                const toParse = jsonMatch ? jsonMatch[0] : noFence;
                 const parsed = JSON.parse(toParse);
                 getTodayUsageCount(true);
                 return parsed;
               }
             } else {
               const errJson = await res.json().catch(() => ({}));
-              lastErrMsg = errJson?.error?.message || `HTTP ${res.status}`;
+              const msg = errJson?.error?.message || `HTTP ${res.status}`;
+              if (!firstErrMsg) firstErrMsg = `${modelName}: ${msg}`;
             }
           } catch (err) {
-            lastErrMsg = err?.message || 'Network/Parse error';
+            if (!firstErrMsg) firstErrMsg = `${modelName}: ${err?.message || 'Parse/Network error'}`;
           }
         }
       }
-      if (lastErrMsg) {
+      if (firstErrMsg) {
         const subEl = document.getElementById('inlineApiStatusSub');
-        if (subEl) subEl.textContent = `⚠️ Gemini API Error: ${lastErrMsg.slice(0, 90)}`;
+        if (subEl) subEl.textContent = `⚠️ Gemini API Error: ${firstErrMsg.slice(0, 90)}`;
         const cLbl = document.getElementById('aiCompactStatusLabel');
-        if (cLbl) cLbl.textContent = `⚠️ API Error: ${lastErrMsg.slice(0, 40)}`;
-        showToast(`Gemini API Error: ${lastErrMsg.slice(0, 70)}`);
+        if (cLbl) cLbl.textContent = `⚠️ ${firstErrMsg.slice(0, 38)}`;
+        showToast(`Gemini Error: ${firstErrMsg.slice(0, 80)}`);
       }
       return null;
     }
@@ -3284,6 +3324,12 @@ Return a valid JSON object with these exact keys:
   "hookHindi2": "Second distinct Hindi Devanagari thumbnail hook separated by | (strictly 2-3 punchy words per part)",
   "hookHinglish": "Catchy Hinglish thumbnail hook separated by | (strictly 2-3 punchy words per part, uppercase)",
   "hookEnglish": "Pure English thumbnail hook separated by | (strictly 2-3 punchy words per part, uppercase)",
+  "thumbSubjectVisual": "Specific iconic real-world visual scene & props for this exact topic (e.g. Mohenjo-Daro Great Bath ruins & Harappan unicorn seal)",
+  "viralCreatorInspiration": "Name 3-4 top viral YouTube creators in this exact niche & topic (e.g. Nitish Rajput, Dhruv Rathee, Think School, Johnny Harris, MKBHD) and explain the exact viral thumbnail layout, lighting, contrast, and curiosity triggers they use.",
+  "creatorSceneA": "Photoshop art direction for Concept A (Hero Portrait + Proof) directly inspired by top viral creators in this niche",
+  "creatorSceneB": "Photoshop art direction for Concept B (Forensic Zoom / Secret Detail) directly inspired by top viral creators in this niche",
+  "creatorSceneC": "Photoshop art direction for Concept C (Myth vs Reality Split-Screen) directly inspired by top viral creators in this niche",
+  "creatorSceneD": "Photoshop art direction for Concept D (Cinema Documentary Poster) directly inspired by top viral creators in this niche",
   "tags": ["array of 14 high-search YouTube tags strictly in English/Roman script"],
   "script": "A deeply researched, human-sounding 4-paragraph documentary voiceover script (separated by double newlines) in the topic's language with real facts and emotional storytelling."
 }`);
@@ -3328,6 +3374,20 @@ Return a valid JSON object with these exact keys:
           if (aiPayload.hookHindi2) document.getElementById('thumbHookHindi2').value = aiPayload.hookHindi2;
           if (aiPayload.hookHinglish) document.getElementById('thumbHookHinglish').value = aiPayload.hookHinglish;
           if (aiPayload.hookEnglish) document.getElementById('thumbHookEnglish').value = aiPayload.hookEnglish;
+          if (aiPayload.thumbSubjectVisual && document.getElementById('promptTopicSubject')) {
+            document.getElementById('promptTopicSubject').value = aiPayload.thumbSubjectVisual;
+          }
+          if (aiPayload.viralCreatorInspiration) {
+            appState.creatorThumbDna = aiPayload.viralCreatorInspiration;
+            const dnaBox = document.getElementById('viralCreatorDnaBox');
+            if (dnaBox) dnaBox.textContent = aiPayload.viralCreatorInspiration;
+          }
+          appState.creatorScenes = {
+            A: aiPayload.creatorSceneA || '',
+            B: aiPayload.creatorSceneB || '',
+            C: aiPayload.creatorSceneC || '',
+            D: aiPayload.creatorSceneD || ''
+          };
           if (Array.isArray(aiPayload.chapters) && aiPayload.chapters.length >= 3) {
             appState.chapters = aiPayload.chapters;
           }
@@ -3435,6 +3495,10 @@ Return a valid JSON object with these exact keys:
       appState.activeTags = [...preset.tags];
       appState.chapters = preset.chapters.map(c => ({ ...c }));
       appState.customThumbDataUrl = null;
+      appState.creatorThumbDna = '';
+      appState.creatorScenes = { A: '', B: '', C: '', D: '' };
+      const dnaB = document.getElementById('viralCreatorDnaBox');
+      if (dnaB) dnaB.textContent = 'Click Generate Complete Pack or Research Top Creators to scan top YouTube creators in your selected category and model your A/B/C/D prompts on their viral thumbnail designs.';
 
       buildCompetitorIntelligence(preset.primaryKeyword || 'YouTube Topic');
       generateThumbnailPrompts(true);
@@ -3501,7 +3565,7 @@ Return a valid JSON object with these exact keys:
       document.getElementById('liveKhandLine1').textContent = line1;
       document.getElementById('liveKhandLine2').textContent = line2;
       updateCtrSimulator();
-      renderThumbMockupCanvas(conceptLetter);
+      
     }
 
     function syncHookTextFromPromptStudio() {
@@ -3519,8 +3583,46 @@ Return a valid JSON object with these exact keys:
       generateThumbnailPrompts(true);
     }
 
+
+    async function researchNicheCreatorsForThumbnails() {
+      const rawTopic = (document.getElementById('topic-prompt-input').value || document.getElementById('primaryKeywordInput').value || '').trim();
+      const cat = CATEGORY_ALGORITHMS[appState.activeCategory] || CATEGORY_ALGORITHMS.history;
+      const dnaBox = document.getElementById('viralCreatorDnaBox');
+      if (!rawTopic) {
+        showToast('Enter your video topic first!');
+        return;
+      }
+      if (!appState.geminiApiKey) {
+        if (dnaBox) dnaBox.textContent = `Niche Benchmark (${cat.name}): High-contrast focal subject, expressive emotional close-up, dramatic rim lighting, and 2–3 word curiosity hook.`;
+        showToast('Connect Gemini API Key at top for live YouTube creator research!');
+        return;
+      }
+      if (dnaBox) dnaBox.textContent = `🔍 Searching top viral YouTube creators in ${cat.name} for "${rawTopic}"...`;
+      const res = await callGeminiJsonAPI(`Use Google Search to find the top 3-4 viral YouTube creators in the "${cat.name}" niche making videos similar to "${rawTopic}".
+Analyze their highest-CTR viral thumbnail designs (composition, color psychology, lighting, focal props, emotion) and return JSON:
+{
+  "viralCreatorInspiration": "2-3 crisp sentences naming those top creators and the exact viral thumbnail design patterns they use.",
+  "creatorSceneA": "Photoshop art direction for Concept A (Hero Cutout + Proof) modeled on these creators",
+  "creatorSceneB": "Photoshop art direction for Concept B (Forensic Zoom / Mystery Arrow) modeled on these creators",
+  "creatorSceneC": "Photoshop art direction for Concept C (Myth vs Reality Split-Screen) modeled on these creators",
+  "creatorSceneD": "Photoshop art direction for Concept D (Netflix/NatGeo Cinema Poster) modeled on these creators"
+}`);
+      if (res) {
+        appState.creatorThumbDna = res.viralCreatorInspiration || '';
+        if (dnaBox && res.viralCreatorInspiration) dnaBox.textContent = res.viralCreatorInspiration;
+        appState.creatorScenes = {
+          A: res.creatorSceneA || '',
+          B: res.creatorSceneB || '',
+          C: res.creatorSceneC || '',
+          D: res.creatorSceneD || ''
+        };
+        generateThumbnailPrompts(true);
+        showToast('Top niche creators researched & all 4 A/B/C/D prompts updated!');
+      }
+    }
+
     function generateThumbnailPrompts(silent) {
-      renderThumbMockupCanvas(activeMockupConcept);
+      
       const topic = (document.getElementById('topic-prompt-input').value || document.getElementById('primaryKeywordInput').value || 'Your Video Topic').trim();
 
       const h1 = splitHookIntoTwoLines(document.getElementById('thumbHookHindi1').value || 'YOUR HOOK | REAL PROOF');
@@ -4875,6 +4977,10 @@ ${shortHashtag.length > 2 ? shortHashtag : '#Documentary'} ${catTags}`;
 
     function resetCustomThumbAndApplyTheme() {
       appState.customThumbDataUrl = null;
+      appState.creatorThumbDna = '';
+      appState.creatorScenes = { A: '', B: '', C: '', D: '' };
+      const dnaB = document.getElementById('viralCreatorDnaBox');
+      if (dnaB) dnaB.textContent = 'Click Generate Complete Pack or Research Top Creators to scan top YouTube creators in your selected category and model your A/B/C/D prompts on their viral thumbnail designs.';
       updateCtrSimulator();
     }
 
