@@ -7,7 +7,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v1.0 | Live Gemini AI YouTube SEO, Thumbnail, Scene Video &amp; Voice Studio</title>
+  <title>YT SEO — Powered by SSIRO • v1.2 | Live Gemini AI YouTube SEO, Thumbnail, Scene Video &amp; Voice Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -610,6 +610,10 @@
               <span>Fresh</span>
             </button>
           </div>
+          <div id="aiLiveProcessBanner" class="hidden p-3 rounded-xl bg-surface-container-lowest border border-secondary/40 flex items-center gap-2.5 text-xs font-mono">
+            <span id="aiLiveProcessDot" class="w-2.5 h-2.5 rounded-full bg-tertiary animate-ping shrink-0"></span>
+            <span id="aiLiveProcessText" class="text-white font-semibold">Initializing AI Research...</span>
+          </div>
         </div>
       </section>
 
@@ -953,28 +957,28 @@
                 <label for="thumbHookHindi1" class="block font-mono text-[10px] text-tertiary font-bold uppercase mb-1">
                   Concept A Title (Pure Hindi #1 • Yellow | White):
                 </label>
-                <input id="thumbHookHindi1" type="text" value="1276 ई. का रहस्य! | असली ऐतिहासिक प्रमाण" oninput="generateThumbnailPrompts(true)" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-sm font-bold text-white focus:outline-none focus:border-tertiary" />
+                <input id="thumbHookHindi1" type="text" value="" placeholder="Concept A Hindi #1 Hook" oninput="generateThumbnailPrompts(true)" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-sm font-bold text-white focus:outline-none focus:border-tertiary" />
               </div>
 
               <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-tertiary/40">
                 <label for="thumbHookHindi2" class="block font-mono text-[10px] text-tertiary font-bold uppercase mb-1">
                   Concept B Title (Pure Hindi #2 • Yellow | White):
                 </label>
-                <input id="thumbHookHindi2" type="text" value="इतिहास का अनदेखा सच! | मूल शिलालेख का खुलासा" oninput="generateThumbnailPrompts(true)" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-sm font-bold text-white focus:outline-none focus:border-tertiary" />
+                <input id="thumbHookHindi2" type="text" value="" placeholder="Concept B Hindi #2 Hook" oninput="generateThumbnailPrompts(true)" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-sm font-bold text-white focus:outline-none focus:border-tertiary" />
               </div>
 
               <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-primary/40">
                 <label for="thumbHookHinglish" class="block font-mono text-[10px] text-primary font-bold uppercase mb-1">
                   Concept C Title (Viral Hinglish • Yellow | White):
                 </label>
-                <input id="thumbHookHinglish" type="text" value="1276 CE KA ASLI SACH! | SABSE BADA PROOF" oninput="generateThumbnailPrompts(true)" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-sm font-bold text-white focus:outline-none focus:border-primary" />
+                <input id="thumbHookHinglish" type="text" value="" placeholder="Concept C Hinglish Hook" oninput="generateThumbnailPrompts(true)" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-sm font-bold text-white focus:outline-none focus:border-primary" />
               </div>
 
               <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-secondary/40">
                 <label for="thumbHookEnglish" class="block font-mono text-[10px] text-secondary font-bold uppercase mb-1">
                   Concept D Title (Pure English • Yellow | White):
                 </label>
-                <input id="thumbHookEnglish" type="text" value="THE 1276 CE SECRET! | UNTOLD ARCHIVAL PROOF" oninput="generateThumbnailPrompts(true)" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-sm font-bold text-white focus:outline-none focus:border-secondary" />
+                <input id="thumbHookEnglish" type="text" value="" placeholder="Concept D English Hook" oninput="generateThumbnailPrompts(true)" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-sm font-bold text-white focus:outline-none focus:border-secondary" />
               </div>
             </div>
 
@@ -1116,7 +1120,7 @@
               <div class="space-y-3">
                 <div>
                   <label for="thumbOverlayHeadline" class="block text-xs text-on-surface-variant mb-1">Thumbnail Hook Text (Use | for Yellow/White Split)</label>
-                  <input id="thumbOverlayHeadline" type="text" value="1276 ई. का रहस्य! | असली ऐतिहासिक प्रमाण" oninput="syncFromCtrHeadline()" class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-xl px-3.5 py-2 font-khand text-base font-bold text-tertiary focus:outline-none focus:border-tertiary" />
+                  <input id="thumbOverlayHeadline" type="text" value="" placeholder="Concept A Hindi #1 Hook" oninput="syncFromCtrHeadline()" class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-xl px-3.5 py-2 font-khand text-base font-bold text-tertiary focus:outline-none focus:border-tertiary" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
@@ -2611,6 +2615,23 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
     // ==================== 1-TAP COPY & OPEN CHATGPT / GEMINI + API IMAGE GEN + A/B/C/D RANKER ====================
     const rankerImages = { A: null, B: null, C: null, D: null };
 
+
+    async function shareGeneratedPrompt(idx) {
+      const promptText = (window.__latestThumbnailPrompts && window.__latestThumbnailPrompts[idx]) || '';
+      if (!promptText) {
+        showToast('Generate your topic first!');
+        return;
+      }
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: 'YT SEO Thumbnail Prompt', text: promptText });
+          return;
+        } catch (e) {}
+      }
+      try { await navigator.clipboard.writeText(promptText); } catch (e) {}
+      showToast('Prompt copied for sharing!');
+    }
+
     async function copyAndOpenTool(target, idx) {
       const promptText = (window.__latestThumbnailPrompts && window.__latestThumbnailPrompts[idx]) || '';
       if (!promptText) {
@@ -3257,6 +3278,16 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
 
       const btnText = document.getElementById('generateBtnText');
       if (btnText) btnText.textContent = appState.geminiApiKey ? '⚡ Gemini AI Researching...' : 'Generating...';
+      const procBanner = document.getElementById('aiLiveProcessBanner');
+      const procDot = document.getElementById('aiLiveProcessDot');
+      const procText = document.getElementById('aiLiveProcessText');
+      if (procBanner && procText) {
+        procBanner.classList.remove('hidden');
+        if (procDot) procDot.className = 'w-2.5 h-2.5 rounded-full bg-tertiary animate-ping shrink-0';
+        procText.textContent = appState.geminiApiKey
+          ? '⏳ Live Gemini AI: Searching Google & YouTube competitors, titles & creators...'
+          : '⚡ Running Local Engine (No API Key connected)...';
+      }
 
       const { core, englishKw, isHindi } = extractCleanCoreTopic(rawCmd);
       const activeCat = CATEGORY_ALGORITHMS[appState.activeCategory] || CATEGORY_ALGORITHMS.history;
@@ -3772,19 +3803,19 @@ ${buildTypeBlock(h4.line1.toUpperCase(), h4.line2.toUpperCase(), 'PURE ENGLISH �
             <div class="space-y-2 pt-2 border-t border-outline-variant/30 text-[11px]">
               <div class="flex flex-wrap items-center justify-between gap-2 text-outline">
                 <span>✓ Uses ALL Ref Photos + Auto-Fallback</span>
-                <button type="button" onclick="copyGeneratedPrompt(${idx})" class="text-tertiary font-semibold hover:underline">
-                  Copy Prompt Only
-                </button>
               </div>
-              <div class="grid grid-cols-3 gap-1.5">
-                <button type="button" onclick="copyAndOpenTool('chatgpt', ${idx})" class="px-2 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-white font-mono text-[10px] font-bold flex items-center justify-center gap-1 transition">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                <button type="button" onclick="copyGeneratedPrompt(${idx})" class="px-2 py-2 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold flex items-center justify-center gap-1 shadow transition">
+                  <span>📋</span><span>Copy</span>
+                </button>
+                <button type="button" onclick="shareGeneratedPrompt(${idx})" class="px-2 py-2 rounded-lg bg-secondary/20 hover:bg-secondary/30 border border-secondary/40 text-secondary font-mono text-[11px] font-bold flex items-center justify-center gap-1 transition">
+                  <span>📤</span><span>Share</span>
+                </button>
+                <button type="button" onclick="copyAndOpenTool('chatgpt', ${idx})" class="px-2 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-white font-mono text-[10px] font-bold flex items-center justify-center gap-1 transition">
                   <span>🚀</span><span>ChatGPT</span>
                 </button>
-                <button type="button" onclick="copyAndOpenTool('gemini', ${idx})" class="px-2 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-white font-mono text-[10px] font-bold flex items-center justify-center gap-1 transition">
+                <button type="button" onclick="copyAndOpenTool('gemini', ${idx})" class="px-2 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-white font-mono text-[10px] font-bold flex items-center justify-center gap-1 transition">
                   <span>✨</span><span>Gemini</span>
-                </button>
-                <button type="button" onclick="generateThumbnailImageWithAPI(${idx})" class="px-2 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary/30 border border-tertiary/40 text-tertiary font-mono text-[10px] font-bold flex items-center justify-center gap-1 transition">
-                  <span>🎨</span><span>API Image</span>
                 </button>
               </div>
             </div>
@@ -3913,80 +3944,143 @@ Include at least 6 detailed scenes.`);
 
     function buildSceneBySceneStoryboard(silent) {
       const kw = (document.getElementById('primaryKeywordInput').value || document.getElementById('topic-prompt-input').value || 'Your Video Topic').trim();
-      const sec = (document.getElementById('secondaryKeywordsInput').value || 'Primary Archival Evidence').split(',')[0].trim();
-      const durationKey = document.getElementById('sceneScriptDurationSelect').value;
+      const sec = (document.getElementById('secondaryKeywordsInput').value || 'Primary Evidence').split(',')[0].trim();
       const aspect = document.getElementById('sceneAspectRatioSelect').value;
       const engineStyle = document.getElementById('sceneVisualEngineSelect').value;
       const rawScript = (document.getElementById('scriptAnalyzerTextarea').value || '').trim();
+      const cat = CATEGORY_ALGORITHMS[appState.activeCategory] || CATEGORY_ALGORITHMS.history;
 
       const aspectSpec = aspect === '9:16'
-        ? 'Vertical 9:16 Portrait (1080x1920) framing optimized for YouTube Shorts/Reels, central vertical subject composition'
-        : 'Widescreen 16:9 Landscape (3840x2160 4K) cinema framing optimized for YouTube Long-Form';
+        ? 'Vertical 9:16 Portrait (1080x1920) framing for YouTube Shorts/Reels'
+        : 'Widescreen 16:9 Landscape (3840x2160 4K) cinema framing';
 
       const realismSpec = engineStyle === 'flow'
-        ? 'Photorealistic live-action cinema quality (Google Flow / Gemini Veo), shot on ARRI Alexa 65 35mm prime lens, natural human micro-movements, realistic skin and stone textures, volumetric lighting, 24fps film motion, zero AI morphing'
+        ? `${cat.videoStyle}, photorealistic live-action cinema (Google Flow / Gemini Veo), ARRI Alexa 65 35mm prime lens, natural human micro-movements, volumetric lighting, 24fps, zero AI morphing`
         : (engineStyle === 'historical'
-          ? 'Museum-grade historical documentary cinematography, warm chiaroscuro torchlight and golden-hour rays, macro archival texture fidelity, 24fps slow camera movement'
-          : 'Clean 3D Unreal Engine 5 documentary visualization with glowing callout lines and smooth orbital camera tracking');
-
-      const userParagraphs = rawScript
-        .split(/\n\s*\n+/)
-        .map(p => p.replace(/^\[[^\]]+\]\s*/g, '').trim())
-        .filter(p => p.length > 15);
+          ? `${cat.videoStyle}, museum-grade documentary cinematography, warm chiaroscuro light, macro texture fidelity, 24fps smooth camera motion`
+          : `${cat.videoStyle}, crisp 3D Unreal Engine 5 documentary visualization, glowing callouts, smooth orbital camera tracking`);
 
       const cameraAngles = [
         'Slow suspenseful cinematic push-in shot',
         'Sweeping golden-hour establishing camera pan',
-        'Over-the-shoulder forensic researcher close-up with magnifying glass',
-        'Medium portrait-grade shot with flickering warm rim lighting and natural human motion',
-        'Extreme macro rack-focus shot gliding across carved/written primary details',
-        'Slow orbital camera move transitioning from deep shadow into crisp gallery spotlight',
-        'Cinematic tracking shot across an archival research table with primary texts and maps',
-        'Atmospheric wide pull-back closing shot fading into a clean dark end-screen vignette'
+        'Over-the-shoulder researcher close-up with atmospheric depth',
+        'Medium portrait-grade shot with warm rim lighting and natural motion',
+        'Extreme macro rack-focus gliding across primary visual details',
+        'Slow orbital camera move from shadow into crisp spotlight',
+        'Cinematic tracking shot across research table, maps & primary artifacts',
+        'Atmospheric wide pull-back closing shot with subtle vignette'
       ];
 
-      const totalMinutes = durationKey === '1min' ? 1 : (durationKey === '10min' ? 10 : (durationKey === '15min' ? 15 : 5));
-      const targetSceneCount = durationKey === '1min' ? 5 : (durationKey === '10min' ? 8 : (durationKey === '15min' ? 10 : Math.max(5, userParagraphs.length)));
+      // 100% LOSSLESS SENTENCE SPLITTER (never drops a single word or line!)
+      const cleanedText = rawScript.replace(/\[[^\]]+\]\s*/g, '').replace(/\r/g, '').trim();
+      const container = document.getElementById('sceneBySceneCardsContainer');
+      if (!cleanedText) {
+        if (container) {
+          container.innerHTML = '<div class="col-span-full p-5 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-center text-xs text-outline font-mono">Paste your script or generate a topic above to build a continuous second-by-second storyboard.</div>';
+        }
+        return;
+      }
 
+      // Split into complete sentences keeping Hindi (। ? !) and English (. ? !) punctuation intact
+      const rawSentences = cleanedText
+        .split(/(?<=[।?!.])\s+|\n+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      // Group into continuous 2-sentence storyboard beats (~18-32 words per scene, ideal for 6-14s video clips)
+      const sceneChunks = [];
+      let buffer = [];
+      let bufferWords = 0;
+      for (const sent of rawSentences) {
+        const wc = sent.split(/\s+/).filter(Boolean).length;
+        buffer.push(sent);
+        bufferWords += wc;
+        if (bufferWords >= 18 || buffer.length >= 2) {
+          sceneChunks.push(buffer.join(' '));
+          buffer = [];
+          bufferWords = 0;
+        }
+      }
+      if (buffer.length > 0) {
+        sceneChunks.push(buffer.join(' '));
+      }
+
+      const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+      let cursorSec = 0;
       const builtScenes = [];
-      const secPerScene = Math.floor((totalMinutes * 60) / targetSceneCount);
 
-      for (let i = 0; i < targetSceneCount; i++) {
-        const startSec = i * secPerScene;
-        const endSec = (i + 1) * secPerScene;
-        const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
-        const timeRange = `${fmt(startSec)} – ${fmt(endSec)}`;
-
-        const narrationLine = userParagraphs[i]
-          ? userParagraphs[i]
-          : (i === 0
-            ? `What if a single piece of primary evidence about ${kw} could completely reshape what we know about ${sec}?`
-            : (i === targetSceneCount - 1
-              ? `Ultimately, ${kw} stands as an irreplaceable primary witness. Share your verdict in the comments below and watch this next investigation.`
-              : `In this stage of our investigation into ${kw}, we examine how ${sec} is corroborated by direct archival and visual records.`));
+      sceneChunks.forEach((fullNarration, i) => {
+        const words = fullNarration.split(/\s+/).filter(Boolean).length;
+        const durationSec = Math.max(5, Math.round(words / 2.3));
+        const startSec = cursorSec;
+        const endSec = cursorSec + durationSec;
+        cursorSec = endSec;
+        const timeRange = `${fmt(startSec)} – ${fmt(endSec)} (${durationSec}s)`;
 
         const camMove = cameraAngles[i % cameraAngles.length];
-        const snippetPreview = narrationLine.slice(0, 95).replace(/"/g, '');
+        const continuityNote = i === 0
+          ? 'Opening visual hook matching first spoken word'
+          : `Seamless visual match-cut continuing directly from Scene ${i} (${fmt(startSec)})`;
 
         builtScenes.push({
           num: i + 1,
-          time: timeRange,
-          phase: i === 0 ? 'OPENING HOOK & PATTERN INTERRUPT' : (i === targetSceneCount - 1 ? 'CONCLUSION & END-SCREEN BRIDGE' : `SCENE ${i + 1}: CORE EVIDENCE & VISUAL STORY`),
-          narration: narrationLine,
-          explainGuide: i === 0
-            ? 'Show the strongest visual proof in the first 5 seconds before any long intro. Add a subtle sub-bass riser.'
-            : 'Display the primary source screenshot or map on screen, highlight the key phrase in yellow, and explain its meaning in simple language.',
-          brollGuide: `B-Roll & Graphics: ${camMove} illustrating "${snippetPreview}..." + on-screen callout card for ${kw}.`,
-          videoPrompt: `[Google Flow / Gemini Video Prompt • ${aspect}]: ${camMove} visually depicting: "${snippetPreview}". Subject focus: ${kw} and ${sec}. Warm dramatic lighting cutting through atmospheric dust, shallow depth of field, lifelike human/environmental realism, ${aspectSpec}, ${realismSpec}.`,
-          imagePrompt: `[Gemini / ChatGPT Keyframe Image Prompt • ${aspect}]: Photorealistic documentary keyframe illustrating "${snippetPreview}" (${kw}), dramatic chiaroscuro rim lighting, razor-sharp macro detail, ${aspectSpec}.`
+          timeRange,
+          phase: i === 0 ? 'OPENING HOOK' : (i === sceneChunks.length - 1 ? 'CLOSING & BRIDGE' : `STORYBOARD BEAT ${i + 1}`),
+          spokenText: fullNarration,
+          explainTip: i === 0
+            ? 'Start immediately with strong visual proof on the very first word—zero slow intro.'
+            : `${continuityNote}. Keep on-screen text minimal and highlight key nouns.`,
+          videoPrompt: `[Google Flow / Gemini Veo • ${aspect} • Duration: ${durationSec}s]: ${camMove}. Visualizes the exact narration: "${fullNarration}". Subject: ${kw} (${sec}). Continuity: ${continuityNote}. Style: ${realismSpec}, ${aspectSpec}.`,
+          imagePrompt: `[Gemini / ChatGPT Keyframe • ${aspect}]: Photorealistic storyboard keyframe for Scene ${i + 1} (${fmt(startSec)}–${fmt(endSec)}) depicting: "${fullNarration}". Subject: ${kw}. Style: ${realismSpec}, ${aspectSpec}.`
         });
-      }
+      });
 
       appState.scenesList = builtScenes;
-      renderSceneCardsToDOM(aspect);
-      if (!silent) {
-        showToast(`Built ${builtScenes.length} custom Scene Video Prompts from your script (${aspect})!`);
-      }
+      if (!container) return;
+
+      container.innerHTML = builtScenes.map((s, idx) => `
+        <div class="p-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 space-y-3 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/30 pb-2.5">
+            <div class="min-w-0">
+              <span class="font-mono text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-tertiary text-on-tertiary">SCENE ${idx + 1} • ${s.timeRange}</span>
+              <h4 class="font-display text-sm font-bold text-white mt-1 truncate">${s.phase}</h4>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button type="button" onclick="copySingleSceneVideoPrompt(${idx})" class="px-2.5 py-1.5 rounded-lg bg-primary/20 text-primary border border-primary/30 font-mono text-[10px] font-bold">
+                🎬 Copy Video
+              </button>
+              <button type="button" onclick="copySingleSceneImagePrompt(${idx})" class="px-2.5 py-1.5 rounded-lg bg-surface-container text-white border border-outline-variant/50 font-mono text-[10px] font-bold">
+                🖼️ Copy Image
+              </button>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30">
+            <span class="font-mono text-[10px] uppercase text-secondary font-bold block mb-1">🎙️ Exact Spoken Narration (100% Continuous)</span>
+            <p class="text-xs sm:text-sm text-white leading-relaxed">${s.spokenText}</p>
+          </div>
+
+          <p class="text-xs text-on-surface-variant"><strong class="text-tertiary">💡 Storyboard Continuity:</strong> ${s.explainTip}</p>
+
+          <details class="rounded-xl bg-surface-container border border-outline-variant/40 p-2.5">
+            <summary class="cursor-pointer font-mono text-[11px] font-bold text-primary select-none">
+              🎬 View Full Video &amp; Keyframe AI Prompts (${aspect})
+            </summary>
+            <div class="mt-2.5 space-y-2.5 text-xs">
+              <div class="p-2.5 rounded-lg bg-surface-container-lowest border border-outline-variant/30">
+                <span class="font-mono text-[10px] uppercase text-primary font-bold block mb-1">Video Prompt (${aspect}):</span>
+                <p class="font-mono text-[11px] text-slate-300 leading-relaxed">${s.videoPrompt}</p>
+              </div>
+              <div class="p-2.5 rounded-lg bg-surface-container-lowest border border-outline-variant/30">
+                <span class="font-mono text-[10px] uppercase text-secondary font-bold block mb-1">Keyframe Image Prompt:</span>
+                <p class="font-mono text-[11px] text-slate-300 leading-relaxed">${s.imagePrompt}</p>
+              </div>
+            </div>
+          </details>
+        </div>
+      `).join('');
+
+      if (!silent) showToast(`Built ${builtScenes.length} continuous second-by-second storyboard scenes!`);
     }
 
     function copySingleSceneVideoPrompt(idx) {
@@ -5420,5 +5514,5 @@ ${pinned}
         .replace(/"/g, '&quot;');
     }
   </script>
-<input id="promptHookTextOverlay" type="hidden" value="1276 ई. का रहस्य! | असली ऐतिहासिक प्रमाण" /></body>
+<input id="promptHookTextOverlay" type="hidden" value="" placeholder="Concept A Hindi #1 Hook" /></body>
 </html>
