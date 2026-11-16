@@ -7,7 +7,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v1.4 | Live Gemini AI YouTube SEO, Thumbnail, Scene Video &amp; Voice Studio</title>
+  <title>YT SEO — Powered by SSIRO • v1.7 | Live Gemini AI YouTube SEO, Thumbnail, Scene Video &amp; Voice Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -2827,7 +2827,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
 
 
     // ==================== 1-TAP IN-APP LIVE UPDATE (NO UNINSTALL NEEDED) ====================
-    const CURRENT_APP_VERSION = 'v1.4';
+    const CURRENT_APP_VERSION = 'v1.7';
 
     async function forceAppUpdate() {
       showToast('Checking GitHub for new update...');
@@ -2985,7 +2985,10 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
     async function autoDiscoverWorkingGeminiModel() {
       if (!appState.geminiApiKey) return null;
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(appState.geminiApiKey)}`);
+        const adCtrl = new AbortController();
+        const adTimer = setTimeout(() => adCtrl.abort(), 6000);
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(appState.geminiApiKey)}`, { signal: adCtrl.signal });
+        clearTimeout(adTimer);
         if (!res.ok) {
           const errD = await res.json().catch(() => ({}));
           const msg = errD?.error?.message || `HTTP ${res.status}`;
@@ -3035,50 +3038,60 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
         await autoDiscoverWorkingGeminiModel();
       }
       const preferred = (appState.geminiModel && appState.geminiModel !== 'gemini-1.5-flash') ? appState.geminiModel : 'gemini-2.5-flash';
-      const basePool = __discoveredModelsCache && __discoveredModelsCache.length
-        ? __discoveredModelsCache.slice(0, 4)
-        : ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
-      const modelsToTry = Array.from(new Set([preferred, ...basePool]));
-      let firstErrMsg = '';
-      for (const modelName of modelsToTry) {
-        const attempts = [
-          {
-            contents: [{ parts: [{ text: promptText + '\n\nReturn ONLY a valid raw JSON object (no markdown fences, no extra text).' }] }],
+      const backup = preferred === 'gemini-2.5-flash-lite' ? 'gemini-2.5-flash' : 'gemini-2.5-flash-lite';
+      const fastPlan = [
+        {
+          model: preferred,
+          timeout: 14000,
+          body: {
+            contents: [{ parts: [{ text: promptText + '\n\nReturn ONLY valid raw JSON (no markdown fences).' }] }],
             tools: [{ google_search: {} }]
-          },
-          {
+          }
+        },
+        {
+          model: backup,
+          timeout: 12000,
+          body: {
             contents: [{ parts: [{ text: promptText }] }],
             generationConfig: { responseMimeType: 'application/json' }
           }
-        ];
-        for (const bodyObj of attempts) {
-          try {
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
-            const res = await fetch(endpoint, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(bodyObj)
-            });
-            if (res.ok) {
-              const data = await res.json();
-              const parts = data?.candidates?.[0]?.content?.parts || [];
-              const rawText = parts.map(pt => pt.text || '').join('\n').trim();
-              if (rawText) {
-                const noFence = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
-                const jsonMatch = noFence.match(/\{[\s\S]*\}/);
-                const toParse = jsonMatch ? jsonMatch[0] : noFence;
-                const parsed = JSON.parse(toParse);
-                getTodayUsageCount(true);
-                return parsed;
-              }
-            } else {
-              const errJson = await res.json().catch(() => ({}));
-              const msg = errJson?.error?.message || `HTTP ${res.status}`;
-              if (!firstErrMsg) firstErrMsg = `${modelName}: ${msg}`;
+        }
+      ];
+
+      let firstErrMsg = '';
+      for (const step of fastPlan) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), step.timeout);
+        try {
+          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${step.model}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(step.body),
+            signal: controller.signal
+          });
+          clearTimeout(timer);
+          if (res.ok) {
+            const data = await res.json();
+            const parts = data?.candidates?.[0]?.content?.parts || [];
+            const rawText = parts.map(pt => pt.text || '').join('\n').trim();
+            if (rawText) {
+              const noFence = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+              const jsonMatch = noFence.match(/\{[\s\S]*\}/);
+              const toParse = jsonMatch ? jsonMatch[0] : noFence;
+              const parsed = JSON.parse(toParse);
+              getTodayUsageCount(true);
+              return parsed;
             }
-          } catch (err) {
-            if (!firstErrMsg) firstErrMsg = `${modelName}: ${err?.message || 'Parse/Network error'}`;
+          } else {
+            const errJson = await res.json().catch(() => ({}));
+            const msg = errJson?.error?.message || `HTTP ${res.status}`;
+            if (!firstErrMsg) firstErrMsg = `${step.model}: ${msg}`;
           }
+        } catch (err) {
+          clearTimeout(timer);
+          const msg = err?.name === 'AbortError' ? `Timeout (${step.timeout / 1000}s)` : (err?.message || 'Network error');
+          if (!firstErrMsg) firstErrMsg = `${step.model}: ${msg}`;
         }
       }
       if (firstErrMsg) {
@@ -3189,7 +3202,16 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
       if (resolvedTab === 'competitors') {
         setTimeout(() => updateCompetitorChart(), 50);
       } else if (resolvedTab === 'prompts') {
-        generateThumbnailPrompts(true);
+        generateFullAutomationScript(true);
+      autoGenerateSEODescription(true);
+      generateKeywordResearchMatrix(true);
+      addAllSuggestedTagsToWorkspace(true);
+      generateThumbnailPrompts(true);
+      buildSceneBySceneStoryboard(true);
+      buildHumanVoiceoverPackage(true);
+      renderChaptersList();
+      generateRetentionHooks();
+      runLiveSEOAudit();
       } else if (resolvedTab === 'keywords') {
         renderChaptersList();
         setTimeout(() => updateKeywordChart(), 50);
@@ -3363,6 +3385,7 @@ Discovered inside the complex, the ancient Brahmi inscription of Maharaja Udayas
           ];
 
       let usedLiveGemini = false;
+      try {
       if (appState.geminiApiKey) {
         const aiPayload = await callGeminiJsonAPI(`You are an expert YouTube SEO strategist, documentary scriptwriter, and thumbnail art director.
 Analyze this YouTube video topic deeply using live Google Search to check what top-ranking competitor videos and real viewer search queries exist for: "${rawCmd}".
@@ -3484,11 +3507,27 @@ Return a valid JSON object with these exact keys:
       runLiveSEOAudit();
       updatePinnedCommentSuggestion();
 
+      if (procBanner && procText) {
+        if (procDot) procDot.className = usedLiveGemini ? 'w-2.5 h-2.5 rounded-full bg-secondary shrink-0' : 'w-2.5 h-2.5 rounded-full bg-tertiary shrink-0';
+        procText.textContent = usedLiveGemini
+          ? `✅ Live Gemini AI (${appState.geminiModel || '2.5-flash'}) researched & generated all 6 steps!`
+          : '⚠️ Gemini unavailable — generated via Local Engine (check API status above).';
+      }
       if (btnText) btnText.textContent = 'Generate Complete Pack';
       showToast(usedLiveGemini
-        ? `⚡ Live Gemini AI generated all 6 steps + Hindi/Hinglish/English Thumbnail Prompts for "${primaryKw}"!`
-        : `🚀 Complete SEO + A/B/C/D Thumbnail Prompts + Scene Prompts ready for "${primaryKw}"!`
+        ? `⚡ Live Gemini AI generated all 6 steps for "${primaryKw}"!`
+        : `🚀 Complete SEO + Prompts ready for "${primaryKw}"!`
       );
+    
+      } catch (err) {
+        if (procBanner && procText) {
+          if (procDot) procDot.className = 'w-2.5 h-2.5 rounded-full bg-error shrink-0';
+          procText.textContent = '⚠️ Error: ' + (err?.message || 'Please try again');
+        }
+        showToast('Error: ' + (err?.message || 'Generation interrupted'));
+      } finally {
+        if (btnText) btnText.textContent = 'Generate Complete Pack';
+      }
     }
 
 
