@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v2.7 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v3.2 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -270,11 +270,21 @@
         </span>
       </div>
       <p class="font-mono text-[9px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        Powered by SSIRO • v2.7
+        Powered by SSIRO • v3.2
       </p>
     </div>
 
     <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+      <button type="button" onclick="toggleHistoryModal()" title="Saved Project History" class="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 font-mono text-[11px] font-bold transition">
+        <span class="material-symbols-outlined text-[16px]">history</span>
+        <span class="hidden sm:inline">History</span>
+      </button>
+
+      <button type="button" onclick="togglePresetsModal()" title="Channel Presets" class="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 font-mono text-[11px] font-bold transition">
+        <span class="material-symbols-outlined text-[16px]">bookmarks</span>
+        <span class="hidden sm:inline">Presets</span>
+      </button>
+
       <button type="button" id="themeToggleBtn" onclick="toggleThemeMode()" title="Switch Dark / Light Mode" class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 transition">
         <span id="themeToggleIcon" class="material-symbols-outlined text-[16px]">light_mode</span>
       </button>
@@ -305,7 +315,7 @@
             <span class="material-symbols-outlined text-[14px]">system_update</span>
             <span>Update</span>
           </button>
-          <button type="button" onclick="resetStudioFresh(true)" title="Data Eraser: Clear Old Search &amp; Start Fresh" class="px-2 py-1 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-400/40 text-red-200 font-mono text-[10px] font-bold flex items-center gap-1 shrink-0 transition">
+          <button type="button" onclick="resetStudioFresh(true)" title="Data Eraser: Clear Old Search &amp; Start Fresh" class="px-2 py-1 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-500 font-mono text-[10px] font-bold flex items-center gap-1 shrink-0 transition">
             <span class="material-symbols-outlined text-[14px]">delete_sweep</span>
             <span>Clear Data</span>
           </button>
@@ -497,83 +507,58 @@
         <div id="thumbnailSizeGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2"></div>
       </div>
 
-      <!-- STEPS 3 & 4: VIDEO TITLE, DESCRIPTION / TOPIC DETAILS & OPTIONAL REFERENCE INFO -->
+      <!-- STEPS 3 & 4: ONLY 2 CLEAN INPUTS (VIDEO TITLE + OPTIONAL VIDEO DETAILS) -->
       <div class="space-y-4 pt-2 border-t border-outline-variant/30">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          <div class="lg:col-span-6 space-y-1.5">
-            <label for="videoTitleInput" class="font-display text-sm font-bold text-white flex items-center gap-1.5">
-              <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 3</span>
-              <span>Video Title</span> <button type="button" onclick="openHindiHelp('inputs')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
-            </label>
-            <div class="flex items-center gap-2">
-              <input
-                id="videoTitleInput"
-                type="text"
-                placeholder="Enter or speak video title..."
-                class="flex-1 bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-tertiary"
-              />
-              <button type="button" data-mic-for="videoTitleInput" onclick="toggleVoiceDictation('videoTitleInput', this)" title="Speak Video Title" class="w-10 h-10 rounded-xl bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 flex items-center justify-center shrink-0 transition">
-                <span class="material-symbols-outlined text-[20px]">mic</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="lg:col-span-6 space-y-1.5">
-            <label for="optionalHookOverrideInput" class="font-display text-sm font-bold text-white flex items-center justify-between gap-1.5">
-              <span>Thumbnail Text</span>
-              <span class="font-mono text-[10px] text-tertiary whitespace-nowrap">Khand Bold</span>
-            </label>
-            <div class="flex items-center gap-2">
-              <input
-                id="optionalHookOverrideInput"
-                type="text"
-                placeholder="Optional: Line 1 | Line 2 (or leave blank)"
-                class="flex-1 bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2.5 font-khand text-sm font-bold text-tertiary focus:outline-none focus:border-tertiary"
-              />
-              <button type="button" data-mic-for="optionalHookOverrideInput" onclick="toggleVoiceDictation('optionalHookOverrideInput', this)" title="Speak Thumbnail Text" class="w-10 h-10 rounded-xl bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 flex items-center justify-center shrink-0 transition">
-                <span class="material-symbols-outlined text-[20px]">mic</span>
-              </button>
-            </div>
+        <div class="space-y-1.5">
+          <label for="videoTitleInput" class="font-display text-sm font-bold text-white flex items-center gap-1.5">
+            <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 3</span>
+            <span>Video Title</span>
+            <button type="button" onclick="openHindiHelp('inputs')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
+          </label>
+          <div class="flex items-center gap-2">
+            <input
+              id="videoTitleInput"
+              type="text"
+              placeholder="Enter or speak video title..."
+              class="flex-1 bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-tertiary"
+            />
+            <button type="button" data-mic-for="videoTitleInput" onclick="toggleVoiceDictation('videoTitleInput', this)" title="Speak Video Title" class="w-10 h-10 rounded-xl bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 flex items-center justify-center shrink-0 transition">
+              <span class="material-symbols-outlined text-[20px]">mic</span>
+            </button>
           </div>
         </div>
+          <div id="moodChipsBar" class="flex flex-wrap items-center gap-1.5 pt-1">
+            <span class="font-mono text-[10px] text-outline uppercase font-bold mr-1">Body &amp; Mood:</span>
+            <button type="button" data-mood="auto" onclick="selectExpressionMood('auto')" class="mood-chip px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-bold transition">Auto (Topic)</button>
+            <button type="button" data-mood="curiosity" onclick="selectExpressionMood('curiosity')" class="mood-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-mono text-[10px] font-bold transition">Mystery / Curiosity</button>
+            <button type="button" data-mood="shock" onclick="selectExpressionMood('shock')" class="mood-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-mono text-[10px] font-bold transition">Shock / Reveal</button>
+            <button type="button" data-mood="debate" onclick="selectExpressionMood('debate')" class="mood-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-mono text-[10px] font-bold transition">Debate / Intense</button>
+            <button type="button" data-mood="authority" onclick="selectExpressionMood('authority')" class="mood-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-mono text-[10px] font-bold transition">Calm Authority</button>
+          </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          <div class="lg:col-span-7 space-y-1.5">
-            <div class="flex items-center justify-between gap-2">
-              <label for="videoTopicDetailsInput" class="font-display text-sm font-bold text-white flex items-center gap-1.5">
-                <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 4</span>
-                <span>Video Details</span>
-              </label>
+        <div class="space-y-1.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <label for="videoTopicDetailsInput" class="font-display text-sm font-bold text-white flex items-center gap-1.5">
+              <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 4</span>
+              <span>Video Details (Optional)</span>
+            </label>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="autoWriteVideoDetailsFromTitle()" class="px-2.5 py-1 rounded-lg bg-secondary/15 hover:bg-secondary hover:text-slate-950 text-secondary border border-secondary/40 font-mono text-[11px] font-bold flex items-center gap-1 shrink-0 transition">
+                <span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+                <span>AI Auto-Write</span>
+              </button>
               <button type="button" data-mic-for="videoTopicDetailsInput" onclick="toggleVoiceDictation('videoTopicDetailsInput', this)" class="px-2.5 py-1 rounded-lg bg-tertiary/15 hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 font-mono text-[11px] font-bold flex items-center gap-1 shrink-0 transition">
                 <span class="material-symbols-outlined text-[15px]">mic</span>
-                <span>Speak Details</span>
+                <span>Speak</span>
               </button>
             </div>
-            <textarea
-              id="videoTopicDetailsInput"
-              rows="4"
-              placeholder="Describe story, characters, key facts..."
-              class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-3.5 text-xs sm:text-sm text-white leading-relaxed focus:outline-none focus:border-tertiary custom-scroll"
-            ></textarea>
           </div>
-
-          <div class="lg:col-span-5 space-y-1.5">
-            <div class="flex items-center justify-between gap-2">
-              <label for="referenceInfoInput" class="font-display text-sm font-bold text-white flex items-center gap-1.5">
-                <span>Reference Info</span>
-              </label>
-              <button type="button" data-mic-for="referenceInfoInput" onclick="toggleVoiceDictation('referenceInfoInput', this)" class="px-2.5 py-1 rounded-lg bg-secondary/15 hover:bg-secondary hover:text-slate-950 text-secondary border border-secondary/40 font-mono text-[11px] font-bold flex items-center gap-1 shrink-0 transition">
-                <span class="material-symbols-outlined text-[15px]">mic</span>
-                <span>Speak Ref</span>
-              </button>
-            </div>
-            <textarea
-              id="referenceInfoInput"
-              rows="4"
-              placeholder="Optional: Photos &amp; placement..."
-              class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-3.5 text-xs sm:text-sm text-white leading-relaxed focus:outline-none focus:border-secondary custom-scroll"
-            ></textarea>
-          </div>
+          <textarea
+            id="videoTopicDetailsInput"
+            rows="3"
+            placeholder="Optional: Describe story &amp; key facts — or leave blank &amp; AI will auto-write from your Title..."
+            class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-3.5 text-xs sm:text-sm text-white leading-relaxed focus:outline-none focus:border-tertiary custom-scroll"
+          ></textarea>
         </div>
       </div>
 
@@ -593,7 +578,7 @@
           type="button"
           onclick="resetStudioFresh(true)"
           title="Data Eraser: Clear Old Search, Prompts &amp; Inputs"
-          class="py-3.5 px-4 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-200 border border-red-400/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 transition"
+          class="py-3.5 px-4 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-500 border border-red-500/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 transition"
         >
           <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
           <span>Clear Data</span>
@@ -694,6 +679,18 @@
         </span>
       </div>
 
+      <!-- 3 TOPIC-UNIQUE AI THUMBNAIL TEXT VARIATIONS PREVIEW -->
+      <div id="aiHooksPreviewPanel" class="hidden p-3.5 sm:p-4 rounded-xl bg-surface-container-lowest border border-tertiary/40 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-mono text-[11px] uppercase text-tertiary font-extrabold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">title</span>
+            <span>3 AI Thumbnail Text Variations (Khand Bold)</span>
+          </span>
+          <span class="font-mono text-[10px] text-secondary">Unique to This Topic</span>
+        </div>
+        <div id="aiHooksPreviewGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5"></div>
+      </div>
+
       <div id="conceptsDashboardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div class="col-span-full p-6 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-center text-xs text-outline font-mono">
           Run Step 5 above to generate 6 thumbnail concepts.
@@ -779,7 +776,7 @@
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
-    const CURRENT_APP_VERSION = 'v2.7';
+    const CURRENT_APP_VERSION = 'v3.2';
 
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
@@ -1120,8 +1117,10 @@
       selectedFormatId: 'documentary',
       selectedSubStyleId: 'cinematic_doc',
       selectedSizeId: 'yt_16_9',
+      selectedMood: 'auto',
       researchSource: 'none',
       researchInsights: null,
+      thumbnailHooksPreview: [],
       conceptsList: [],
       selectedConceptIndex: 0,
       variantsList: [],
@@ -1138,7 +1137,11 @@
       'yt_seo_ssiro_unlocked',
       'yt_seo_ssiro_theme',
       'yt_seo_ssiro_last_clean',
-      STUDIO_STATE_STORAGE_KEY
+      STUDIO_STATE_STORAGE_KEY,
+      'yt_seo_ssiro_history_v30',
+      'yt_seo_ssiro_presets_v30',
+      'yt_seo_ssiro_creator_face_v31',
+      'yt_seo_ssiro_chatgpt_chat_url_v32'
     ]);
 
     function autoCleanUnusedStorage() {
@@ -1837,7 +1840,7 @@
         const hp = hookPacks[idx % hookPacks.length];
         return {
           num: idx + 1,
-          title: `Concept ${idx + 1}: ${sItem.name} (${core})`,
+          title: `${core} — ${sItem.name}`,
           subStyleName: sItem.name,
           subStyleBlueprint: sItem.blueprint,
           whatIsShown: `${sItem.blueprint} Specifically designed around "${title}" (${descSnippet}).`,
@@ -1881,13 +1884,19 @@
       }
 
       const title = (document.getElementById('videoTitleInput').value || '').trim();
-      const desc = (document.getElementById('videoTopicDetailsInput').value || '').trim();
-      const refInfo = (document.getElementById('referenceInfoInput').value || '').trim();
+      let desc = (document.getElementById('videoTopicDetailsInput').value || '').trim();
+      const refInfo = '';
 
       if (!title && !desc) {
-        showToast('Please enter your Video Title and Topic Details first!');
+        showToast('Please enter your Video Title in Step 3 first!');
         document.getElementById('videoTitleInput').focus();
         return;
+      }
+
+
+
+      if (!desc && title) {
+        desc = await autoWriteVideoDetailsFromTitle(true);
       }
 
       const niche = getActiveNicheObj();
@@ -1932,9 +1941,9 @@ Use Google Search to research popular and currently trending YouTube videos and 
 - User Reference Image Notes: "${refInfo || 'User will upload reference images (portrait, characters, places, or artifacts) when prompting'}"
 
 CRITICAL INSTRUCTIONS:
-1. Analyze BOTH the Video Title AND Video Description deeply (note: the user may dictate these naturally by voice in Hindi/Hinglish—interpret the exact intent, names, and story professionally).
-2. Research what types of close-ups, facial expressions, compositions, lighting, backgrounds, and 2-3 word hooks top creators in "${niche.name}" use for "${fmt.name}" thumbnails.
-3. Generate 6 genuinely distinct Thumbnail Design Concepts tailored specifically to "${fmt.name}" (using different sub-styles of ${fmt.name}, NEVER repeating the same scene with different text).
+1. Analyze BOTH the Video Title AND Video Details deeply.
+2. Generate 3 COMPLETELY ORIGINAL, TOPIC-SPECIFIC Thumbnail Text variations (never use generic templates like "सत्य या भ्रम?" or "अनसुना सच!"—invent fresh, punchy 2-line hooks uniquely tailored to "${title}").
+3. Generate 6 genuinely distinct Thumbnail Design Concepts with REAL, DESCRIPTIVE, TOPIC-SPECIFIC TITLES (never generic "Concept 1" titles) tailored to "${fmt.name}" and hyper-realistic 8K YouTube quality.
 4. Return a valid JSON object with these exact keys:
 {
   "topicUnderstanding": {
@@ -1957,6 +1966,11 @@ CRITICAL INSTRUCTIONS:
       "published": "Year / Timeframe",
       "pattern": "Exact thumbnail composition, expression, lighting & hook pattern used"
     }
+  ],
+  "thumbnailTextVariations": [
+    {"hindi": "Unique 2-3 word Hindi Line 1 | Line 2", "hinglish": "Unique Hinglish Line 1 | Line 2", "english": "Unique English Line 1 | Line 2"},
+    {"hindi": "Different angle Hindi Line 1 | Line 2", "hinglish": "Different Hinglish Line 1 | Line 2", "english": "Different English Line 1 | Line 2"},
+    {"hindi": "Third punchy Hindi Line 1 | Line 2", "hinglish": "Third Hinglish Line 1 | Line 2", "english": "Third English Line 1 | Line 2"}
   ],
   "concepts": [
     {
@@ -1994,6 +2008,9 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
             observedViralVideos: directYtVideos || aiResult.observedViralVideos || []
           };
           appState.conceptsList = aiResult.concepts.slice(0, 6);
+          appState.thumbnailHooksPreview = Array.isArray(aiResult.thumbnailTextVariations) && aiResult.thumbnailTextVariations.length >= 3
+            ? aiResult.thumbnailTextVariations.slice(0, 3)
+            : appState.conceptsList.slice(0, 3).map(c => ({ hindi: c.hookHindi, hinglish: c.hookHinglish, english: c.hookEnglish }));
 
           if (progSpinner) progSpinner.className = 'w-2.5 h-2.5 rounded-full bg-secondary shrink-0';
           if (progHeadline) {
@@ -2059,6 +2076,7 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
             ]
           };
           appState.conceptsList = buildStructuredConceptsForTopic(niche, fmt, sub, title, desc, refInfo);
+          appState.thumbnailHooksPreview = appState.conceptsList.slice(0, 3).map(c => ({ hindi: c.hookHindi, hinglish: c.hookHinglish, english: c.hookEnglish }));
 
           if (progSpinner) progSpinner.className = 'w-2.5 h-2.5 rounded-full bg-error shrink-0';
           if (progHeadline) progHeadline.textContent = `⚠️ ${reason} — Showing Built-in Niche & Format Blueprints (Not Live YouTube Results).`;
@@ -2072,8 +2090,11 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
 
         setStageStatus(3, 'done', '3. 6 Concepts & Variant A/B/C Engine Ready');
         renderResearchInsightsSection();
+        renderAiHooksPreview();
         renderConceptsDashboard();
         selectConceptAndGenerateVariants(0, true);
+        saveProjectToHistory(title);
+        saveStudioState();
         showToast('6 Thumbnail Concepts & Variants A, B, C ready!');
       } catch (err) {
         setStageStatus(3, 'warn', 'Error: ' + (err?.message || 'Interrupted'));
@@ -2136,7 +2157,7 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
       const grid = document.getElementById('conceptsDashboardGrid');
       if (!grid || !appState.conceptsList.length) return;
 
-      const customHook = (document.getElementById('optionalHookOverrideInput')?.value || '').trim();
+      const customHook = '';
 
       grid.innerHTML = appState.conceptsList.map((c, idx) => {
         const isSel = idx === appState.selectedConceptIndex;
@@ -2197,8 +2218,8 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
       const fmt = getActiveFormatObj();
       const title = (document.getElementById('videoTitleInput').value || concept.title || 'YouTube Video').trim();
       const desc = (document.getElementById('videoTopicDetailsInput').value || '').trim();
-      const refInfo = (document.getElementById('referenceInfoInput').value || '').trim();
-      const customHook = (document.getElementById('optionalHookOverrideInput').value || '').trim();
+      const refInfo = '';
+      const customHook = '';
       const { core } = extractCleanCoreTopic(title, desc);
       const fallbackPacks = getUniqueConceptHooks(core, fmt.id);
       const pack = fallbackPacks[((concept.num || 1) - 1 + regenSeed) % fallbackPacks.length];
@@ -2326,17 +2347,17 @@ Create a hyper-realistic, high-CTR ${sz.ratio} ${sz.platform} Thumbnail (${sz.re
 • Video Story & Topic Context: "${desc || title}"
 
 ===================================================================
-STEP 1 — MANDATORY "REFERENCE IMAGE FIRST" WORKFLOW (DO NOT SKIP!):
+STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
 ===================================================================
-• STOP AND CHECK BEFORE GENERATING ANY IMAGE: Have I already uploaded/attached the required Reference Image(s) in this conversation?
-• IF NO REFERENCE IMAGE IS ATTACHED YET: Do NOT generate the thumbnail image yet! First, ask me in a clear message:
-  "Before I generate this thumbnail, please upload all required Reference Images (such as your own portrait photo, photos of the individuals/personalities in the video, historical characters, monuments, inscriptions, or specific objects you want featured). Or reply 'skip' if you want me to generate the scene without real-person reference photos."
-• WAIT until I upload the Reference Image(s) (or explicitly reply 'skip').
-• ONCE REFERENCE IMAGES ARE PROVIDED:
-  1. Preserve 100% of the real person's facial identity, bone structure, skin tone, expressions, glasses/beard, and real features—NEVER distort, age, or replace their face.
-  2. Use and composite EVERY SINGLE uploaded reference image into the exact composition zones specified in Step 2 below.
-  3. Match perspective, studio rim-lighting, color grading, and contact shadows so all reference photos blend like a seamless professional Photoshop composite.
-  4. If no reference image is given for a real living/historical person, do NOT fabricate an inaccurate fake face for them; focus on accurate historical/topical visuals and silhouettes.
+• STOP AND CHECK BEFORE GENERATING ANY IMAGE: Has the user already uploaded their **own YouTuber/Creator portrait photo** in this conversation?
+• IF NOT UPLOADED YET: Do NOT generate the thumbnail yet! First ask the user clearly:
+  "Before I generate this 8K thumbnail, please upload **your own portrait photo (MANDATORY — YouTuber/Creator face)** so I can preserve 100% of your real identity. You may also optionally upload any extra reference photos (historical figures, monuments, manuscripts, or objects); if you don't have extra photos, I will generate all secondary elements in hyper-realistic 8K DSLR quality."
+• WAIT until the user uploads their portrait photo (or explicitly replies 'skip').
+• ONCE UPLOADED:
+  1. STRICT ZERO-FACE-CHANGE IDENTITY LOCK (FOR ALL UPLOADED PEOPLE — YOUTUBER & ANY 2ND/3RD PERSON): Keep EVERY uploaded person's exact real face, eyes, nose, jawline, skin tone, hairline, glasses/beard, and natural skin pores 100% identical to their uploaded photo—NEVER morph or replace any face with a lookalike!
+  1B. TOPIC-ADAPTIVE EXPRESSION & BODY LANGUAGE: While keeping the face 100% unchanged, naturally adapt ONLY their facial emotion, eye gaze, hand gesture, and upper-body posture to fit the video topic & selected mood (${getSelectedMoodDirective(v)}).
+  2. For EVERY extra uploaded image (monuments, inscriptions, manuscripts, screenshots, products, or additional people): do NOT paste it flatly—redesign, relight, upscale to 8K photorealism, match camera perspective/depth-of-field, and seamlessly blend it into the scene with studio rim lighting, contact shadows, and unified HDR color grading.
+  3. For any secondary historical/topical elements where no photo was uploaded, generate them in ultra-sharp, historically/factually accurate 8K photographic realism.
 ${refDetailsLine}
 ===================================================================
 STEP 2 — VARIANT ${v.code} VISUAL ARCHITECTURE (100% DISTINCT DIRECTION):
@@ -2348,7 +2369,7 @@ STEP 2 — VARIANT ${v.code} VISUAL ARCHITECTURE (100% DISTINCT DIRECTION):
 • Subject Placement & Hierarchy: ${v.placement}
 • Platform Safe-Zone Rule: ${sz.textSafeZone}
 • Visual Storytelling Angle: ${v.storytelling}
-• Facial Expression & Emotion: ${v.expression}
+• Facial Expression & Body Language: ${getSelectedMoodDirective(v)} (${v.expression})
 • Foreground & Background Arrangement: ${v.fgBgArrangement}
 • Background Treatment: ${v.background}
 • Cinematic Lighting & Color Grading: ${v.lighting}
@@ -2364,10 +2385,12 @@ STEP 3 — LOCKED TYPOGRAPHY & BRAND RULES (KHAND BOLD • YELLOW & WHITE):
 • Do NOT add any other random words, gibberish text, or extra labels anywhere on the image.
 
 ===================================================================
-STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
+STEP 4 — HYPER-REALISTIC 8K/4K COLOR GRADING & MICRO-DETAILING LOCK:
 ===================================================================
-• Format & Resolution Lock: Exact ${sz.ratio} aspect ratio (${sz.resolution}px, ${sz.orientation}) for ${sz.platform}, Ultra-Realistic / Photorealistic 8K quality, razor-sharp focus on foreground subject eyes and primary evidence.
-• NO clutter, NO extra random objects, NO watermarks, NO channel logos, NO timestamps in bottom-right corner, NO plastic AI skin, NO historically inaccurate clothing/architecture.`;
+• Format & Resolution Lock: Exact ${sz.ratio} aspect ratio (${sz.resolution}px, ${sz.orientation}) for ${sz.platform}.
+• Pro YouTube 8K Color Grading: Deep cinematic HDR contrast, rich vibrant color separation (warm golden #FFD700 / amber rim highlights vs deep obsidian shadows & electric cyan/crimson accents) so the thumbnail pops off any mobile feed.
+• 8K Micro-Detailing: Razor-sharp focus on iris catchlights, natural skin pores, individual hair strands, fabric weave, weathered stone/manuscript fiber texture, volumetric light rays, f/1.4 shallow depth-of-field bokeh, and grounded contact shadows.
+• Negative Constraints: ZERO plastic AI skin, ZERO flat/muddy colors, ZERO clutter, ZERO random extra words, ZERO watermarks, ZERO channel logos, NO historically inaccurate attire or architecture.`;
     }
 
     function selectConceptAndGenerateVariants(conceptIdx, silent) {
@@ -2512,10 +2535,21 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
                 />
               </div>
 
-              <!-- Live 2-Line Typography Bar -->
-              <div class="dark-badge-keep p-2.5 rounded-xl bg-[#090b10] border border-tertiary/40">
+              <!-- Live 2-Line Typography Bar + Mobile CTR Score -->
+              <div class="dark-badge-keep p-2.5 rounded-xl bg-[#090b10] border border-tertiary/40 space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-mono text-[9px] text-slate-400 uppercase">Khand Bold Preview</span>
+                  <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-secondary/20 text-secondary font-bold">CTR Score: ${computeVariantCtrScore(v.activeHook, v).score}/100</span>
+                </div>
                 <p id="varLine1_${idx}" class="font-khand text-lg font-bold text-[#FFD700] leading-tight khand-thumb-shadow">${line1}</p>
                 <p id="varLine2_${idx}" class="font-khand text-base font-bold text-white leading-tight khand-thumb-shadow">${line2}</p>
+                <p class="font-mono text-[9px] text-slate-400">${computeVariantCtrScore(v.activeHook, v).tip}</p>
+              </div>
+
+              <!-- Live Aspect-Ratio Layout Blueprint Wireframe -->
+              <div class="space-y-1">
+                <span class="font-mono text-[9px] uppercase text-outline block">Live Layout Blueprint (${getSelectedThumbnailSize().ratio})</span>
+                ${renderMiniLayoutWireframe(v, line1, line2)}
               </div>
 
               <!-- Full Copyable English Prompt Box -->
@@ -2553,6 +2587,10 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
                   <span>Share ${v.code}</span>
                 </button>
               </div>
+              <button type="button" onclick="openImageStudioModal(${idx})" class="w-full py-2.5 px-3 rounded-xl bg-primary/20 hover:bg-primary hover:text-slate-950 border border-primary/40 text-primary font-display text-xs font-extrabold flex items-center justify-center gap-1.5 transition">
+                <span class="material-symbols-outlined text-[16px]">auto_fix_high</span>
+                <span>Generate Image / ChatGPT Studio</span>
+              </button>
               <div class="grid grid-cols-2 gap-2">
                 <button type="button" onclick="copyAndLaunchAI('chatgpt', ${idx})" class="py-2 px-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-white font-mono text-[11px] font-bold flex items-center justify-center gap-1 transition">
                   <span>🚀</span><span>Copy &amp; ChatGPT</span>
@@ -2577,7 +2615,7 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
       const fmt = getActiveFormatObj();
       const title = (document.getElementById('videoTitleInput').value || '').trim();
       const desc = (document.getElementById('videoTopicDetailsInput').value || '').trim();
-      const refInfo = (document.getElementById('referenceInfoInput').value || '').trim();
+      const refInfo = '';
       v.promptText = composeFullVariantPrompt(v, concept, niche, fmt, title, desc, refInfo, v.activeHook);
       renderVariantsComparisonAndCards();
     }
@@ -2597,7 +2635,7 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
       const fmt = getActiveFormatObj();
       const title = (document.getElementById('videoTitleInput').value || '').trim();
       const desc = (document.getElementById('videoTopicDetailsInput').value || '').trim();
-      const refInfo = (document.getElementById('referenceInfoInput').value || '').trim();
+      const refInfo = '';
       v.promptText = composeFullVariantPrompt(v, concept, niche, fmt, title, desc, refInfo, newHook);
       const pre = document.getElementById('variantPromptPre_' + idx);
       if (pre) pre.textContent = v.promptText;
@@ -2627,8 +2665,11 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
       const v = appState.variantsList[idx];
       if (!v) return;
       try { await navigator.clipboard.writeText(v.promptText); } catch (e) {}
-      const url = target === 'chatgpt' ? 'https://chatgpt.com/' : 'https://gemini.google.com/app';
-      window.open(url, '_blank', 'noopener');
+      if (target === 'chatgpt') {
+        dispatchToChatGPTBridge(v.promptText, `Prompt ${v.code} copied & sent to ChatGPT!`);
+        return;
+      }
+      window.open('https://gemini.google.com/app', '_blank', 'noopener');
       showToast(`Variant ${v.code} Prompt copied! Opening ${target === 'chatgpt' ? 'ChatGPT' : 'Gemini'}...`);
     }
 
@@ -2673,7 +2714,9 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
       });
       appState.customNicheText = '';
       appState.researchInsights = null;
+      appState.thumbnailHooksPreview = [];
       appState.conceptsList = [];
+      renderAiHooksPreview();
       appState.variantsList = [];
       appState.selectedConceptIndex = 0;
 
@@ -2800,6 +2843,66 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
     }
 
 
+
+    function buildLocalAutoDetails(title, niche, fmt) {
+      const cleanT = (title || '').trim();
+      return `Video Topic: "${cleanT}". Niche: ${niche.name} (${fmt.name}). Focuses on the core mystery, verified historical/factual evidence, dramatic visual contrast, and high-curiosity storytelling tailored for maximum viewer engagement.`;
+    }
+
+    async function autoWriteVideoDetailsFromTitle(silent = false) {
+      const title = (document.getElementById('videoTitleInput')?.value || '').trim();
+      if (!title) {
+        if (!silent) showToast('Enter a Video Title in Step 3 first!');
+        return '';
+      }
+      const niche = getActiveNicheObj();
+      const fmt = getActiveFormatObj();
+      const descEl = document.getElementById('videoTopicDetailsInput');
+
+      if (appState.geminiApiKey) {
+        if (!silent) showToast('✨ AI analyzing Title & writing Video Details...');
+        const pTxt = `Analyze this YouTube video title: "${title}" (Niche: ${niche.name}, Format: ${fmt.name}).
+Write a crisp 2-3 sentence Video Details summary (in the same language as the title—Hindi/Hinglish/English) covering the core story, key characters/subjects, primary evidence or mystery, and visual elements needed for a hyper-realistic thumbnail.
+Return strict JSON: {"details": "..."}`;
+        const res = await callGeminiJsonAPI(pTxt, false).catch(() => null);
+        if (res && res.details) {
+          if (descEl) descEl.value = res.details.trim();
+          saveStudioState();
+          if (!silent) showToast('✅ Video Details auto-written by Gemini AI!');
+          return res.details.trim();
+        }
+      }
+      const localDetails = buildLocalAutoDetails(title, niche, fmt);
+      if (descEl) descEl.value = localDetails;
+      saveStudioState();
+      if (!silent) showToast('✅ Video Details generated from Title!');
+      return localDetails;
+    }
+
+    function renderAiHooksPreview() {
+      const panel = document.getElementById('aiHooksPreviewPanel');
+      const grid = document.getElementById('aiHooksPreviewGrid');
+      if (!panel || !grid) return;
+      const hooks = appState.thumbnailHooksPreview || [];
+      if (!hooks.length) {
+        panel.classList.add('hidden');
+        return;
+      }
+      panel.classList.remove('hidden');
+      grid.innerHTML = hooks.slice(0, 3).map((h, i) => {
+        const { line1, line2 } = splitHookIntoTwoLines(h.hindi || h.hinglish || h.english || '');
+        const label = i === 0 ? 'Variation 1 (Curiosity)' : (i === 1 ? 'Variation 2 (Contrast)' : 'Variation 3 (Punch)');
+        return `<div class="dark-badge-keep p-3 rounded-xl bg-[#090b10] border border-tertiary/35 space-y-1">
+          <div class="flex items-center justify-between gap-1">
+            <span class="font-mono text-[9px] uppercase text-slate-400 font-bold">${label}</span>
+            <span class="font-mono text-[9px] text-tertiary">Khand Bold</span>
+          </div>
+          <p class="font-khand text-base font-bold text-[#FFD700] leading-tight khand-thumb-shadow">${line1}</p>
+          <p class="font-khand text-sm font-bold text-white leading-tight khand-thumb-shadow">${line2}</p>
+        </div>`;
+      }).join('');
+    }
+
     function getSelectedThumbnailSize() {
       return THUMBNAIL_SIZES.find(s => s.id === appState.selectedSizeId) || THUMBNAIL_SIZES[0];
     }
@@ -2854,12 +2957,14 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
           selectedFormatId: appState.selectedFormatId,
           selectedSubStyleId: appState.selectedSubStyleId,
           selectedSizeId: appState.selectedSizeId,
+          selectedMood: appState.selectedMood,
           videoTitle: (document.getElementById('videoTitleInput') || {}).value || '',
-          optionalHookOverride: (document.getElementById('optionalHookOverrideInput') || {}).value || '',
+          optionalHookOverride: '',
           videoTopicDetails: (document.getElementById('videoTopicDetailsInput') || {}).value || '',
-          referenceInfo: (document.getElementById('referenceInfoInput') || {}).value || '',
+          referenceInfo: '',
           researchSource: appState.researchSource,
           researchInsights: appState.researchInsights,
+          thumbnailHooksPreview: appState.thumbnailHooksPreview,
           conceptsList: appState.conceptsList,
           selectedConceptIndex: appState.selectedConceptIndex,
           variantsList: appState.variantsList,
@@ -2883,8 +2988,10 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
         if (data.selectedFormatId) appState.selectedFormatId = data.selectedFormatId;
         if (data.selectedSubStyleId) appState.selectedSubStyleId = data.selectedSubStyleId;
         if (data.selectedSizeId) appState.selectedSizeId = data.selectedSizeId;
+        if (data.selectedMood) selectExpressionMood(data.selectedMood);
         if (data.researchSource) appState.researchSource = data.researchSource;
         if (data.researchInsights) appState.researchInsights = data.researchInsights;
+        if (Array.isArray(data.thumbnailHooksPreview)) appState.thumbnailHooksPreview = data.thumbnailHooksPreview;
         if (Array.isArray(data.conceptsList)) appState.conceptsList = data.conceptsList;
         if (typeof data.selectedConceptIndex === 'number') appState.selectedConceptIndex = data.selectedConceptIndex;
         if (Array.isArray(data.variantsList)) appState.variantsList = data.variantsList;
@@ -2894,10 +3001,8 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
         const setVal = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
         setVal('customNicheInput', data.customNicheText || '');
         setVal('videoTitleInput', data.videoTitle || '');
-        setVal('optionalHookOverrideInput', data.optionalHookOverride || '');
-        setVal('videoTopicDetailsInput', data.videoTopicDetails || '');
-        setVal('referenceInfoInput', data.referenceInfo || '');
-
+                setVal('videoTopicDetailsInput', data.videoTopicDetails || '');
+        
         renderNicheSelectionGrid();
         renderFormatSelectionGrid();
         renderThumbnailSizeGrid();
@@ -2905,6 +3010,7 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
         if (appState.researchInsights) {
           renderResearchInsightsUI(appState.researchInsights, data.videoTitle || '', appState.researchSource);
         }
+        renderAiHooksPreview();
         if (appState.conceptsList.length > 0) {
           renderConceptsDashboard();
           if (appState.variantsList.length > 0) {
@@ -2916,6 +3022,471 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
         return !!(data.videoTitle || appState.conceptsList.length);
       } catch (e) {
         return false;
+      }
+    }
+
+
+    // ==================== 14. V3.0 NEXT-LEVEL FEATURES (WIREFRAME, CTR, HISTORY, PRESETS, IMAGE STUDIO) ====================
+    const HISTORY_STORAGE_KEY = 'yt_seo_ssiro_history_v30';
+    const PRESETS_STORAGE_KEY = 'yt_seo_ssiro_presets_v30';
+    let activeStudioVariantIndex = 0;
+    let studioCreatorPhotoB64 = null;
+    let studioExtraPhotosB64 = [];
+
+    async function copyTextSafe(txt, toastMsg) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(txt);
+        }
+      } catch (e) {}
+      if (toastMsg) showToast(toastMsg);
+    }
+
+    function escHtml(s) { return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+
+
+    const CHATGPT_CHAT_URL_KEY = 'yt_seo_ssiro_chatgpt_chat_url_v32';
+
+    function getSavedChatGptUrl() {
+      try { return (localStorage.getItem(CHATGPT_CHAT_URL_KEY) || '').trim(); } catch (e) { return ''; }
+    }
+
+    function saveChatGptChatUrl() {
+      const inp = document.getElementById('savedChatGptUrlInput');
+      const val = (inp?.value || '').trim();
+      if (val && !val.startsWith('https://chatgpt.com')) {
+        showToast('Please paste a valid https://chatgpt.com/... link!');
+        return;
+      }
+      try {
+        if (val) localStorage.setItem(CHATGPT_CHAT_URL_KEY, val);
+        else localStorage.removeItem(CHATGPT_CHAT_URL_KEY);
+      } catch (e) {}
+      showToast(val ? '✅ Permanent ChatGPT chat link saved!' : 'Cleared ChatGPT link (will open new chat).');
+    }
+
+    function clearChatGptChatUrl() {
+      const inp = document.getElementById('savedChatGptUrlInput');
+      if (inp) inp.value = '';
+      try { localStorage.removeItem(CHATGPT_CHAT_URL_KEY); } catch (e) {}
+      showToast('ChatGPT link cleared.');
+    }
+
+    function dispatchToChatGPTBridge(promptText, toastMsg) {
+      copyTextSafe(promptText, toastMsg || 'Prompt copied! Paste & Send in ChatGPT.');
+      try {
+        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, ts: Date.now() }, '*');
+      } catch (e) {}
+      const savedUrl = getSavedChatGptUrl();
+      if (savedUrl) {
+        window.open(savedUrl, 'ssiro_chatgpt_bridge', 'noopener');
+      } else {
+        const qParam = promptText.length <= 3200 ? '?q=' + encodeURIComponent(promptText) : '';
+        window.open('https://chatgpt.com/' + qParam, 'ssiro_chatgpt_bridge', 'noopener');
+      }
+    }
+
+    const CREATOR_FACE_STORAGE_KEY = 'yt_seo_ssiro_creator_face_v31';
+
+    const MOOD_DIRECTIVES = {
+      auto: '',
+      curiosity: 'Wide-eyed stunned curiosity, slightly raised eyebrows, leaning slightly forward with an inquisitive/pointing gesture toward the focal evidence (face 100% unchanged).',
+      shock: 'Jaw-dropping revelation shock, intense wide-open eyes, raised hand or dramatic lean-back reaction toward the proof (face 100% unchanged).',
+      debate: 'Assertive, intense debate stance, sharp focused eye contact, confident hand gesture challenging the claim (face 100% unchanged).',
+      authority: 'Calm, commanding documentary authority, composed serious gaze, poised confident posture (face 100% unchanged).'
+    };
+
+    function getSelectedMoodDirective(v) {
+      const m = appState.selectedMood || 'auto';
+      if (m !== 'auto' && MOOD_DIRECTIVES[m]) return MOOD_DIRECTIVES[m];
+      return v ? `${v.expression}; body posture & hand gesture naturally aligned to this scene while keeping the exact real face 100% unchanged` : 'Topic-matched expression & body language while keeping the exact real face 100% unchanged';
+    }
+
+    function selectExpressionMood(moodId) {
+      appState.selectedMood = moodId;
+      document.querySelectorAll('.mood-chip').forEach(btn => {
+        const isAct = btn.getAttribute('data-mood') === moodId;
+        btn.className = isAct
+          ? 'mood-chip px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-bold transition'
+          : 'mood-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-mono text-[10px] font-bold transition';
+      });
+      if (appState.conceptsList && appState.conceptsList.length > 0) {
+        selectConceptAndGenerateVariants(appState.selectedConceptIndex, true);
+        showToast('🎭 Body language & expression updated in all prompts!');
+      }
+      saveStudioState();
+    }
+
+    function loadSavedCreatorFace() {
+      try {
+        const saved = localStorage.getItem(CREATOR_FACE_STORAGE_KEY);
+        if (saved) {
+          studioCreatorPhotoB64 = saved;
+          const prev = document.getElementById('studioCreatorPreview');
+          if (prev) {
+            prev.classList.remove('hidden');
+            prev.innerHTML = `<img src="${saved}" class="h-14 w-14 object-cover rounded-lg border border-tertiary" /><span class="font-mono text-[10px] text-secondary font-bold">✓ Default Face Saved</span>`;
+          }
+        }
+      } catch (e) {}
+    }
+
+    function clearSavedCreatorPhoto() {
+      studioCreatorPhotoB64 = null;
+      try { localStorage.removeItem(CREATOR_FACE_STORAGE_KEY); } catch (e) {}
+      const prev = document.getElementById('studioCreatorPreview');
+      if (prev) { prev.classList.add('hidden'); prev.innerHTML = ''; }
+      showToast('Saved default portrait cleared.');
+    }
+
+    function copyFollowUpFix(kind) {
+      const map = {
+        face_bigger: 'Keep the exact same real face(s) 100% unchanged (zero face morphing), just make the main YouTuber portrait 20% larger and sharper in the foreground with stronger rim lighting.',
+        text_brighter: 'Keep the exact same real face(s) and composition unchanged, just make the 2-line Khand Bold text (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White) 20% larger, brighter, and add a deeper dark gradient behind the text for mobile readability.',
+        more_contrast: 'Keep the exact same real face(s) unchanged, boost 8K HDR color contrast, deepen the obsidian shadows, intensify the golden rim light, and sharpen micro-details.',
+        cleaner_bg: 'Keep the exact same real face(s) and foreground evidence unchanged, softly declutter and blur (f/1.4 bokeh) the background so the main subject and headline pop immediately.'
+      };
+      const fixPrompt = map[kind] || map.more_contrast;
+      if (getSavedChatGptUrl()) { dispatchToChatGPTBridge(fixPrompt, 'Fix sent to your saved ChatGPT chat!'); } else { copyTextSafe(fixPrompt, 'Follow-up fix copied! Paste in ChatGPT.'); }
+    }
+
+    function previewInYouTubeFeed(input) {
+      const file = (input.files || [])[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = () => {
+        const card = document.getElementById('ytFeedSimulatorCard');
+        const img = document.getElementById('ytFeedSimImg');
+        const ttl = document.getElementById('ytFeedSimTitle');
+        if (img) img.src = String(r.result || '');
+        if (ttl) ttl.textContent = (document.getElementById('videoTitleInput')?.value || 'Your YouTube Video Title').trim();
+        if (card) card.classList.remove('hidden');
+      };
+      r.readAsDataURL(file);
+    }
+
+    function computeVariantCtrScore(hookRaw, v) {
+      const { line1, line2 } = splitHookIntoTwoLines(hookRaw);
+      const w1 = line1.trim().split(/\s+/).filter(Boolean).length;
+      const w2 = line2.trim().split(/\s+/).filter(Boolean).length;
+      let score = 88;
+      let tip = 'Optimal 2-line punch for mobile feeds.';
+      if (w1 > 4 || w2 > 4) {
+        score -= 8;
+        tip = 'Keep each line to 2–4 words for faster mobile reading.';
+      } else if (w1 >= 2 && w2 >= 2 && w1 <= 3 && w2 <= 3) {
+        score += 7;
+        tip = 'High-impact mobile contrast & ideal 2–3 word hook.';
+      }
+      if (v.shortCode === 'A') score = Math.min(98, score + 2);
+      return { score: Math.max(72, Math.min(98, score)), tip };
+    }
+
+    function renderMiniLayoutWireframe(v, line1, line2) {
+      const sz = getSelectedThumbnailSize();
+      const isVert = sz.ratio === '9:16' || sz.ratio === '4:5';
+      const isSq = sz.ratio === '1:1';
+      const aspectCls = sz.ratio === '9:16' ? 'aspect-[9/16] max-w-[130px] mx-auto' : (sz.ratio === '4:5' ? 'aspect-[4/5] max-w-[155px] mx-auto' : (isSq ? 'aspect-square max-w-[165px] mx-auto' : 'aspect-video w-full'));
+
+      if (isVert) {
+        return `<div class="dark-badge-keep ${aspectCls} rounded-xl bg-gradient-to-b from-[#0b0f19] via-[#131a2b] to-[#080a10] border border-tertiary/40 p-2 flex flex-col justify-between relative overflow-hidden">
+          <div class="text-center pt-1">
+            <span class="font-mono text-[8px] px-1.5 py-0.5 rounded bg-white/10 text-slate-300">${sz.ratio} SAFE</span>
+            <p class="font-khand text-xs font-bold text-[#FFD700] leading-tight mt-1 truncate">${escHtml(line1)}</p>
+            <p class="font-khand text-[11px] font-bold text-white leading-tight truncate">${escHtml(line2)}</p>
+          </div>
+          <div class="my-auto mx-auto w-14 h-14 rounded-full bg-tertiary/20 border border-tertiary/60 flex items-center justify-center text-[10px] font-mono text-tertiary font-bold text-center leading-tight">👤 Face<br/>Center</div>
+          <div class="text-center pb-2">
+            <span class="inline-block px-2 py-0.5 rounded bg-secondary/20 border border-secondary/40 font-mono text-[9px] text-secondary font-bold">🔍 Proof Zone</span>
+          </div>
+        </div>`;
+      }
+
+      const isSplit = v.shortCode === 'B';
+      return `<div class="dark-badge-keep ${aspectCls} rounded-xl bg-gradient-to-r from-[#090d16] via-[#141c2f] to-[#0a0d14] border border-tertiary/40 p-2.5 grid grid-cols-12 gap-1.5 items-center relative overflow-hidden">
+        <div class="${isSplit ? 'col-span-6' : 'col-span-7'} space-y-0.5 z-10">
+          <span class="font-mono text-[8px] px-1.5 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold">${sz.ratio} TEXT ZONE</span>
+          <p class="font-khand text-sm font-bold text-[#FFD700] leading-tight truncate">${escHtml(line1)}</p>
+          <p class="font-khand text-xs font-bold text-white leading-tight truncate">${escHtml(line2)}</p>
+          <span class="inline-block mt-1 px-1.5 py-0.5 rounded bg-secondary/20 text-secondary font-mono text-[8px] font-bold">🔍 Focal Proof</span>
+        </div>
+        <div class="${isSplit ? 'col-span-6' : 'col-span-5'} h-full flex items-center justify-center">
+          <div class="w-14 h-14 rounded-2xl bg-tertiary/15 border border-tertiary/60 flex items-center justify-center text-[10px] font-mono text-tertiary font-bold text-center leading-tight">👤 Hero<br/>Subject</div>
+        </div>
+      </div>`;
+    }
+
+    function saveProjectToHistory(title) {
+      if (!title || !appState.conceptsList.length) return;
+      try {
+        const list = JSON.parse(localStorage.getItem(HISTORY_STORAGE_KEY) || '[]');
+        const entry = {
+          id: Date.now(),
+          title,
+          details: (document.getElementById('videoTopicDetailsInput')?.value || '').trim(),
+          nicheId: appState.selectedNicheId,
+          formatId: appState.selectedFormatId,
+          subStyleId: appState.selectedSubStyleId,
+          sizeId: appState.selectedSizeId,
+          hooks: appState.thumbnailHooksPreview || [],
+          concepts: appState.conceptsList || [],
+          insights: appState.researchInsights || null,
+          savedAt: new Date().toLocaleString()
+        };
+        const filtered = [entry, ...list.filter(x => x.title !== title)].slice(0, 20);
+        localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(filtered));
+      } catch (e) {}
+    }
+
+    function toggleHistoryModal() {
+      const m = document.getElementById('historyModalOverlay');
+      if (!m) return;
+      m.classList.toggle('hidden');
+      if (!m.classList.contains('hidden')) renderHistoryList();
+    }
+
+    function renderHistoryList() {
+      const box = document.getElementById('historyListContainer');
+      if (!box) return;
+      let list = [];
+      try { list = JSON.parse(localStorage.getItem(HISTORY_STORAGE_KEY) || '[]'); } catch (e) {}
+      if (!list.length) {
+        box.innerHTML = '<div class="p-6 text-center text-xs text-outline font-mono">No saved projects yet. Run Step 5 on any video to save it automatically.</div>';
+        return;
+      }
+      box.innerHTML = list.map(item => `
+        <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 flex items-center justify-between gap-2">
+          <div class="min-w-0 flex-1">
+            <p class="font-display text-xs sm:text-sm font-bold text-white truncate">${escHtml(item.title)}</p>
+            <p class="font-mono text-[10px] text-outline mt-0.5">${escHtml(item.savedAt || '')} • ${escHtml(item.sizeId || '16:9')}</p>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" onclick="loadProjectFromHistory(${item.id})" class="px-2.5 py-1.5 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">Load</button>
+            <button type="button" onclick="deleteHistoryItem(${item.id})" class="p-1.5 rounded-lg bg-red-500/15 text-red-400 border border-red-500/30"><span class="material-symbols-outlined text-[15px]">delete</span></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadProjectFromHistory(id) {
+      try {
+        const list = JSON.parse(localStorage.getItem(HISTORY_STORAGE_KEY) || '[]');
+        const item = list.find(x => x.id === id);
+        if (!item) return;
+        appState.selectedNicheId = item.nicheId || 'history';
+        appState.selectedFormatId = item.formatId || 'documentary';
+        appState.selectedSubStyleId = item.subStyleId || 'cinematic_doc';
+        appState.selectedSizeId = item.sizeId || 'yt_16_9';
+        appState.thumbnailHooksPreview = item.hooks || [];
+        appState.conceptsList = item.concepts || [];
+        appState.researchInsights = item.insights || null;
+        document.getElementById('videoTitleInput').value = item.title || '';
+        document.getElementById('videoTopicDetailsInput').value = item.details || '';
+        renderNicheSelectionGrid();
+        renderFormatSelectionGrid();
+        renderThumbnailSizeGrid();
+        if (appState.researchInsights) renderResearchInsightsSection();
+        renderAiHooksPreview();
+        renderConceptsDashboard();
+        selectConceptAndGenerateVariants(0, true);
+        saveProjectToHistory(title);
+        saveStudioState();
+        toggleHistoryModal();
+        showToast('✅ Loaded project from History!');
+      } catch (e) {}
+    }
+
+    function deleteHistoryItem(id) {
+      try {
+        const list = JSON.parse(localStorage.getItem(HISTORY_STORAGE_KEY) || '[]').filter(x => x.id !== id);
+        localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(list));
+        renderHistoryList();
+      } catch (e) {}
+    }
+
+    function getPresetsList() {
+      const defaults = [
+        { id: 'p_hist', name: 'History & Mystery (16:9 Documentary)', nicheId: 'history', formatId: 'documentary', subStyleId: 'cinematic_doc', sizeId: 'yt_16_9' },
+        { id: 'p_sanatan', name: 'Sanatan / Debate (16:9 Clash)', nicheId: 'religion', formatId: 'debate', subStyleId: 'evidence_vs_claim', sizeId: 'yt_16_9' },
+        { id: 'p_reels', name: 'Shorts / Reels Vertical (9:16)', nicheId: 'history', formatId: 'mystery_rev', subStyleId: 'hidden_history', sizeId: 'shorts_9_16' }
+      ];
+      try {
+        const saved = JSON.parse(localStorage.getItem(PRESETS_STORAGE_KEY) || 'null');
+        return Array.isArray(saved) && saved.length ? saved : defaults;
+      } catch (e) { return defaults; }
+    }
+
+    function togglePresetsModal() {
+      const m = document.getElementById('presetsModalOverlay');
+      if (!m) return;
+      m.classList.toggle('hidden');
+      if (!m.classList.contains('hidden')) renderPresetsList();
+    }
+
+    function renderPresetsList() {
+      const box = document.getElementById('presetsListContainer');
+      if (!box) return;
+      const list = getPresetsList();
+      box.innerHTML = list.map(pr => `
+        <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 flex items-center justify-between gap-2">
+          <div class="min-w-0 flex-1">
+            <p class="font-display text-xs sm:text-sm font-bold text-white truncate">${escHtml(pr.name)}</p>
+            <p class="font-mono text-[10px] text-outline">${escHtml(pr.nicheId)} • ${escHtml(pr.formatId)} • ${escHtml(pr.sizeId)}</p>
+          </div>
+          <button type="button" onclick="applyChannelPreset('${pr.id}')" class="px-3 py-1.5 rounded-lg bg-secondary text-slate-950 font-mono text-[11px] font-extrabold shrink-0">Apply</button>
+        </div>
+      `).join('');
+    }
+
+    function applyChannelPreset(id) {
+      const pr = getPresetsList().find(x => x.id === id);
+      if (!pr) return;
+      appState.selectedNicheId = pr.nicheId;
+      appState.selectedFormatId = pr.formatId;
+      appState.selectedSubStyleId = pr.subStyleId;
+      appState.selectedSizeId = pr.sizeId;
+      renderNicheSelectionGrid();
+      renderFormatSelectionGrid();
+      renderThumbnailSizeGrid();
+      saveStudioState();
+      togglePresetsModal();
+      showToast(`✅ Preset applied: ${pr.name}`);
+    }
+
+    function saveCurrentAsPreset() {
+      const inp = document.getElementById('newPresetNameInput');
+      const name = (inp?.value || '').trim();
+      if (!name) { showToast('Enter a preset name first!'); return; }
+      const list = getPresetsList();
+      list.unshift({
+        id: 'p_' + Date.now(),
+        name,
+        nicheId: appState.selectedNicheId,
+        formatId: appState.selectedFormatId,
+        subStyleId: appState.selectedSubStyleId,
+        sizeId: appState.selectedSizeId
+      });
+      try { localStorage.setItem(PRESETS_STORAGE_KEY, JSON.stringify(list.slice(0, 12))); } catch (e) {}
+      if (inp) inp.value = '';
+      renderPresetsList();
+      showToast(`💾 Preset "${name}" saved!`);
+    }
+
+    function openImageStudioModal(idx) {
+      activeStudioVariantIndex = idx;
+      const v = appState.variantsList[idx];
+      const titleEl = document.getElementById('imageStudioModalTitle');
+      if (titleEl && v) titleEl.innerHTML = `<span class="material-symbols-outlined text-tertiary">auto_fix_high</span><span>Image Studio — Variant ${v.code}</span>`;
+      loadSavedCreatorFace();
+      const cgInp = document.getElementById('savedChatGptUrlInput'); if (cgInp) cgInp.value = getSavedChatGptUrl();
+      const resBox = document.getElementById('studioImageResultBox');
+      if (resBox) resBox.classList.add('hidden');
+      const m = document.getElementById('imageStudioModalOverlay');
+      if (m) m.classList.remove('hidden');
+    }
+
+    function closeImageStudioModal() {
+      const m = document.getElementById('imageStudioModalOverlay');
+      if (m) m.classList.add('hidden');
+    }
+
+    function handleStudioPhotoSelect(input, kind) {
+      const files = Array.from(input.files || []);
+      if (!files.length) return;
+      if (kind === 'creator') {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const rawUrl = String(reader.result || '');
+          studioCreatorPhotoB64 = rawUrl;
+          const prev = document.getElementById('studioCreatorPreview');
+          if (prev) {
+            prev.classList.remove('hidden');
+            prev.innerHTML = `<img src="${rawUrl}" class="h-14 w-14 object-cover rounded-lg border border-tertiary" /><span class="font-mono text-[10px] text-secondary font-bold">✓ Saved as Default</span>`;
+          }
+          try {
+            const img = new Image();
+            img.onload = () => {
+              const c = document.createElement('canvas');
+              const scale = Math.min(1, 512 / Math.max(img.width, img.height));
+              c.width = Math.round(img.width * scale);
+              c.height = Math.round(img.height * scale);
+              c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+              const compact = c.toDataURL('image/jpeg', 0.8);
+              studioCreatorPhotoB64 = compact;
+              localStorage.setItem(CREATOR_FACE_STORAGE_KEY, compact);
+            };
+            img.src = rawUrl;
+          } catch (e) {}
+        };
+        reader.readAsDataURL(files[0]);
+      } else {
+        studioExtraPhotosB64 = [];
+        const prev = document.getElementById('studioExtraPreview');
+        if (prev) { prev.classList.remove('hidden'); prev.innerHTML = ''; }
+        files.slice(0, 3).forEach(f => {
+          const r = new FileReader();
+          r.onload = () => {
+            const b64 = String(r.result || '');
+            studioExtraPhotosB64.push(b64);
+            if (prev) prev.innerHTML += `<img src="${b64}" class="h-14 w-14 object-cover rounded-lg border border-secondary" />`;
+          };
+          r.readAsDataURL(f);
+        });
+      }
+    }
+
+    function launchChatGPTPluginBridge() {
+      const v = appState.variantsList[activeStudioVariantIndex];
+      if (!v) return;
+      dispatchToChatGPTBridge(v.promptText, `Prompt ${v.code} copied & sent to ChatGPT!`);
+    }
+
+    async function generateThumbnailViaGeminiInApp() {
+      const v = appState.variantsList[activeStudioVariantIndex];
+      if (!v) return;
+      loadSavedCreatorFace();
+      const resBox = document.getElementById('studioImageResultBox');
+      const statusEl = document.getElementById('studioImageStatusText');
+      const imgEl = document.getElementById('studioGeneratedImg');
+      const dlEl = document.getElementById('studioDownloadImageLink');
+      if (resBox) resBox.classList.remove('hidden');
+      if (imgEl) imgEl.classList.add('hidden');
+      if (dlEl) dlEl.classList.add('hidden');
+
+      if (!appState.geminiApiKey) {
+        if (statusEl) statusEl.textContent = '⚠️ No Gemini API Key connected — use "Copy & Open ChatGPT" on the right!';
+        return;
+      }
+      if (statusEl) statusEl.textContent = '⏳ Calling Gemini Image API (if supported on your key)...';
+      try {
+        const parts = [{ text: v.promptText.replace('STOP AND CHECK BEFORE GENERATING ANY IMAGE', 'GENERATE IMAGE NOW USING ATTACHED PHOTOS') }];
+        const allImgs = [studioCreatorPhotoB64, ...studioExtraPhotosB64].filter(Boolean);
+        allImgs.forEach(dataUrl => {
+          const [meta, b64] = dataUrl.split(',');
+          const mime = (meta.match(/data:(.*?);/) || [])[1] || 'image/jpeg';
+          if (b64) parts.push({ inlineData: { mimeType: mime, data: b64 } });
+        });
+        const ep = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
+        const resp = await fetch(ep, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseModalities: ['TEXT', 'IMAGE'] } })
+        });
+        const data = await resp.json().catch(() => ({}));
+        const outParts = data?.candidates?.[0]?.content?.parts || [];
+        const imgPart = outParts.find(pt => pt.inlineData && pt.inlineData.data);
+        if (imgPart) {
+          const outSrc = `data:${imgPart.inlineData.mimeType || 'image/png'};base64,${imgPart.inlineData.data}`;
+          if (imgEl) { imgEl.src = outSrc; imgEl.classList.remove('hidden'); }
+          if (dlEl) { dlEl.href = outSrc; dlEl.download = `thumbnail_${v.code}.png`; dlEl.classList.remove('hidden'); }
+          if (statusEl) statusEl.textContent = '✅ 8K Thumbnail Generated!';
+          return;
+        }
+        const errMsg = data?.error?.message || 'Free Gemini tier does not allow image generation for this key.';
+        if (statusEl) statusEl.textContent = `⚠️ ${errMsg.slice(0, 95)} — Click "Copy & Open ChatGPT" to generate free!`;
+      } catch (e) {
+        if (statusEl) statusEl.textContent = '⚠️ Gemini Image API unavailable — Click "Copy & Open ChatGPT"!';
       }
     }
 
@@ -2960,11 +3531,165 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
       if (restored) {
         setTimeout(() => showToast('💾 आपका पिछला काम सुरक्षित रीस्टोर कर दिया गया है!'), 700);
       }
-      ['customNicheInput', 'videoTitleInput', 'optionalHookOverrideInput', 'videoTopicDetailsInput', 'referenceInfoInput'].forEach(fid => {
+      ['customNicheInput', 'videoTitleInput', 'videoTopicDetailsInput'].forEach(fid => {
         const el = document.getElementById(fid);
         if (el) el.addEventListener('input', saveStudioState);
       });
     });
   </script>
+
+  <!-- ==================== PROJECT HISTORY MODAL ==================== -->
+  <div id="historyModalOverlay" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-surface-container-low border border-outline-variant/60 rounded-2xl p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
+        <div>
+          <h3 class="font-display text-base font-extrabold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-tertiary">history</span>
+            <span>Saved Project History</span>
+          </h3>
+          <p class="text-[11px] text-on-surface-variant">1-click to reload any past video title, research, concepts &amp; prompts.</p>
+        </div>
+        <button type="button" onclick="toggleHistoryModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <div id="historyListContainer" class="flex-1 overflow-y-auto custom-scroll space-y-2.5 pr-1"></div>
+    </div>
+  </div>
+
+  <!-- ==================== CHANNEL PRESETS MODAL ==================== -->
+  <div id="presetsModalOverlay" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-xl bg-surface-container-low border border-outline-variant/60 rounded-2xl p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
+        <div>
+          <h3 class="font-display text-base font-extrabold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">bookmarks</span>
+            <span>Channel Brand Presets</span>
+          </h3>
+          <p class="text-[11px] text-on-surface-variant">Save your Niche + Format + Size combo for 1-tap switching.</p>
+        </div>
+        <button type="button" onclick="togglePresetsModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <div class="flex items-center gap-2">
+        <input id="newPresetNameInput" type="text" placeholder="Channel / Preset Name (e.g. TheHistoFy Documentary)..." class="flex-1 bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-secondary" />
+        <button type="button" onclick="saveCurrentAsPreset()" class="px-3.5 py-2 rounded-xl bg-secondary text-slate-950 font-mono text-xs font-extrabold whitespace-nowrap">Save Current</button>
+      </div>
+      <div id="presetsListContainer" class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1"></div>
+    </div>
+  </div>
+
+  <!-- ==================== IN-APP THUMBNAIL IMAGE STUDIO & CHATGPT BRIDGE MODAL ==================== -->
+  <div id="imageStudioModalOverlay" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-surface-container-low border border-tertiary/50 rounded-2xl p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
+        <div>
+          <h3 id="imageStudioModalTitle" class="font-display text-base font-extrabold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-tertiary">auto_fix_high</span>
+            <span>Thumbnail Image Studio</span>
+          </h3>
+          <p class="text-[11px] text-on-surface-variant">Upload your mandatory portrait + optional extra photos, then generate via API or 1-click ChatGPT.</p>
+        </div>
+        <button type="button" onclick="closeImageStudioModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3 rounded-xl bg-surface-container-lowest border border-tertiary/40 space-y-2">
+          <div class="flex items-center justify-between gap-1">
+            <label class="font-mono text-[11px] font-bold text-tertiary">1. YouTuber Portrait (Mandatory)</label>
+            <button type="button" onclick="clearSavedCreatorPhoto()" class="font-mono text-[10px] text-outline hover:text-red-400">Clear Saved</button>
+          </div>
+          <input id="studioCreatorPhotoInput" type="file" accept="image/*" onchange="handleStudioPhotoSelect(this, 'creator')" class="w-full text-[11px] text-on-surface-variant file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-tertiary file:text-on-tertiary file:font-bold" />
+          <div id="studioCreatorPreview" class="hidden pt-1 flex items-center gap-2"></div>
+        </div>
+        <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-2">
+          <label class="font-mono text-[11px] font-bold text-secondary block">2. Extra Reference Photos (Optional)</label>
+          <input id="studioExtraPhotosInput" type="file" accept="image/*" multiple onchange="handleStudioPhotoSelect(this, 'extra')" class="w-full text-[11px] text-on-surface-variant file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-secondary file:text-slate-950 file:font-bold" />
+          <div id="studioExtraPreview" class="hidden pt-1 flex flex-wrap gap-1.5"></div>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-1">
+          <label for="savedChatGptUrlInput" class="font-mono text-[11px] font-bold text-secondary">🔗 Permanent ChatGPT Chat Link (Phone + PC):</label>
+          <span class="font-mono text-[9px] text-outline">Keep 1 chat with your photo!</span>
+        </div>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <input id="savedChatGptUrlInput" type="url" placeholder="https://chatgpt.com/c/... (paste your Thumbnail Studio chat link)" class="flex-1 bg-surface-container border border-outline-variant/60 rounded-lg px-3 py-2 font-mono text-[11px] text-white focus:outline-none focus:border-secondary" />
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="saveChatGptChatUrl()" class="px-3 py-2 rounded-lg bg-secondary text-slate-950 font-mono text-[11px] font-extrabold whitespace-nowrap">Save Link</button>
+            <button type="button" onclick="clearChatGptChatUrl()" class="px-2.5 py-2 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-mono text-[11px]">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/50 space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-mono text-[11px] font-bold text-white">Generate Options:</span>
+          <span class="font-mono text-[10px] text-outline">Reuses your saved ChatGPT chat + copies prompt!</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <button type="button" onclick="generateThumbnailViaGeminiInApp()" class="py-2.5 px-3 rounded-xl bg-primary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
+            <span class="material-symbols-outlined text-[17px]">bolt</span>
+            <span>Try Gemini Image API</span>
+          </button>
+          <button type="button" onclick="launchChatGPTPluginBridge()" class="py-2.5 px-3 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
+            <span>🚀</span>
+            <span>Copy &amp; Open ChatGPT</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="studioImageResultBox" class="hidden p-3 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span id="studioImageStatusText" class="font-mono text-xs font-bold text-secondary">Generating...</span>
+          <a id="studioDownloadImageLink" href="#" download="thumbnail_8k.png" class="hidden px-3 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">Download PNG</a>
+        </div>
+        <img id="studioGeneratedImg" src="" alt="Generated Thumbnail" class="hidden w-full rounded-xl border border-outline-variant/50 object-contain max-h-80" />
+      </div>
+
+      <!-- 1-TAP FOLLOW-UP FIX CHIPS FOR CHATGPT -->
+      <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-2">
+        <span class="font-mono text-[10px] uppercase text-secondary font-bold block">1-Tap Follow-Up Fix Prompts (Copy &amp; Paste in ChatGPT):</span>
+        <div class="flex flex-wrap gap-1.5">
+          <button type="button" onclick="copyFollowUpFix('face_bigger')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Face Bigger</button>
+          <button type="button" onclick="copyFollowUpFix('text_brighter')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Text Brighter</button>
+          <button type="button" onclick="copyFollowUpFix('more_contrast')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">8K More Contrast</button>
+          <button type="button" onclick="copyFollowUpFix('cleaner_bg')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Cleaner BG</button>
+        </div>
+      </div>
+
+      <!-- YOUTUBE HOME FEED SIMULATOR (TEST YOUR FINAL PNG!) -->
+      <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-mono text-[11px] font-bold text-white flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-red-500">smart_display</span>
+            <span>YouTube Mobile Feed Simulator</span>
+          </span>
+          <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-mono text-[10px] font-bold">
+            Test Final PNG
+            <input type="file" accept="image/*" onchange="previewInYouTubeFeed(this)" class="hidden" />
+          </label>
+        </div>
+        <div id="ytFeedSimulatorCard" class="hidden max-w-sm mx-auto rounded-xl bg-[#0f0f0f] border border-white/10 overflow-hidden shadow-lg">
+          <div class="relative aspect-video bg-black">
+            <img id="ytFeedSimImg" src="" alt="Feed Preview" class="w-full h-full object-cover" />
+            <span class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/85 text-white font-mono text-[10px] font-bold">12:45</span>
+          </div>
+          <div class="p-2.5 flex items-start gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-tertiary text-on-tertiary font-bold text-xs flex items-center justify-center shrink-0">YT</div>
+            <div class="min-w-0 flex-1">
+              <p id="ytFeedSimTitle" class="text-xs font-semibold text-white leading-snug line-clamp-2"></p>
+              <p class="text-[10px] text-slate-400 mt-0.5">Your Channel • 125K views • 2 hours ago</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
