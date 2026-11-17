@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v2.4 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v2.7 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -270,7 +270,7 @@
         </span>
       </div>
       <p class="font-mono text-[9px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        Powered by SSIRO • v2.4
+        Powered by SSIRO • v2.7
       </p>
     </div>
 
@@ -305,6 +305,10 @@
             <span class="material-symbols-outlined text-[14px]">system_update</span>
             <span>Update</span>
           </button>
+          <button type="button" onclick="resetStudioFresh(true)" title="Data Eraser: Clear Old Search &amp; Start Fresh" class="px-2 py-1 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-400/40 text-red-200 font-mono text-[10px] font-bold flex items-center gap-1 shrink-0 transition">
+            <span class="material-symbols-outlined text-[14px]">delete_sweep</span>
+            <span>Clear Data</span>
+          </button>
           <div class="flex items-center gap-1.5 min-w-0">
             <span class="w-2 h-2 rounded-full bg-secondary animate-pulse shrink-0"></span>
             <span id="aiCompactStatusLabel" class="font-mono text-[11px] font-bold text-secondary truncate">Gemini AI Active</span>
@@ -326,7 +330,7 @@
           <span class="material-symbols-outlined text-tertiary text-[20px] shrink-0 mt-0.5">bolt</span>
           <div class="space-y-0.5">
             <span class="font-display text-xs sm:text-sm font-bold text-white block leading-snug">Live Gemini AI &amp; YouTube Thumbnail Research Engine</span>
-            <span id="inlineApiStatusSub" class="text-[11px] sm:text-xs text-on-surface-variant block leading-relaxed">अपनी Gemini API Key पेस्ट करें ताकि YouTube के वायरल थंबनेल ट्रेंड्स और A/B/C प्रॉम्प्ट्स लाइव बन सकें</span>
+            <span id="inlineApiStatusSub" class="text-[11px] sm:text-xs text-on-surface-variant block leading-relaxed">Paste Gemini API Key for live YouTube trends &amp; A/B/C prompts.</span>
           </div>
         </div>
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto shrink-0">
@@ -353,28 +357,28 @@
           <span class="w-8 h-8 rounded-lg bg-tertiary text-on-tertiary font-mono text-xs font-black flex items-center justify-center shrink-0">01</span>
           <div class="min-w-0 flex-1">
             <p class="font-display text-xs sm:text-sm font-bold text-white leading-snug">Niche, Format &amp; Topic</p>
-            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">कैटेगरी, थंबनेल स्टाइल और वीडियो विषय चुनें</p>
+            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">Niche, format, size &amp; topic</p>
           </div>
         </a>
         <a href="#section-step-6" class="p-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 flex items-center gap-3 transition">
           <span class="w-8 h-8 rounded-lg bg-secondary/20 text-secondary border border-secondary/30 font-mono text-xs font-black flex items-center justify-center shrink-0">02</span>
           <div class="min-w-0 flex-1">
             <p class="font-display text-xs sm:text-sm font-bold text-white leading-snug">YouTube Viral Research</p>
-            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">यूट्यूब के सफल थंबनेल ट्रेंड्स और विश्लेषण</p>
+            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">Live trends &amp; 3-layer insights</p>
           </div>
         </a>
         <a href="#section-step-7-8" class="p-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 flex items-center gap-3 transition">
           <span class="w-8 h-8 rounded-lg bg-primary/20 text-primary border border-primary/30 font-mono text-xs font-black flex items-center justify-center shrink-0">03</span>
           <div class="min-w-0 flex-1">
             <p class="font-display text-xs sm:text-sm font-bold text-white leading-snug">6 Thumbnail Concepts</p>
-            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">6 अलग-अलग थंबनेल डिजाइन कॉन्सेप्ट्स</p>
+            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">6 distinct design concepts</p>
           </div>
         </a>
         <a href="#section-step-9-11" class="p-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 flex items-center gap-3 transition">
           <span class="w-8 h-8 rounded-lg bg-tertiary/20 text-tertiary border border-tertiary/30 font-mono text-xs font-black flex items-center justify-center shrink-0">04</span>
           <div class="min-w-0 flex-1">
             <p class="font-display text-xs sm:text-sm font-bold text-white leading-snug">Prompt Hub (Variants A, B, C)</p>
-            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">कॉपी करने योग्य प्रॉम्प्ट्स + हिंदी विवरण</p>
+            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">Copy A/B/C prompts + Hindi guide</p>
           </div>
         </a>
       </div>
@@ -402,8 +406,8 @@
       <div class="space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <label class="font-display text-sm font-bold text-white flex items-center gap-1.5">
-            <span class="px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-mono text-[11px] font-black">STEP 1</span>
-            <span>Select Video Niche (20 YouTube Niches + Custom Niche)</span> <button type="button" onclick="openHindiHelp('niche')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
+            <span class="px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 1</span>
+            <span>Select Niche</span> <button type="button" onclick="openHindiHelp('niche')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
           </label>
           <span id="activeNicheBadge" class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-tertiary/15 text-tertiary border border-tertiary/40 font-bold">
             1. History &amp; Archaeology
@@ -450,8 +454,8 @@
       <div class="space-y-3 pt-2 border-t border-outline-variant/30">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <label class="font-display text-sm font-bold text-white flex items-center gap-1.5">
-            <span class="px-2 py-0.5 rounded bg-secondary text-slate-950 font-mono text-[11px] font-black">STEP 2</span>
-            <span>Select Thumbnail Format &amp; Specific Sub-Style</span> <button type="button" onclick="openHindiHelp('format')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
+            <span class="px-2 py-0.5 rounded bg-secondary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 2</span>
+            <span>Select Format</span> <button type="button" onclick="openHindiHelp('format')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
           </label>
           <span id="activeFormatBadge" class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/40 font-bold">
             A. Documentary Thumbnail
@@ -480,19 +484,32 @@
         </div>
       </div>
 
+      <!-- STEP 2B: MULTI-PLATFORM SOCIAL MEDIA THUMBNAIL SIZE SELECTOR -->
+      <div class="space-y-3 pt-2 border-t border-outline-variant/30">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2 py-0.5 rounded bg-tertiary/20 text-tertiary border border-tertiary/40 font-mono text-[11px] font-bold">SIZE</span>
+            <h3 class="font-display text-sm sm:text-base font-bold text-white">Thumbnail Size</h3>
+            <button type="button" onclick="openHindiHelp('size')" title="हिंदी में निर्देश देखें" aria-label="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
+          </div>
+          <span id="selectedSizeBadge" class="font-mono text-[11px] px-2.5 py-1 rounded-lg bg-tertiary/15 text-tertiary border border-tertiary/30 font-bold">16:9 • 1920x1080 (YouTube / FB Video)</span>
+        </div>
+        <div id="thumbnailSizeGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2"></div>
+      </div>
+
       <!-- STEPS 3 & 4: VIDEO TITLE, DESCRIPTION / TOPIC DETAILS & OPTIONAL REFERENCE INFO -->
       <div class="space-y-4 pt-2 border-t border-outline-variant/30">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div class="lg:col-span-6 space-y-1.5">
             <label for="videoTitleInput" class="font-display text-sm font-bold text-white flex items-center gap-1.5">
-              <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black">STEP 3</span>
+              <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 3</span>
               <span>Video Title</span> <button type="button" onclick="openHindiHelp('inputs')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
             </label>
             <div class="flex items-center gap-2">
               <input
                 id="videoTitleInput"
                 type="text"
-                placeholder="बोलकर या लिखकर अपना वीडियो टाइटल डालें..."
+                placeholder="Enter or speak video title..."
                 class="flex-1 bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-tertiary"
               />
               <button type="button" data-mic-for="videoTitleInput" onclick="toggleVoiceDictation('videoTitleInput', this)" title="Speak Video Title" class="w-10 h-10 rounded-xl bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 flex items-center justify-center shrink-0 transition">
@@ -503,14 +520,14 @@
 
           <div class="lg:col-span-6 space-y-1.5">
             <label for="optionalHookOverrideInput" class="font-display text-sm font-bold text-white flex items-center justify-between gap-1.5">
-              <span>Optional Thumbnail Text Override (Line 1 Yellow | Line 2 White)</span>
-              <span class="font-mono text-[10px] text-tertiary">Khand Bold Locked</span>
+              <span>Thumbnail Text</span>
+              <span class="font-mono text-[10px] text-tertiary whitespace-nowrap">Khand Bold</span>
             </label>
             <div class="flex items-center gap-2">
               <input
                 id="optionalHookOverrideInput"
                 type="text"
-                placeholder="खाली छोड़ें (AI खुद बनाएगा) या बोलकर डालें..."
+                placeholder="Optional: Line 1 | Line 2 (or leave blank)"
                 class="flex-1 bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2.5 font-khand text-sm font-bold text-tertiary focus:outline-none focus:border-tertiary"
               />
               <button type="button" data-mic-for="optionalHookOverrideInput" onclick="toggleVoiceDictation('optionalHookOverrideInput', this)" title="Speak Thumbnail Text" class="w-10 h-10 rounded-xl bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 flex items-center justify-center shrink-0 transition">
@@ -524,8 +541,8 @@
           <div class="lg:col-span-7 space-y-1.5">
             <div class="flex items-center justify-between gap-2">
               <label for="videoTopicDetailsInput" class="font-display text-sm font-bold text-white flex items-center gap-1.5">
-                <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black">STEP 4</span>
-                <span>Video Description / Topic Details</span>
+                <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 4</span>
+                <span>Video Details</span>
               </label>
               <button type="button" data-mic-for="videoTopicDetailsInput" onclick="toggleVoiceDictation('videoTopicDetailsInput', this)" class="px-2.5 py-1 rounded-lg bg-tertiary/15 hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 font-mono text-[11px] font-bold flex items-center gap-1 shrink-0 transition">
                 <span class="material-symbols-outlined text-[15px]">mic</span>
@@ -535,7 +552,7 @@
             <textarea
               id="videoTopicDetailsInput"
               rows="4"
-              placeholder="माइक बटन दबाकर बोलें या लिखें: वीडियो की मुख्य कहानी, पात्रों के नाम, ऐतिहासिक तथ्य, विवाद या रहस्य..."
+              placeholder="Describe story, characters, key facts..."
               class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-3.5 text-xs sm:text-sm text-white leading-relaxed focus:outline-none focus:border-tertiary custom-scroll"
             ></textarea>
           </div>
@@ -543,7 +560,7 @@
           <div class="lg:col-span-5 space-y-1.5">
             <div class="flex items-center justify-between gap-2">
               <label for="referenceInfoInput" class="font-display text-sm font-bold text-white flex items-center gap-1.5">
-                <span>Optional Reference Info</span>
+                <span>Reference Info</span>
               </label>
               <button type="button" data-mic-for="referenceInfoInput" onclick="toggleVoiceDictation('referenceInfoInput', this)" class="px-2.5 py-1 rounded-lg bg-secondary/15 hover:bg-secondary hover:text-slate-950 text-secondary border border-secondary/40 font-mono text-[11px] font-bold flex items-center gap-1 shrink-0 transition">
                 <span class="material-symbols-outlined text-[15px]">mic</span>
@@ -553,7 +570,7 @@
             <textarea
               id="referenceInfoInput"
               rows="4"
-              placeholder="बोलकर बताएं कौन-सी फोटो लगानी है (जैसे: मेरी फोटो दाईं तरफ, शंकराचार्य जी, मंदिर या कोई शिलालेख)..."
+              placeholder="Optional: Photos &amp; placement..."
               class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-3.5 text-xs sm:text-sm text-white leading-relaxed focus:outline-none focus:border-secondary custom-scroll"
             ></textarea>
           </div>
@@ -569,24 +586,24 @@
           class="flex-1 py-3.5 px-5 rounded-xl bg-tertiary text-on-tertiary hover:brightness-110 font-display text-sm sm:text-base font-extrabold flex items-center justify-center gap-2 shadow-lg transition"
         >
           <span class="material-symbols-outlined text-[20px]">travel_explore</span>
-          <span id="startResearchBtnText">Step 5: Start Live YouTube Research &amp; Generate 6 Thumbnail Concepts</span>
+          <span id="startResearchBtnText">Step 5: Research &amp; Generate</span>
         </button>
 
         <button
           type="button"
           onclick="resetStudioFresh(true)"
-          title="Clear Inputs &amp; Temp Cache"
-          class="py-3.5 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/60 font-mono text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 transition"
+          title="Data Eraser: Clear Old Search, Prompts &amp; Inputs"
+          class="py-3.5 px-4 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-200 border border-red-400/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 transition"
         >
-          <span class="material-symbols-outlined text-[17px]">cleaning_services</span>
-          <span>Fresh Reset</span>
+          <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
+          <span>Clear Data</span>
         </button>
       </div>
 
       <!-- REAL-TIME STEP-BY-STEP PROGRESS TRACKER (NO FAKE INSTANT SUCCESS!) -->
       <div id="liveProgressPanel" class="hidden p-4 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2.5">
-        <div class="flex items-center justify-between gap-2">
-          <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2 min-w-0">
             <span id="liveProgressSpinner" class="w-2.5 h-2.5 rounded-full bg-tertiary animate-ping shrink-0"></span>
             <span id="liveProgressHeadline" class="font-mono text-xs font-bold text-white">Running Live YouTube &amp; AI Thumbnail Intelligence...</span>
           </div>
@@ -604,8 +621,8 @@
     <section id="section-step-6" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/40 pb-3">
         <div>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold block">Step 6 • Live YouTube Research &amp; 3-Layer AI Thumbnail Intelligence</span>
-          <h2 class="font-display text-base sm:text-lg font-extrabold text-white flex flex-wrap items-center gap-2"><span>Viral Thumbnail Patterns, Close-up Trends &amp; Topic Intelligence</span> <button type="button" onclick="openHindiHelp('research')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button></h2>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold block">Step 6 • Live YouTube Research</span>
+          <h2 class="font-display text-base sm:text-lg font-extrabold text-white flex flex-wrap items-center gap-2"><span>Research &amp; Intelligence</span> <button type="button" onclick="openHindiHelp('research')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button></h2>
         </div>
         <span id="researchAuthenticityBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-outline border border-outline-variant/40 font-bold">
           Waiting for Topic Input
@@ -621,7 +638,7 @@
             <span class="material-symbols-outlined text-tertiary text-[18px]">psychology</span>
           </div>
           <div id="layer1TopicBox" class="text-xs text-on-surface-variant space-y-1.5 leading-relaxed">
-            Enter your Video Title &amp; Description above and click <strong>Start Live YouTube Research</strong> to analyze the core story, viewer curiosity question, and primary visual anchor.
+            Analyzes story, viewer hook &amp; visual anchor.
           </div>
         </div>
 
@@ -632,7 +649,7 @@
             <span class="material-symbols-outlined text-secondary text-[18px]">Burst_mode</span>
           </div>
           <div id="layer2ViralBox" class="text-xs text-on-surface-variant space-y-1.5 leading-relaxed">
-            Analyzes close-up shot types, facial expressions, lighting contrast, background depth, and typography placement trending in your selected Niche &amp; Format.
+            Scans viral close-ups, lighting &amp; contrast.
           </div>
         </div>
 
@@ -643,7 +660,7 @@
             <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
           </div>
           <div id="layer3AccuracyBox" class="text-xs text-on-surface-variant space-y-1.5 leading-relaxed">
-            Enforces <strong>Khand Bold</strong> (#FFD700 Yellow + #FFFFFF White), <strong>Reference-Image-First</strong> facial lock, mobile readability, and strict period/domain visual accuracy.
+            Locks Khand Bold (#FFD700/#FFFFFF) &amp; Ref-Image-First.
           </div>
         </div>
       </div>
@@ -659,7 +676,7 @@
         </div>
         <div id="youtubeViralVideosGrid" class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="col-span-full py-4 text-center text-xs text-outline font-mono">
-            Click <strong>Step 5: Start Live YouTube Research</strong> above to inspect viral thumbnail patterns for your topic.
+            Run Step 5 above to scan viral YouTube patterns.
           </div>
         </div>
       </div>
@@ -669,8 +686,8 @@
     <section id="section-step-7-8" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/40 pb-3">
         <div>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-primary font-bold block">Steps 7 &amp; 8 • Interactive Thumbnail Concept Selection Dashboard</span>
-          <h2 class="font-display text-base sm:text-lg font-extrabold text-white flex flex-wrap items-center gap-2"><span>Select One Concept (or Open Full 9-Variant Hub)</span> <button type="button" onclick="openHindiHelp('concepts')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button></h2>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-primary font-bold block">Steps 7 &amp; 8 • 6 Design Concepts</span>
+          <h2 class="font-display text-base sm:text-lg font-extrabold text-white flex flex-wrap items-center gap-2"><span>Select a Concept</span> <button type="button" onclick="openHindiHelp('concepts')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button></h2>
         </div>
         <span id="selectedConceptPill" class="font-mono text-xs px-3 py-1 rounded-full bg-tertiary/20 text-tertiary border border-tertiary/40 font-bold">
           No Concept Selected Yet
@@ -679,7 +696,7 @@
 
       <div id="conceptsDashboardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div class="col-span-full p-6 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-center text-xs text-outline font-mono">
-          Run Step 5 above to generate <strong>6 tailored Thumbnail Design Concepts</strong> for your Niche, Format, Title &amp; Description.
+          Run Step 5 above to generate 6 thumbnail concepts.
         </div>
       </div>
     </section>
@@ -688,9 +705,9 @@
     <section id="section-step-9-11" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">Steps 9, 10 &amp; 11 • Three Independent Creative Directions (A, B &amp; C)</span>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">Steps 9–11 • Variants A, B &amp; C</span>
           <h2 id="variantsSectionTitle" class="font-display text-base sm:text-lg font-extrabold text-white">
-            Variants A, B &amp; C — Compare &amp; Copy Reference-Image-First Prompts
+            Prompt Hub (A, B &amp; C)
           </h2>
         </div>
         <div class="flex flex-wrap items-center gap-2 shrink-0">
@@ -718,15 +735,15 @@
 
       <!-- STEP 10: SIDE-BY-SIDE VISUAL COMPARISON MATRIX (A vs B vs C) -->
       <div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/40 space-y-3">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <h3 class="font-display text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
             <span class="material-symbols-outlined text-tertiary text-[17px]">compare</span>
-            <span>Step 10: Variant A vs. Variant B vs. Variant C — 8-Point Visual Architecture Comparison</span>
+            <span>Step 10: A vs B vs C Comparison</span>
           </h3>
-          <span class="font-mono text-[10px] text-secondary">100% Distinct Compositions</span>
+          <span class="font-mono text-[10px] text-secondary">Swipe table ↔</span>
         </div>
-        <div class="overflow-x-auto custom-scroll">
-          <table class="w-full text-left border-collapse text-xs">
+        <div class="overflow-x-auto custom-scroll -mx-1 px-1">
+          <table class="w-full min-w-[560px] text-left border-collapse text-xs">
             <thead>
               <tr class="border-b border-outline-variant/40 font-mono text-[10px] uppercase text-outline">
                 <th class="py-2 pr-3">Visual Dimension</th>
@@ -762,7 +779,7 @@
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
-    const CURRENT_APP_VERSION = 'v2.4';
+    const CURRENT_APP_VERSION = 'v2.7';
 
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
@@ -921,7 +938,7 @@
         code: 'A',
         name: 'Documentary Thumbnail',
         icon: '🎬',
-        shortDesc: 'Cinematic storytelling, historical reconstruction & archival proof',
+        shortDesc: 'Cinematic & archival proof',
         subStyles: [
           { id: 'cinematic_doc', name: 'Cinematic Documentary', blueprint: 'Wide anamorphic cinema frame; expressive foreground subject or narrator on one third, atmospheric depth-of-field location and primary story artifact on the other two thirds.' },
           { id: 'historical_recon', name: 'Historical Reconstruction', blueprint: 'Photorealistic period reconstruction bringing an ancient era, monument, or historical event to life with authentic architecture, wardrobe, and dramatic sunlight.' },
@@ -940,7 +957,7 @@
         code: 'B',
         name: 'Debate Thumbnail',
         icon: '⚔️',
-        shortDesc: 'Face-to-face clash, split-screen & evidence vs claim',
+        shortDesc: 'Clash & split-screen',
         subStyles: [
           { id: 'two_person_face', name: 'Two-Person Face-to-Face Debate', blueprint: 'High-tension profile face-off between two opposing figures looking directly at each other across a glowing central divide.' },
           { id: 'extreme_closeup_debate', name: 'Extreme Close-up Debate', blueprint: 'Tight macro facial close-ups (eyes and expressions filling 70% of frame) capturing raw intellectual intensity and conflict.' },
@@ -959,7 +976,7 @@
         code: 'C',
         name: 'Podcast Thumbnail',
         icon: '🎙️',
-        shortDesc: 'Studio mics, host-guest close-ups & deep conversations',
+        shortDesc: 'Studio mic & host-guest',
         subStyles: [
           { id: 'two_person_podcast', name: 'Two-Person Podcast', blueprint: 'Authentic dark podcast studio; Host and Guest in crisp waist-up or shoulder-up framing with broadcast boom-arm microphones and warm tungsten rim lights.' },
           { id: 'host_guest_closeup', name: 'Host and Guest Close-up', blueprint: 'Tight dual facial close-ups of Host (listening intently) and Guest (speaking passionately) with studio condenser mics in lower foreground.' },
@@ -977,7 +994,7 @@
         code: 'D',
         name: 'Explainer Thumbnail',
         icon: '💡',
-        shortDesc: 'Big question, visual breakdown, maps & hidden truth',
+        shortDesc: 'Visual breakdown & maps',
         subStyles: [
           { id: 'big_question', name: 'Big Question Concept', blueprint: 'Expressive creator close-up pointing or reacting to a single giant, crystal-clear visual paradox or question focal object.' },
           { id: 'one_main_closeup', name: 'One Main Subject Close-up', blueprint: '80% frame dominance on one extraordinary hero subject/artifact in macro detail with clean dark negative space for bold typography.' },
@@ -994,7 +1011,7 @@
         code: 'E',
         name: 'News & Analysis Thumbnail',
         icon: '📰',
-        shortDesc: 'Breaking analysis, political face-off & evidence report',
+        shortDesc: 'Breaking news & analysis',
         subStyles: [
           { id: 'breaking_analysis', name: 'Breaking Analysis', blueprint: 'High-urgency photojournalistic focal scene paired with an authoritative analyst close-up and high-contrast crimson/gold accents.' },
           { id: 'political_faceoff', name: 'Political Face-off', blueprint: 'Stark confrontation between two key political/public figures with official backdrop and high-tension lighting.' },
@@ -1009,7 +1026,7 @@
         code: 'F',
         name: 'Mystery & Revelation Thumbnail',
         icon: '🔮',
-        shortDesc: 'Hidden history, secret discovery & unexplained evidence',
+        shortDesc: 'Hidden history & discovery',
         subStyles: [
           { id: 'hidden_history', name: 'Hidden History', blueprint: 'Ancient subterranean chamber or sealed temple door illuminated by a single torch beam, revealing forgotten carvings.' },
           { id: 'secret_discovery', name: 'Secret Discovery', blueprint: 'Newly unearthed sacred/historical object glowing with warm rim light as dust particles float in the dark air.' },
@@ -1023,6 +1040,77 @@
     };
 
     // ==================== 3. APPLICATION STATE & STORAGE CLEANER ====================
+    const THUMBNAIL_SIZES = [
+      {
+        id: 'yt_16_9',
+        ratio: '16:9',
+        resolution: '1920x1080',
+        platform: 'YouTube',
+        icon: '📺',
+        orientation: 'Horizontal Widescreen Landscape',
+        layoutRule: 'Classic 16:9 widescreen horizontal rule-of-thirds split: place the primary subject/creator on one side (Left or Right) and the bold 2-line Khand headline in the opposite high-contrast negative space, with key evidence in the center bridge.',
+        textSafeZone: 'Keep headline and faces away from the bottom-right corner (YouTube video duration timestamp badge) and outer 5% edges.',
+        hindiLayoutTip: '16:9 लैंडस्केप (YouTube/FB): एक तरफ मुख्य चेहरा, बीच में मुख्य सबूत/सीन और दूसरी तरफ बड़ा टाइटल रहेगा; नीचे दायां कोना YouTube टाइमस्टैम्प के लिए खाली रहेगा।'
+      },
+      {
+        id: 'shorts_9_16',
+        ratio: '9:16',
+        resolution: '1080x1920',
+        platform: 'Reels / Shorts',
+        icon: '📱',
+        orientation: 'Vertical Full-Screen Portrait',
+        layoutRule: 'Vertical 9:16 top-to-bottom stacked composition: place the bold 2-line Khand headline in the upper-middle sky/dark scrim zone (top 18%-34%), the expressive hero face/subject centered in the middle focal zone (35%-70%), and foreground evidence/artifact in the lower-middle zone.',
+        textSafeZone: 'CRITICAL VERTICAL SAFE ZONE: Keep all faces and text strictly away from the right-side 15% edge (Like/Comment/Share icons) and bottom 22% (channel name & caption overlay).',
+        hindiLayoutTip: '9:16 वर्टिकल (Shorts/Reels): ऊपर-बीच में बोल्ड टाइटल, बीच में मुख्य चेहरा व सीन और नीचे-बीच में सबूत रहेगा; दाईं किनारी (Like/Share आइकन) और सबसे निचला हिस्सा खाली रहेगा।'
+      },
+      {
+        id: 'insta_4_5',
+        ratio: '4:5',
+        resolution: '1080x1350',
+        platform: 'IG / FB Feed',
+        icon: '📸',
+        orientation: 'Tall Feed Portrait',
+        layoutRule: 'Tall 4:5 Instagram/Facebook feed-dominating vertical framing: bold 2-line Khand headline anchored cleanly in the upper 25% dark vignette, tight hero portrait + primary proof filling the central 55%, and atmospheric foreground depth at the bottom 20%.',
+        textSafeZone: 'Keep key eyes and typography inside the central 85% safe box so Instagram feed cropping never clips letters or faces.',
+        hindiLayoutTip: '4:5 पोर्ट्रेट (Instagram/FB Feed): ऊपरी हिस्से में बड़ा टाइटल और बीच में पूरा फोकस चेहरे व सबूत पर रहेगा ताकि मोबाइल फीड में पूरा स्क्रीन कवर हो।'
+      },
+      {
+        id: 'square_1_1',
+        ratio: '1:1',
+        resolution: '1080x1080',
+        platform: 'Square Post',
+        icon: '🟦',
+        orientation: 'Balanced 1:1 Square',
+        layoutRule: 'Compact 1:1 square poster framing: tightly cropped hero close-up and primary evidence side-by-side or diagonally balanced in the center, with a punchy 2-line Khand headline anchored cleanly across the top or bottom dark gradient band.',
+        textSafeZone: 'Maintain generous 8% outer padding on all 4 sides so circular/square previews never clip the headline.',
+        hindiLayoutTip: '1:1 स्क्वायर पोस्ट: चेहरा और सबूत केंद्र में पास-पास संतुलित रहेंगे और ऊपर या नीचे साफ डार्क पट्टी पर 2 लाइन का टाइटल दिखेगा।'
+      },
+      {
+        id: 'wide_191_1',
+        ratio: '1.91:1',
+        resolution: '1200x628',
+        platform: 'X / LinkedIn',
+        icon: '🔗',
+        orientation: 'Wide Social Link Card',
+        layoutRule: 'Ultra-wide 1.91:1 editorial banner layout: sharp horizontal left-to-right storytelling with hero portrait on the right 40%, central focal evidence, and large crisp 2-line Khand typography on the left 45% dark scrim.',
+        textSafeZone: 'Keep top and bottom 10% margins clean to survive X/LinkedIn/WhatsApp link preview crops.',
+        hindiLayoutTip: '1.91:1 वाइड कार्ड (X/LinkedIn): बाईं तरफ बड़ा टाइटल और दाईं तरफ चेहरा व मुख्य दृश्य बिल्कुल अखबार/मैगज़ीन बैनर की तरह सजेगा।'
+      },
+      {
+        id: 'classic_4_3',
+        ratio: '4:3',
+        resolution: '1440x1080',
+        platform: 'Classic 4:3',
+        icon: '🖼️',
+        orientation: 'Classic 4:3 Frame',
+        layoutRule: 'Balanced 4:3 documentary frame: generous vertical headroom for the subject, primary evidence anchored in the lower foreground, and bold 2-line Khand headline positioned in the upper-left dark contrast zone.',
+        textSafeZone: 'Keep all text and facial features inside the inner 90% title-safe margin.',
+        hindiLayoutTip: '4:3 क्लासिक फ्रेम: ऊपर बाईं तरफ टाइटल और बीच से नीचे तक मुख्य पात्र व सबूत का संतुलित डॉक्यूमेंट्री फ्रेम बनेगा।'
+      }
+    ];
+
+    const STUDIO_STATE_STORAGE_KEY = 'yt_seo_ssiro_studio_state_v25';
+
     const appState = {
       geminiApiKey: '',
       geminiModel: 'gemini-2.5-flash',
@@ -1031,12 +1119,14 @@
       customNicheText: '',
       selectedFormatId: 'documentary',
       selectedSubStyleId: 'cinematic_doc',
+      selectedSizeId: 'yt_16_9',
       researchSource: 'none',
       researchInsights: null,
       conceptsList: [],
       selectedConceptIndex: 0,
       variantsList: [],
-      variantRegenCount: 0
+      variantRegenCount: 0,
+      fullHubMode: false
     };
 
     const ESSENTIAL_STORAGE_KEYS = new Set([
@@ -1047,7 +1137,8 @@
       'yt_seo_ssiro_pin',
       'yt_seo_ssiro_unlocked',
       'yt_seo_ssiro_theme',
-      'yt_seo_ssiro_last_clean'
+      'yt_seo_ssiro_last_clean',
+      STUDIO_STATE_STORAGE_KEY
     ]);
 
     function autoCleanUnusedStorage() {
@@ -1538,6 +1629,7 @@
     function selectNiche(nicheId) {
       appState.selectedNicheId = nicheId;
       renderNicheSelectionGrid();
+      saveStudioState();
     }
 
     function updateCustomNicheIntelligence() {
@@ -1584,6 +1676,7 @@
       const fmt = getActiveFormatObj();
       appState.selectedSubStyleId = fmt.subStyles[0].id;
       renderFormatSelectionGrid();
+      saveStudioState();
     }
 
     function handleSubStyleChange() {
@@ -1618,6 +1711,10 @@
       research: {
         title: 'Step 6: YouTube Research & 3-Layer AI Intelligence',
         body: '<p><strong>इसमें क्या होता है?</strong></p><p>• <strong>Layer 1 (Topic Understanding):</strong> यह बताता है कि आपके वीडियो का सबसे आकर्षक सवाल और मुख्य विज़ुअल क्या होना चाहिए।</p><p>• <strong>Layer 2 (Viral Design Analysis):</strong> यह बताता है कि इस कैटेगरी में किस तरह के चेहरे के भाव (Expressions), क्लोज़-अप शॉट और लाइटिंग सबसे ज्यादा क्लिक (CTR) लाते हैं।</p><p>• <strong>Layer 3 (Accuracy Lock):</strong> यह आपके <strong>Khand Bold</strong> (पीला + सफेद) फ़ॉन्ट और <strong>Reference-Image-First</strong> नियम को लॉक रखता है।</p>'
+      },
+      size: {
+        title: 'सोशल मीडिया थंबनेल साइज (Multi-Platform Size)',
+        desc: 'आप एक ही वीडियो को YouTube (16:9), Shorts/Reels (9:16), Instagram Feed (4:5), Square (1:1) या X/LinkedIn (1.91:1) पर डालते हैं। यहाँ जो भी साइज चुनेंगे, पूरा Prompt (कैमरा एंगल, फोटो की जगह, और टाइटल का Safe-Zone) उसी साइज के हिसाब से अपने आप री-अरेंज हो जाएगा ताकि ChatGPT/Gemini बिल्कुल सटीक साइज में फोटो बनाए।'
       },
       concepts: {
         title: 'Steps 7 & 8: 6 Thumbnail Concepts Dashboard',
@@ -2142,7 +2239,7 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
           code: `${concept.num || 1}A`,
           shortCode: 'A',
           conceptTitle: concept.title,
-          name: `Variant A — Hero Close-Up & Primary Proof (हिंदी टाइटल एंगल)`,
+          name: `Variant A — Hero Close-Up & Proof`,
           badgeColor: 'tertiary',
           defaultLang: 'hindi',
           hooks: { hindi: hookA_hi, hinglish: hookB_hg, english: hookC_en },
@@ -2164,7 +2261,7 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
           code: `${concept.num || 1}B`,
           shortCode: 'B',
           conceptTitle: concept.title,
-          name: `Variant B — High-Contrast Split / Confrontation (हिंग्लिश / दूसरा हिंदी एंगल)`,
+          name: `Variant B — High-Contrast Split`,
           badgeColor: 'secondary',
           defaultLang: 'hinglish',
           hooks: { hindi: hookB_hi, hinglish: hookB_hg, english: hookC_en },
@@ -2186,7 +2283,7 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
           code: `${concept.num || 1}C`,
           shortCode: 'C',
           conceptTitle: concept.title,
-          name: `Variant C — Epic Cinema Scale & Mystery Reveal (इंग्लिश / डॉक्यूमेंट्री पोस्टर एंगल)`,
+          name: `Variant C — Cinema Scale & Reveal`,
           badgeColor: 'primary',
           defaultLang: 'english',
           hooks: { hindi: hookB_hi, hinglish: hookB_hg, english: hookC_en },
@@ -2215,13 +2312,14 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
 
     function composeFullVariantPrompt(v, concept, niche, fmt, title, desc, refInfo, hookRaw) {
       const { line1, line2 } = splitHookIntoTwoLines(hookRaw);
+      const sz = getSelectedThumbnailSize();
       const refDetailsLine = refInfo
         ? `• User-Specified Reference Details to Incorporate: "${refInfo}"
 `
         : '';
 
-      return `You are a Master YouTube Thumbnail Art Director & Senior Photoshop Compositor.
-Create a hyper-realistic, high-CTR 16:9 YouTube Thumbnail (1920x1080 resolution) for the following video:
+      return `You are a Master Social Media & YouTube Thumbnail Art Director & Senior Photoshop Compositor.
+Create a hyper-realistic, high-CTR ${sz.ratio} ${sz.platform} Thumbnail (${sz.resolution}px resolution, ${sz.orientation}) for the following video:
 • Niche: ${niche.name}
 • Thumbnail Format & Style: ${fmt.name} — ${concept.subStyleName} (${v.name})
 • Video Title: "${title}"
@@ -2246,7 +2344,9 @@ STEP 2 — VARIANT ${v.code} VISUAL ARCHITECTURE (100% DISTINCT DIRECTION):
 • Selected Concept: ${concept.title}
 • What Must Be Shown in Scene: ${concept.whatIsShown}
 • Camera Angle & Lens: ${v.camera}
+• Aspect Ratio & Platform Layout (${sz.ratio} • ${sz.platform}): ${sz.layoutRule}
 • Subject Placement & Hierarchy: ${v.placement}
+• Platform Safe-Zone Rule: ${sz.textSafeZone}
 • Visual Storytelling Angle: ${v.storytelling}
 • Facial Expression & Emotion: ${v.expression}
 • Foreground & Background Arrangement: ${v.fgBgArrangement}
@@ -2266,7 +2366,7 @@ STEP 3 — LOCKED TYPOGRAPHY & BRAND RULES (KHAND BOLD • YELLOW & WHITE):
 ===================================================================
 STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
 ===================================================================
-• Format: 16:9 widescreen YouTube Thumbnail (1920x1080), Ultra-Realistic / Photorealistic 8K quality, razor-sharp focus on foreground subject eyes and primary evidence.
+• Format & Resolution Lock: Exact ${sz.ratio} aspect ratio (${sz.resolution}px, ${sz.orientation}) for ${sz.platform}, Ultra-Realistic / Photorealistic 8K quality, razor-sharp focus on foreground subject eyes and primary evidence.
 • NO clutter, NO extra random objects, NO watermarks, NO channel logos, NO timestamps in bottom-right corner, NO plastic AI skin, NO historically inaccurate clothing/architecture.`;
     }
 
@@ -2287,6 +2387,7 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
       renderConceptsDashboard();
       appState.variantsList = buildThreeDistinctVariantsForConcept(concept, appState.variantRegenCount);
       renderVariantsComparisonAndCards();
+      saveStudioState();
 
       if (!silent) {
         showToast(`Generated 3 Unique Variants (A, B & C) for Concept ${conceptIdx + 1}!`);
@@ -2338,6 +2439,7 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
       if (btnText) btnText.textContent = 'Regenerate Variants';
       appState.variantsList = buildThreeDistinctVariantsForConcept(concept, appState.variantRegenCount);
       renderVariantsComparisonAndCards();
+      saveStudioState();
       showToast('🔄 Regenerated 3 fresh Variant angles & unique titles!');
     }
 
@@ -2384,10 +2486,10 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
         };
 
         return `
-          <div class="p-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/60 flex flex-col justify-between space-y-4 shadow-lg">
+          <div class="p-3.5 sm:p-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/60 flex flex-col justify-between space-y-4 shadow-lg min-w-0">
             <div class="space-y-3">
-              <div class="flex items-center justify-between gap-2">
-                <span class="font-mono text-[11px] uppercase px-2.5 py-0.5 rounded bg-${v.badgeColor}/20 text-${v.badgeColor} font-extrabold">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="font-mono text-[11px] uppercase px-2.5 py-0.5 whitespace-nowrap rounded bg-${v.badgeColor}/20 text-${v.badgeColor} font-extrabold">
                   VARIANT ${v.code}
                 </span>
                 <div class="flex items-center gap-1">
@@ -2420,9 +2522,9 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
               <div class="space-y-1">
                 <div class="flex items-center justify-between font-mono text-[10px]">
                   <span class="text-secondary font-bold">✓ Reference-Image-First Prompt</span>
-                  <span class="text-outline">1920×1080 • 16:9</span>
+                  <span class="text-outline">${getSelectedThumbnailSize().resolution} • ${getSelectedThumbnailSize().ratio}</span>
                 </div>
-                <pre id="variantPromptPre_${idx}" class="w-full h-52 overflow-y-auto custom-scroll p-3 rounded-xl bg-surface-container border border-outline-variant/50 font-mono text-[11px] text-slate-200 whitespace-pre-wrap leading-relaxed select-all">${v.promptText}</pre>
+                <pre id="variantPromptPre_${idx}" class="w-full h-52 overflow-y-auto custom-scroll p-3 rounded-xl bg-surface-container border border-outline-variant/50 font-mono text-[11px] text-slate-200 whitespace-pre-wrap break-words leading-relaxed select-all">${v.promptText}</pre>
               </div>
 
               <!-- HINDI VISUAL BREAKDOWN BOX RIGHT BELOW THE ENGLISH PROMPT! -->
@@ -2431,6 +2533,7 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
                   <span class="font-bold text-tertiary text-[11px]">🇮🇳 इस प्रॉम्प्ट में क्या और किधर बनेगा (हिंदी विवरण):</span>
                   <span class="font-mono text-[10px] text-secondary">Variant ${v.code}</span>
                 </div>
+                <p class="text-on-surface-variant leading-relaxed"><strong class="text-white">• चुना गया साइज (${getSelectedThumbnailSize().ratio}):</strong> ${getSelectedThumbnailSize().hindiLayoutTip}</p>
                 <p class="text-on-surface-variant leading-relaxed"><strong class="text-white">• कौन-सी चीज़ किधर रहेगी:</strong> ${hg.layout}</p>
                 <p class="text-on-surface-variant leading-relaxed"><strong class="text-white">• कैमरा और चेहरे का भाव:</strong> ${hg.cameraExp}</p>
                 <p class="text-on-surface-variant leading-relaxed"><strong class="text-white">• लाइटिंग और स्टाइल:</strong> ${hg.lightingStyle}</p>
@@ -2586,8 +2689,10 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
       const tbody = document.getElementById('variantsComparisonTableBody');
       if (tbody) tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center font-mono text-xs text-outline">Select any Concept in Step 8 above to compare Variants A, B &amp; C side by side.</td></tr>';
 
+      appState.fullHubMode = false;
+      try { localStorage.removeItem(STUDIO_STATE_STORAGE_KEY); } catch (e) {}
       autoCleanUnusedStorage();
-      if (notify) showToast('Studio reset completely fresh & temporary cache cleaned!');
+      if (notify) showToast('🧹 पुराना सर्च और डेटा साफ कर दिया गया! अब नया वीडियो शुरू करें।');
     }
 
 
@@ -2694,6 +2799,126 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
       }
     }
 
+
+    function getSelectedThumbnailSize() {
+      return THUMBNAIL_SIZES.find(s => s.id === appState.selectedSizeId) || THUMBNAIL_SIZES[0];
+    }
+
+    function renderThumbnailSizeGrid() {
+      const grid = document.getElementById('thumbnailSizeGrid');
+      const badge = document.getElementById('selectedSizeBadge');
+      const sz = getSelectedThumbnailSize();
+      if (badge) badge.textContent = `${sz.ratio} • ${sz.resolution} (${sz.platform})`;
+      if (!grid) return;
+
+      grid.innerHTML = THUMBNAIL_SIZES.map(s => {
+        const active = s.id === appState.selectedSizeId;
+        return `<button type="button" onclick="selectThumbnailSize('${s.id}')" class="p-2.5 rounded-xl border text-left transition flex flex-col gap-1 ${active ? 'bg-tertiary/15 border-tertiary text-white shadow' : 'bg-surface-container-lowest border-outline-variant/50 text-on-surface-variant hover:border-tertiary/50 hover:text-white'}">
+          <div class="flex items-center justify-between gap-1">
+            <span class="text-sm">${s.icon}</span>
+            <span class="font-mono text-[11px] font-black ${active ? 'text-tertiary' : 'text-white'}">${s.ratio}</span>
+          </div>
+          <div class="font-display text-[11px] font-bold leading-tight truncate">${s.platform}</div>
+          <div class="font-mono text-[10px] text-outline">${s.resolution}px</div>
+        </button>`;
+      }).join('');
+    }
+
+    function selectThumbnailSize(sizeId) {
+      appState.selectedSizeId = sizeId;
+      renderThumbnailSizeGrid();
+      const sz = getSelectedThumbnailSize();
+      if (appState.conceptsList && appState.conceptsList.length > 0) {
+        if (appState.fullHubMode) {
+          const allVars = [];
+          appState.conceptsList.slice(0, 3).forEach((c, cIdx) => {
+            allVars.push(...buildThreeDistinctVariantsForConcept(c, appState.variantRegenCount + cIdx));
+          });
+          appState.variantsList = allVars;
+          renderVariantsComparisonAndCards();
+        } else {
+          selectConceptAndGenerateVariants(appState.selectedConceptIndex, true);
+        }
+        showToast(`📐 Size updated to ${sz.ratio} (${sz.platform}) — Prompts re-arranged!`);
+      } else {
+        showToast(`📐 Selected ${sz.ratio} (${sz.platform})`);
+      }
+      saveStudioState();
+    }
+
+    function saveStudioState() {
+      try {
+        const payload = {
+          selectedNicheId: appState.selectedNicheId,
+          customNicheText: (document.getElementById('customNicheInput') || {}).value || appState.customNicheText || '',
+          selectedFormatId: appState.selectedFormatId,
+          selectedSubStyleId: appState.selectedSubStyleId,
+          selectedSizeId: appState.selectedSizeId,
+          videoTitle: (document.getElementById('videoTitleInput') || {}).value || '',
+          optionalHookOverride: (document.getElementById('optionalHookOverrideInput') || {}).value || '',
+          videoTopicDetails: (document.getElementById('videoTopicDetailsInput') || {}).value || '',
+          referenceInfo: (document.getElementById('referenceInfoInput') || {}).value || '',
+          researchSource: appState.researchSource,
+          researchInsights: appState.researchInsights,
+          conceptsList: appState.conceptsList,
+          selectedConceptIndex: appState.selectedConceptIndex,
+          variantsList: appState.variantsList,
+          variantRegenCount: appState.variantRegenCount,
+          fullHubMode: !!appState.fullHubMode,
+          savedAt: Date.now()
+        };
+        localStorage.setItem(STUDIO_STATE_STORAGE_KEY, JSON.stringify(payload));
+      } catch (e) {}
+    }
+
+    function restoreStudioState() {
+      try {
+        const raw = localStorage.getItem(STUDIO_STATE_STORAGE_KEY);
+        if (!raw) return false;
+        const data = JSON.parse(raw);
+        if (!data || typeof data !== 'object') return false;
+
+        if (data.selectedNicheId) appState.selectedNicheId = data.selectedNicheId;
+        if (data.customNicheText !== undefined) appState.customNicheText = data.customNicheText;
+        if (data.selectedFormatId) appState.selectedFormatId = data.selectedFormatId;
+        if (data.selectedSubStyleId) appState.selectedSubStyleId = data.selectedSubStyleId;
+        if (data.selectedSizeId) appState.selectedSizeId = data.selectedSizeId;
+        if (data.researchSource) appState.researchSource = data.researchSource;
+        if (data.researchInsights) appState.researchInsights = data.researchInsights;
+        if (Array.isArray(data.conceptsList)) appState.conceptsList = data.conceptsList;
+        if (typeof data.selectedConceptIndex === 'number') appState.selectedConceptIndex = data.selectedConceptIndex;
+        if (Array.isArray(data.variantsList)) appState.variantsList = data.variantsList;
+        if (typeof data.variantRegenCount === 'number') appState.variantRegenCount = data.variantRegenCount;
+        appState.fullHubMode = !!data.fullHubMode;
+
+        const setVal = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+        setVal('customNicheInput', data.customNicheText || '');
+        setVal('videoTitleInput', data.videoTitle || '');
+        setVal('optionalHookOverrideInput', data.optionalHookOverride || '');
+        setVal('videoTopicDetailsInput', data.videoTopicDetails || '');
+        setVal('referenceInfoInput', data.referenceInfo || '');
+
+        renderNicheSelectionGrid();
+        renderFormatSelectionGrid();
+        renderThumbnailSizeGrid();
+
+        if (appState.researchInsights) {
+          renderResearchInsightsUI(appState.researchInsights, data.videoTitle || '', appState.researchSource);
+        }
+        if (appState.conceptsList.length > 0) {
+          renderConceptsDashboard();
+          if (appState.variantsList.length > 0) {
+            renderVariantsComparisonAndCards();
+          } else {
+            selectConceptAndGenerateVariants(appState.selectedConceptIndex || 0, true);
+          }
+        }
+        return !!(data.videoTitle || appState.conceptsList.length);
+      } catch (e) {
+        return false;
+      }
+    }
+
     // ==================== 13. INITIALIZATION ====================
     window.addEventListener('DOMContentLoaded', () => {
       initThemeMode();
@@ -2730,6 +2955,15 @@ STEP 4 — TECHNICAL QUALITY & NEGATIVE CONSTRAINTS:
 
       renderNicheSelectionGrid();
       renderFormatSelectionGrid();
+      renderThumbnailSizeGrid();
+      const restored = restoreStudioState();
+      if (restored) {
+        setTimeout(() => showToast('💾 आपका पिछला काम सुरक्षित रीस्टोर कर दिया गया है!'), 700);
+      }
+      ['customNicheInput', 'videoTitleInput', 'optionalHookOverrideInput', 'videoTopicDetailsInput', 'referenceInfoInput'].forEach(fid => {
+        const el = document.getElementById(fid);
+        if (el) el.addEventListener('input', saveStudioState);
+      });
     });
   </script>
 </body>
