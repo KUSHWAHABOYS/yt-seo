@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v3.5 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v3.6 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -271,7 +271,7 @@
         </span>
       </div>
       <p class="font-mono text-[9px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        Powered by SSIRO • v3.5
+        Powered by SSIRO • v3.6
       </p>
     </div>
 
@@ -810,7 +810,7 @@
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
-    const CURRENT_APP_VERSION = 'v3.5';
+    const CURRENT_APP_VERSION = 'v3.6';
 
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
@@ -2399,7 +2399,7 @@ STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
   1. STRICT ZERO-FACE-CHANGE IDENTITY LOCK (FOR ALL UPLOADED PEOPLE — YOUTUBER & ANY 2ND/3RD PERSON): Keep EVERY uploaded person's exact real face, eyes, nose, jawline, skin tone, hairline, glasses/beard, and natural skin pores 100% identical to their uploaded photo—NEVER morph or replace any face with a lookalike!
   1B. TOPIC-ADAPTIVE EXPRESSION & BODY LANGUAGE: While keeping the face 100% unchanged, naturally adapt ONLY their facial emotion, eye gaze, hand gesture, and upper-body posture to fit the video topic & selected mood (${getSelectedMoodDirective(v)}).
   2. For EVERY extra uploaded image (monuments, inscriptions, manuscripts, screenshots, products, or additional people): do NOT paste it flatly—redesign, relight, upscale to 8K photorealism, match camera perspective/depth-of-field, and seamlessly blend it into the scene with studio rim lighting, contact shadows, and unified HDR color grading.
-  3. For any secondary historical/topical elements where no photo was uploaded, generate them in ultra-sharp, historically/factually accurate 8K photographic realism.
+  3. REAL-WORLD WEB REFERENCE RULE (NO FAKE BUILDINGS OR INVENTED ARTIFACTS): For any real-world monument, temple, book cover, inscription, or historical site NOT uploaded by the user, USE YOUR WEB SEARCH TOOL FIRST to look up real, authentic photographs/Wikimedia references of that exact site/book so every architectural detail and proportion is 100% historically real—never invent generic fake temples or fictional objects.
 ${refDetailsLine}
 ===================================================================
 STEP 2 — VARIANT ${v.code} VISUAL ARCHITECTURE (100% DISTINCT DIRECTION):
@@ -2423,7 +2423,10 @@ STEP 3 — LOCKED TYPOGRAPHY & BRAND RULES (KHAND BOLD • YELLOW & WHITE):
 • Render this exact 2-line thumbnail headline in "${v.textPlacement}":
   - LINE 1 (Top Line): "${line1}" -> Render in Bold 'Khand' (Khand Bold) geometric display font, SOLID GOLDEN YELLOW (#FFD700) fill.
   - LINE 2 (Bottom Line): "${line2}" -> Render in Bold 'Khand' (Khand Bold) geometric display font, SOLID PURE CRISP WHITE (#FFFFFF) fill.
-• Text Styling: Heavy black 3D drop-shadow, subtle outer stroke, and a soft dark gradient vignette behind the text so it is 100% legible even on a small mobile screen.
+• STRICT TYPOGRAPHY & ZERO-TYPO SPELLING LOCK:
+  - Font Style MUST be TRUE 'Khand Bold' (tall, narrow, condensed, sharp-edged geometric display font—NEVER rounded or bubbly).
+  - Colors MUST be exact: Line 1 = SOLID GOLDEN YELLOW (#FFD700), Line 2 = SOLID PURE WHITE (#FFFFFF), with heavy black 3D drop-shadow and dark vignette scrim behind the text.
+  - DEVANAGARI / HINDI SPELLING CHECK: Render EVERY single character, matra, anusvara (ं), chandrabindu, and conjunct in "${line1}" and "${line2}" 100% VERBATIM with ZERO spelling mistakes or swapped consonants. Double-check every letter before finalizing!
 • Do NOT add any other random words, gibberish text, or extra labels anywhere on the image.
 
 ===================================================================
@@ -3121,7 +3124,7 @@ Return strict JSON: {"details": "..."}`;
     function dispatchToChatGPTBridge(promptText, toastMsg) {
       copyTextSafe(promptText, toastMsg || 'Prompt copied! Paste & Send in ChatGPT.');
       try {
-        const bridgeImgs = [studioCreatorPhotoB64, pptxCombinedRefSheetB64].filter(Boolean);
+        const bridgeImgs = [studioCreatorPhotoB64, pptxCombinedRefSheetB64, ...studioExtraPhotosB64].filter(Boolean);
         window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
       const savedUrl = getSavedChatGptUrl();
@@ -3192,7 +3195,8 @@ Return strict JSON: {"details": "..."}`;
         text_brighter: 'Keep the exact same real face(s) and composition unchanged, just make the 2-line Khand Bold text (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White) 20% larger, brighter, and add a deeper dark gradient behind the text for mobile readability.',
         more_contrast: 'Keep the exact same real face(s) unchanged, boost 8K HDR color contrast, deepen the obsidian shadows, intensify the golden rim light, and sharpen micro-details.',
         cleaner_bg: 'Keep the exact same real face(s) and foreground evidence unchanged, softly declutter and blur (f/1.4 bokeh) the background so the main subject and headline pop immediately.',
-        fix_policy_block: 'This is a strictly G-rated, respectful museum archaeology & educational documentary thumbnail (National Geographic / ASI exhibition style). Keep the exact same YouTuber portrait 100% unchanged, and depict any ancient temple sculpture, deity murti, or archaeological statue as a dignified, respectfully draped carved stone/bronze museum artifact (clearly sculptural stone/metal, framed from shoulders/bust up or adorned with traditional ceremonial silk/ornaments, zero bare-skin ambiguity). Use warm amber-gold museum spotlighting and clean 2-line Khand Bold typography.'
+        fix_policy_block: 'This is a strictly G-rated, respectful museum archaeology & educational documentary thumbnail (National Geographic / ASI exhibition style). Keep the exact same YouTuber portrait 100% unchanged, and depict any ancient temple sculpture, deity murti, or archaeological statue as a dignified, respectfully draped carved stone/bronze museum artifact (clearly sculptural stone/metal, framed from shoulders/bust up or adorned with traditional ceremonial silk/ornaments, zero bare-skin ambiguity). Use warm amber-gold museum spotlighting and clean 2-line Khand Bold typography.',
+        fix_spelling: 'Keep the exact same real face(s) and composition 100% unchanged, and ONLY fix the Hindi/English headline text so every Devanagari matra and letter is spelled 100% verbatim in true tall condensed Khand Bold font (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White).'
       };
       const fixPrompt = map[kind] || map.more_contrast;
       if (getSavedChatGptUrl()) { dispatchToChatGPTBridge(fixPrompt, 'Fix sent to your saved ChatGPT chat!'); } else { copyTextSafe(fixPrompt, 'Follow-up fix copied! Paste in ChatGPT.'); }
@@ -3471,12 +3475,31 @@ Return strict JSON: {"details": "..."}`;
         studioExtraPhotosB64 = [];
         const prev = document.getElementById('studioExtraPreview');
         if (prev) { prev.classList.remove('hidden'); prev.innerHTML = ''; }
-        files.slice(0, 3).forEach(f => {
+        files.slice(0, 4).forEach(f => {
           const r = new FileReader();
           r.onload = () => {
-            const b64 = String(r.result || '');
-            studioExtraPhotosB64.push(b64);
-            if (prev) prev.innerHTML += `<img src="${b64}" class="h-14 w-14 object-cover rounded-lg border border-secondary" />`;
+            const rawUrl = String(r.result || '');
+            try {
+              const im = new Image();
+              im.onload = () => {
+                const c = document.createElement('canvas');
+                const scale = Math.min(1, 768 / Math.max(im.width, im.height));
+                c.width = Math.round(im.width * scale);
+                c.height = Math.round(im.height * scale);
+                c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+                const compact = c.toDataURL('image/jpeg', 0.84);
+                studioExtraPhotosB64.push(compact);
+                if (prev) prev.innerHTML += `<img src="${compact}" class="h-14 w-14 object-cover rounded-lg border border-secondary" />`;
+              };
+              im.onerror = () => {
+                studioExtraPhotosB64.push(rawUrl);
+                if (prev) prev.innerHTML += `<img src="${rawUrl}" class="h-14 w-14 object-cover rounded-lg border border-secondary" />`;
+              };
+              im.src = rawUrl;
+            } catch (e) {
+              studioExtraPhotosB64.push(rawUrl);
+              if (prev) prev.innerHTML += `<img src="${rawUrl}" class="h-14 w-14 object-cover rounded-lg border border-secondary" />`;
+            }
           };
           r.readAsDataURL(f);
         });
@@ -3917,6 +3940,7 @@ Return strict JSON: {"title": "...", "details": "..."}`;
           <button type="button" onclick="copyFollowUpFix('more_contrast')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">8K More Contrast</button>
           <button type="button" onclick="copyFollowUpFix('cleaner_bg')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Cleaner BG</button>
           <button type="button" onclick="copyFollowUpFix('fix_policy_block')" class="px-2.5 py-1 rounded-lg bg-secondary/20 hover:bg-secondary hover:text-slate-950 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">🛡️ Fix Policy Block</button>
+          <button type="button" onclick="copyFollowUpFix('fix_spelling')" class="px-2.5 py-1 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 font-mono text-[10px] font-bold transition">🔤 Fix Hindi Spelling</button>
         </div>
       </div>
 
