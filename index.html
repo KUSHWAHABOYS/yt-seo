@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v5.3 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v5.6 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -261,43 +261,43 @@
   </div>
 
   <!-- ==================== STICKY TOP HEADER (MOBILE-FIRST ZERO OVERLAP) ==================== -->
-  <header class="sticky top-0 left-0 right-0 h-14 sm:h-16 bg-surface-container-lowest/95 backdrop-blur-xl border-b border-outline-variant/40 z-30 flex items-center justify-between px-3.5 sm:px-6 gap-2">
-    <div class="min-w-0 flex-1">
+  <header class="sticky top-0 left-0 right-0 h-14 sm:h-16 bg-surface-container-lowest/95 backdrop-blur-xl border-b border-outline-variant/40 z-30 flex flex-nowrap items-center justify-between px-2.5 sm:px-6 gap-1.5">
+    <div class="min-w-0 shrink">
       <div class="flex items-center gap-2">
-        <span class="font-display font-black text-lg sm:text-2xl text-white tracking-tight whitespace-nowrap leading-none">
+        <span class="font-display font-black text-base sm:text-2xl text-white tracking-tight whitespace-nowrap leading-none">
           YT SEO
         </span>
         <span id="engineBadgeHeader" onclick="toggleAiEngineModal()" class="hidden md:inline-block cursor-pointer font-mono text-[10px] px-2 py-0.5 rounded-md bg-secondary/15 text-secondary border border-secondary/30 font-bold whitespace-nowrap">
           THUMBNAIL AI STUDIO
         </span>
       </div>
-      <p class="font-mono text-[9px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        Powered by SSIRO • v5.3
+      <p class="font-mono text-[8px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
+        <span class="hidden sm:inline">Powered by </span>SSIRO • v5.6
       </p>
     </div>
 
-    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-      <button type="button" onclick="toggleHistoryModal()" title="Saved Project History" class="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 font-mono text-[11px] font-bold transition">
-        <span class="material-symbols-outlined text-[16px]">history</span>
+    <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+      <button type="button" onclick="toggleHistoryModal()" title="Saved Project History" class="flex items-center justify-center gap-1 w-7 h-7 sm:w-auto sm:h-9 sm:px-2.5 rounded-lg sm:rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 font-mono text-[11px] font-bold transition">
+        <span class="material-symbols-outlined text-[15px] sm:text-[16px]">history</span>
         <span class="hidden sm:inline">History</span>
       </button>
 
-      <button type="button" onclick="togglePresetsModal()" title="Channel Presets" class="flex items-center gap-1 px-2 py-1.5 sm:px-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 font-mono text-[11px] font-bold transition">
-        <span class="material-symbols-outlined text-[16px]">bookmarks</span>
+      <button type="button" onclick="togglePresetsModal()" title="Channel Presets" class="flex items-center justify-center gap-1 w-7 h-7 sm:w-auto sm:h-9 sm:px-2.5 rounded-lg sm:rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 font-mono text-[11px] font-bold transition">
+        <span class="material-symbols-outlined text-[15px] sm:text-[16px]">bookmarks</span>
         <span class="hidden sm:inline">Presets</span>
       </button>
 
-      <button type="button" id="themeToggleBtn" onclick="toggleThemeMode()" title="Switch Dark / Light Mode" class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 transition">
-        <span id="themeToggleIcon" class="material-symbols-outlined text-[16px]">light_mode</span>
+      <button type="button" id="themeToggleBtn" onclick="toggleThemeMode()" title="Switch Dark / Light Mode" class="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 transition">
+        <span id="themeToggleIcon" class="material-symbols-outlined text-[15px] sm:text-[16px]">light_mode</span>
       </button>
 
-      <button type="button" onclick="lockAppNow()" title="Lock App with PIN" class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 transition">
-        <span class="material-symbols-outlined text-[16px]">lock</span>
+      <button type="button" onclick="lockAppNow()" title="Lock App with PIN" class="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 transition">
+        <span class="material-symbols-outlined text-[15px] sm:text-[16px]">lock</span>
       </button>
 
-      <button type="button" onclick="exportSelectedVariantPrompts()" class="flex items-center gap-1 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-tertiary text-on-tertiary hover:brightness-110 font-display text-[11px] sm:text-xs font-extrabold whitespace-nowrap shadow transition">
-        <span class="material-symbols-outlined text-[15px]">download</span>
-        <span>Export</span>
+      <button type="button" onclick="exportSelectedVariantPrompts()" title="Export Prompts" class="flex items-center justify-center gap-1 px-2 h-7 sm:h-9 sm:px-3.5 rounded-lg sm:rounded-xl bg-tertiary text-on-tertiary hover:brightness-110 font-display text-[10px] sm:text-xs font-extrabold whitespace-nowrap shadow transition">
+        <span class="material-symbols-outlined text-[14px] sm:text-[15px]">download</span>
+        <span class="hidden xs:inline sm:inline">Export</span>
       </button>
     </div>
   </header>
@@ -363,16 +363,16 @@
         </div>
       </div>
 
-      <!-- CLEAN 3-TAB WORKSPACE SWITCHER (ZERO CONFUSION ON MOBILE & PC) -->
+      <!-- CLEAN 3-TAB WORKSPACE SWITCHER (1. TITLE SEO -> 2. THUMBNAIL STUDIO -> 3. LINK AUDITOR) -->
       <div class="grid grid-cols-3 gap-2 pt-1">
-        <button type="button" id="mainTabBtn_thumb" onclick="switchWorkspaceTab('thumb')" class="py-2.5 px-2 sm:px-4 rounded-xl bg-tertiary text-on-tertiary font-display text-[11px] sm:text-xs font-extrabold flex items-center justify-center gap-1.5 shadow transition">
-          <span>🎨</span><span class="truncate">Thumbnail Studio</span>
+        <button type="button" id="mainTabBtn_seo" onclick="switchWorkspaceTab('seo')" class="py-2.5 px-2 sm:px-4 rounded-xl bg-tertiary text-on-tertiary font-display text-[11px] sm:text-xs font-extrabold flex items-center justify-center gap-1.5 shadow transition">
+          <span>📈</span><span>Title SEO</span>
         </button>
-        <button type="button" id="mainTabBtn_seo" onclick="switchWorkspaceTab('seo')" class="py-2.5 px-2 sm:px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition">
-          <span>📈</span><span class="truncate">SEO &amp; CTR Lab</span>
+        <button type="button" id="mainTabBtn_thumb" onclick="switchWorkspaceTab('thumb')" class="py-2.5 px-2 sm:px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition">
+          <span>🎨</span><span>Thumbnail</span>
         </button>
         <button type="button" id="mainTabBtn_audit" onclick="switchWorkspaceTab('audit')" class="py-2.5 px-2 sm:px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant border border-outline-variant/50 font-display text-[11px] sm:text-xs font-bold flex items-center justify-center gap-1.5 transition">
-          <span>🔍</span><span class="truncate">Link Auditor</span>
+          <span>🔍</span><span>Link SEO</span>
         </button>
       </div>
 
@@ -828,6 +828,20 @@
         </button>
       </div>
 
+      <!-- INDEPENDENT TOPIC / TITLE INPUT FOR TITLE & DESCRIPTION SEO -->
+      <div class="p-3.5 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2">
+        <label for="seoStandaloneTopicInput" class="font-display text-xs sm:text-sm font-bold text-white block">Enter Video Topic or Working Title (Independent Title &amp; Description SEO):</label>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <input id="seoStandaloneTopicInput" type="text" oninput="syncTitleFromSeoTab(this.value)" placeholder="Write or speak topic (e.g. मुंडेश्वरी मंदिर का इतिहास)..." class="flex-1 bg-surface-container border border-outline-variant/60 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-secondary" />
+          <button type="button" data-mic-for="seoStandaloneTopicInput" onclick="toggleVoiceDictation('seoStandaloneTopicInput', this)" title="Speak Topic" class="px-3 py-2.5 rounded-xl bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 font-mono text-xs font-bold flex items-center justify-center gap-1 shrink-0 transition">
+            <span class="material-symbols-outlined text-[18px]">mic</span><span>Speak</span>
+          </button>
+          <button type="button" onclick="sendTitleToThumbnailStudio()" class="px-3.5 py-2.5 rounded-xl bg-tertiary/20 hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 font-display text-xs font-bold whitespace-nowrap transition">
+            🎨 Next: Thumbnail →
+          </button>
+        </div>
+      </div>
+
       <div id="suggestedSeoOutputBox" class="hidden space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span id="seoPackStatusBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-secondary/20 text-secondary border border-secondary/40 font-bold">Ready</span>
@@ -954,7 +968,7 @@
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
-    const CURRENT_APP_VERSION = 'v5.3';
+    const CURRENT_APP_VERSION = 'v5.6';
 
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
@@ -1733,6 +1747,7 @@
           const rawTxt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
           const cleaned = rawTxt.replace(/```json|```/gi, "").trim(); const fB = cleaned.indexOf("{"); const lB = cleaned.lastIndexOf("}"); const parsed = (fB !== -1 && lB > fB) ? JSON.parse(cleaned.slice(fB, lB + 1)) : JSON.parse(cleaned);
           if (parsed) {
+            getTodayUsageCount(true);
             parsed.__watchedVideoDirectly = true;
             parsed.__modelUsed = mName;
             return parsed;
@@ -2151,7 +2166,7 @@ Use Google Search to research popular and currently trending YouTube videos and 
 
 CRITICAL INSTRUCTIONS:
 1. Analyze BOTH the Video Title AND Video Details deeply.
-2. Generate 3 COMPLETELY ORIGINAL, TOPIC-SPECIFIC Thumbnail Text variations in PURE, PUNCHY HINDI tailored to Hindi YouTube viewers for "${title}" (never generic templates). Keep each line 2–4 crisp Hindi words that read instantly on mobile; only transliterate a rare Sanskrit proper noun to English/Hinglish if absolutely necessary to prevent typos.
+2. Apply the YOUTUBE THUMBNAIL TEXT SKILL: Understand the main Video Title "${title}" deeply and generate 3 COMPLETELY ORIGINAL, SHORT, HIGH-IMPACT 2-line Thumbnail Text variations in PURE, PUNCHY HINDI (2–4 words per line) that complement—NOT repeat—the main title, paired with concrete visual ideas (never generic templates). Keep each line 2–4 crisp Hindi words that read instantly on mobile; only transliterate a rare Sanskrit proper noun to English/Hinglish if absolutely necessary to prevent typos.
 3. Generate 6 genuinely distinct Thumbnail Design Concepts with REAL, DESCRIPTIVE, TOPIC-SPECIFIC TITLES (never generic "Concept 1" titles) tailored to "${fmt.name}" and hyper-realistic 8K YouTube quality.
 4. Return a valid JSON object with these exact keys:
 {
@@ -2938,6 +2953,18 @@ ${heritageBlock}`;
     }
 
     function resetStudioFresh(notify) {
+      saveProjectToHistory();
+      const sInp = document.getElementById('seoStandaloneTopicInput');
+      if (sInp) sInp.value = '';
+      const aInp = document.getElementById('auditYoutubeUrlInput');
+      if (aInp) aInp.value = '';
+      const aBox = document.getElementById('videoAuditResultBox');
+      if (aBox) { aBox.classList.add('hidden'); aBox.innerHTML = ''; }
+      const sBox = document.getElementById('suggestedSeoOutputBox');
+      if (sBox) sBox.classList.add('hidden');
+      const cBox = document.getElementById('ctrAuditResultsBox');
+      if (cBox) { cBox.classList.add('hidden'); cBox.innerHTML = ''; }
+      if (typeof clearPptxTempData === 'function') clearPptxTempData(false);
       ['videoTitleInput', 'videoTopicDetailsInput', 'referenceInfoInput', 'optionalHookOverrideInput', 'customNicheInput'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
@@ -3081,7 +3108,10 @@ ${heritageBlock}`;
     }
 
     async function autoWriteVideoDetailsFromTitle(silent = false) {
-      const title = (document.getElementById('videoTitleInput')?.value || '').trim();
+      const seoInpVal = (document.getElementById('seoStandaloneTopicInput')?.value || '').trim();
+      const titleEl = document.getElementById('videoTitleInput');
+      if (seoInpVal && titleEl && !titleEl.value.trim()) titleEl.value = seoInpVal;
+      const title = (titleEl?.value || seoInpVal || '').trim();
       if (!title) {
         if (!silent) showToast('Enter a Video Title in Step 3 first!');
         return '';
@@ -3161,7 +3191,7 @@ Return strict JSON: {"details": "..."}`;
     function selectThumbnailSize(sizeId) {
       appState.selectedSizeId = sizeId;
       renderThumbnailSizeGrid();
-      switchWorkspaceTab('thumb');
+      switchWorkspaceTab('seo');
       const sz = getSelectedThumbnailSize();
       if (appState.conceptsList && appState.conceptsList.length > 0) {
         if (appState.fullHubMode) {
@@ -3233,6 +3263,7 @@ Return strict JSON: {"details": "..."}`;
         const setVal = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
         setVal('customNicheInput', data.customNicheText || '');
         setVal('videoTitleInput', data.videoTitle || '');
+        setVal('seoStandaloneTopicInput', data.videoTitle || '');
                 setVal('videoTopicDetailsInput', data.videoTopicDetails || '');
         
         renderNicheSelectionGrid();
@@ -3449,7 +3480,10 @@ Return strict JSON: {"details": "..."}`;
 
     async function searchWikimediaRealPhotos() {
       const grid = document.getElementById('wikimediaResultsGrid');
-      const title = (document.getElementById('videoTitleInput')?.value || '').trim();
+      const seoInpVal = (document.getElementById('seoStandaloneTopicInput')?.value || '').trim();
+      const titleEl = document.getElementById('videoTitleInput');
+      if (seoInpVal && titleEl && !titleEl.value.trim()) titleEl.value = seoInpVal;
+      const title = (titleEl?.value || seoInpVal || '').trim();
       if (!title) { showToast('Enter Video Title in Step 3 first!'); return; }
       if (grid) {
         grid.classList.remove('hidden');
@@ -3677,25 +3711,47 @@ Return strict JSON: {"details": "..."}`;
     }
 
     function saveProjectToHistory(title) {
-      if (!title || !appState.conceptsList.length) return;
+      const cleanTitle = (title || document.getElementById('videoTitleInput')?.value || document.getElementById('seoStandaloneTopicInput')?.value || '').trim();
+      const seoDesc = (document.getElementById('seoDescriptionPre')?.textContent || '').trim();
+      if (!cleanTitle && !appState.conceptsList.length && !seoDesc) return;
       try {
         const list = JSON.parse(localStorage.getItem(HISTORY_STORAGE_KEY) || '[]');
         const entry = {
           id: Date.now(),
-          title,
+          title: cleanTitle || 'Untitled Project',
           details: (document.getElementById('videoTopicDetailsInput')?.value || '').trim(),
           nicheId: appState.selectedNicheId,
           formatId: appState.selectedFormatId,
           subStyleId: appState.selectedSubStyleId,
           sizeId: appState.selectedSizeId,
+          mood: appState.selectedMood || 'auto',
           hooks: appState.thumbnailHooksPreview || [],
           concepts: appState.conceptsList || [],
           insights: appState.researchInsights || null,
+          seoPackHtml: {
+            titlesHtml: document.getElementById('seoTitlesList')?.innerHTML || '',
+            blueprintHtml: document.getElementById('seoBlueprintBox')?.innerHTML || '',
+            desc: seoDesc,
+            tags: document.getElementById('seoTagsPre')?.textContent || '',
+            hook: document.getElementById('seoOpeningHookPre')?.textContent || '',
+            pin: document.getElementById('seoPinnedCommentPre')?.textContent || '',
+            score: document.getElementById('seoOverallScoreBadge')?.textContent || '',
+            meter: document.getElementById('seoTagCharMeter')?.textContent || ''
+          },
           savedAt: new Date().toLocaleString()
         };
-        const filtered = [entry, ...list.filter(x => x.title !== title)].slice(0, 20);
+        const filtered = [entry, ...list.filter(x => x.title !== entry.title)].slice(0, 25);
         localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(filtered));
       } catch (e) {}
+    }
+
+    function clearAllProjectHistory() {
+      try {
+        localStorage.removeItem(HISTORY_STORAGE_KEY);
+        autoCleanUnusedStorage();
+      } catch (e) {}
+      renderHistoryList();
+      showToast('🗑️ All saved history permanently deleted & storage freed!');
     }
 
     function toggleHistoryModal() {
@@ -3737,18 +3793,34 @@ Return strict JSON: {"details": "..."}`;
         appState.selectedFormatId = item.formatId || 'documentary';
         appState.selectedSubStyleId = item.subStyleId || 'cinematic_doc';
         appState.selectedSizeId = item.sizeId || 'yt_16_9';
+        if (item.mood) selectExpressionMood(item.mood);
         appState.thumbnailHooksPreview = item.hooks || [];
         appState.conceptsList = item.concepts || [];
         appState.researchInsights = item.insights || null;
-        document.getElementById('videoTitleInput').value = item.title || '';
-        document.getElementById('videoTopicDetailsInput').value = item.details || '';
+        if (document.getElementById('videoTitleInput')) document.getElementById('videoTitleInput').value = item.title || '';
+        if (document.getElementById('seoStandaloneTopicInput')) document.getElementById('seoStandaloneTopicInput').value = item.title || '';
+        if (document.getElementById('videoTopicDetailsInput')) document.getElementById('videoTopicDetailsInput').value = item.details || '';
         renderNicheSelectionGrid();
         renderFormatSelectionGrid();
         renderThumbnailSizeGrid();
         if (appState.researchInsights) renderResearchInsightsSection();
         renderAiHooksPreview();
-        renderConceptsDashboard();
-        selectConceptAndGenerateVariants(0, true);
+        if (appState.conceptsList.length) {
+          renderConceptsDashboard();
+          selectConceptAndGenerateVariants(0, true);
+        }
+        if (item.seoPackHtml && (item.seoPackHtml.desc || item.seoPackHtml.titlesHtml)) {
+          const sBox = document.getElementById('suggestedSeoOutputBox');
+          if (sBox) sBox.classList.remove('hidden');
+          if (document.getElementById('seoTitlesList')) document.getElementById('seoTitlesList').innerHTML = item.seoPackHtml.titlesHtml || '';
+          if (document.getElementById('seoBlueprintBox')) document.getElementById('seoBlueprintBox').innerHTML = item.seoPackHtml.blueprintHtml || '';
+          if (document.getElementById('seoDescriptionPre')) document.getElementById('seoDescriptionPre').textContent = item.seoPackHtml.desc || '';
+          if (document.getElementById('seoTagsPre')) document.getElementById('seoTagsPre').textContent = item.seoPackHtml.tags || '';
+          if (document.getElementById('seoOpeningHookPre')) document.getElementById('seoOpeningHookPre').textContent = item.seoPackHtml.hook || '';
+          if (document.getElementById('seoPinnedCommentPre')) document.getElementById('seoPinnedCommentPre').textContent = item.seoPackHtml.pin || '';
+          if (document.getElementById('seoOverallScoreBadge') && item.seoPackHtml.score) document.getElementById('seoOverallScoreBadge').textContent = item.seoPackHtml.score;
+          if (document.getElementById('seoTagCharMeter') && item.seoPackHtml.meter) document.getElementById('seoTagCharMeter').textContent = item.seoPackHtml.meter;
+        }
         saveProjectToHistory(title);
         saveStudioState();
         toggleHistoryModal();
@@ -3959,6 +4031,7 @@ Return strict JSON: {"details": "..."}`;
           const outSrc = `data:${imgPart.inlineData.mimeType || 'image/png'};base64,${imgPart.inlineData.data}`;
           if (imgEl) { imgEl.src = outSrc; imgEl.classList.remove('hidden'); }
           if (dlEl) { dlEl.href = outSrc; dlEl.download = `thumbnail_${v.code}.png`; dlEl.classList.remove('hidden'); }
+          getTodayUsageCount(true);
           if (statusEl) statusEl.textContent = '✅ 8K Thumbnail Generated!';
           return;
         }
@@ -4012,10 +4085,71 @@ Return strict JSON: {"details": "..."}`;
       return btoa(bin);
     }
 
-    function extractFromBinaryPpt(buf) {
-      const u8 = new Uint8Array(buf);
-      const images = [];
+    function readOle2PicturesStream(buf) {
+      try {
+        const dv = new DataView(buf);
+        const u8 = new Uint8Array(buf);
+        if (u8[0] !== 0xD0 || u8[1] !== 0xCF || u8[2] !== 0x11 || u8[3] !== 0xE0) return null;
+        const secShift = dv.getUint16(30, true);
+        const secSize = 1 << (secShift || 9);
+        const dirStartSec = dv.getUint32(48, true);
 
+        const readSec = (secIdx) => {
+          const off = (secIdx + 1) * secSize;
+          return (off >= 0 && off + secSize <= u8.length) ? u8.subarray(off, off + secSize) : null;
+        };
+
+        // Build FAT table from DIFAT (first 109 entries at offset 76)
+        const fat = [];
+        for (let i = 0; i < 109; i++) {
+          const fSec = dv.getUint32(76 + i * 4, true);
+          if (fSec === 0xFFFFFFFF || fSec === 0xFFFFFFFE) break;
+          const s = readSec(fSec);
+          if (!s) break;
+          const sDv = new DataView(s.buffer, s.byteOffset, s.byteLength);
+          for (let j = 0; j < secSize; j += 4) fat.push(sDv.getUint32(j, true));
+        }
+
+        const readChain = (startSec, maxBytes = 25000000) => {
+          const chunks = [];
+          let cur = startSec;
+          let total = 0;
+          const seen = new Set();
+          while (cur < 0xFFFFFFFA && !seen.has(cur) && total < maxBytes) {
+            seen.add(cur);
+            const s = readSec(cur);
+            if (!s) break;
+            chunks.push(s);
+            total += s.length;
+            cur = fat[cur] !== undefined ? fat[cur] : 0xFFFFFFFF;
+          }
+          const out = new Uint8Array(total);
+          let pos = 0;
+          for (const c of chunks) { out.set(c, pos); pos += c.length; }
+          return out;
+        };
+
+        const dirBytes = readChain(dirStartSec, 512000);
+        for (let off = 0; off + 128 <= dirBytes.length; off += 128) {
+          const nameLen = dirBytes[off + 64] | (dirBytes[off + 65] << 8);
+          let name = '';
+          for (let k = 0; k < Math.min(64, Math.max(0, nameLen - 2)); k += 2) {
+            name += String.fromCharCode(dirBytes[off + k] | (dirBytes[off + k + 1] << 8));
+          }
+          if (name.toLowerCase() === 'pictures') {
+            const dDv = new DataView(dirBytes.buffer, dirBytes.byteOffset + off, 128);
+            const startSec = dDv.getUint32(116, true);
+            const size = dDv.getUint32(120, true);
+            const stream = readChain(startSec, size || 25000000);
+            return size ? stream.subarray(0, Math.min(size, stream.length)) : stream;
+          }
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    function carveImagesFromByteArray(u8) {
+      const images = [];
       let i = 0;
       while (i < u8.length - 16 && images.length < 12) {
         if (u8[i] === 0x89 && u8[i+1] === 0x50 && u8[i+2] === 0x4E && u8[i+3] === 0x47 &&
@@ -4028,7 +4162,7 @@ Return strict JSON: {"details": "..."}`;
               break;
             }
           }
-          if (end > i + 1200) {
+          if (end > i + 3000) {
             images.push({ name: `ppt_img_${images.length + 1}.png`, dataUrl: 'data:image/png;base64,' + uint8ToBase64(u8.subarray(i, end)) });
             i = end;
             continue;
@@ -4048,7 +4182,7 @@ Return strict JSON: {"details": "..."}`;
               break;
             }
           }
-          if (end > i + 1500) {
+          if (end > i + 3500) {
             images.push({ name: `ppt_img_${images.length + 1}.jpg`, dataUrl: 'data:image/jpeg;base64,' + uint8ToBase64(u8.subarray(i, end)) });
             i = end;
             continue;
@@ -4056,6 +4190,13 @@ Return strict JSON: {"details": "..."}`;
         }
         i++;
       }
+      return images;
+    }
+
+    function extractFromBinaryPpt(buf) {
+      const u8 = new Uint8Array(buf);
+      const picStream = readOle2PicturesStream(buf);
+      const images = picStream ? carveImagesFromByteArray(picStream) : carveImagesFromByteArray(u8);
 
       const isCleanHumanText = (t) => {
         if (!t || t.length < 6) return false;
@@ -4359,7 +4500,10 @@ Return strict JSON: {"title": "...", "details": "..."}`;
 
     // ==================== 16. STEP 12: SUGGESTED-VIDEO YOUTUBE SEO PACK ====================
     async function runSuggestedVideoSeoPack(opts = {}) {
-      const title = (document.getElementById('videoTitleInput')?.value || '').trim();
+      const seoInpVal = (document.getElementById('seoStandaloneTopicInput')?.value || '').trim();
+      const titleEl = document.getElementById('videoTitleInput');
+      if (seoInpVal && titleEl && !titleEl.value.trim()) titleEl.value = seoInpVal;
+      const title = (titleEl?.value || seoInpVal || '').trim();
       const desc = (document.getElementById('videoTopicDetailsInput')?.value || '').trim();
       if (!title) { showToast('Enter Video Title in Step 3 first!'); return; }
 
@@ -4379,11 +4523,14 @@ Return strict JSON: {"title": "...", "details": "..."}`;
 
       if (appState.geminiApiKey) {
         const neededFields = [];
-        if (wantTitle) neededFields.push('"suggestedTitles": ["Title 1 (60-70 chars)", "Title 2", "Title 3"]', '"suggestionBlueprint": "3 crisp points for Suggested-Video pairing"');
-        if (wantDesc) neededFields.push('"youtubeDescription": "YouTube-standard description: First 150 chars hook + overview + REAL SEARCH-RANKED TIMESTAMPS (00:00 Keyword-Rich Chapter Name matching the video timeline) + 5 hashtags"');
+        if (wantTitle) neededFields.push(`"suggestedTitles": ["Title 1 (Sanaatan Samiksha Evidence + Search Keyword, 55-70 chars)", "Title 2 (Claim vs Archaeological/Textual Proof, 55-70 chars)", "Title 3 (Historical Mystery & Primary Source, 55-70 chars)"]`, '"suggestionBlueprint": "3 crisp points for Suggested-Video pairing"');
+        if (wantDesc) neededFields.push(`"youtubeDescription": "Write the description STRICTLY in this exact Hindi format:\n[हुक — कीवर्ड के साथ 1–2 पंक्तियाँ]\n\n[सारांश — 3–5 पंक्तियाँ]\n\n⏱️ टाइमस्टैम्प\n00:00 – परिचय\n00:00 – (search-ranked chapter titles)\n00:00 – निष्कर्ष\n\n🔎 मुख्य बिंदु\n• ...\n• ...\n\n📖 संदर्भ\n• ...\n\n🔗 लिंक\n📚 ebook/store: [ ]\n▶️ प्लेलिस्ट: [ ]\n📲 सोशल मीडिया: [ ]\n\n🔔 ऐसे ही प्रमाण-आधारित इतिहास के लिए Sanaatan Samiksha को सब्सक्राइब करें।\n\n⚠️ डिस्क्लेमर: (concise educational research disclaimer)\n\n#Hashtag1 #Hashtag2 #Hashtag3"`);
         if (wantTags) neededFields.push('"viralTags": ["tag1", "tag2", "... (15-18 tags under 500 chars total)"]', '"openingHook": "2-sentence 15s hook"', '"pinnedComment": "1 engagement question"');
 
-        const prompt = `You are a YouTube Growth & Suggested-Video Algorithm Strategist.
+        const prompt = `You are the YouTube Title & SEO Strategist for "Sanaatan Samiksha" (साक्ष्य-आधारित भारतीय इतिहास: अभिलेख, पुरातत्त्व, मूल ग्रंथ, हिंदी में).
+Apply the YOUTUBE TITLE SKILL:
+- Goal: High-CTR titles that stay 100% honest & faithful to actual video content (zero fake clickbait).
+- Place the primary search keyword/entity in the first 40 characters, keep total length 55–70 characters, and highlight real evidence (अभिलेख/शिलालेख/पुरातत्त्व/ग्रंथ).
 Generate ONLY the requested SEO fields below (to save tokens) for:
 - Topic / Title: "${title}"
 - Summary: "${(desc || title).slice(0, 500)}"
@@ -4412,7 +4559,7 @@ Return strict JSON with ONLY these keys:
             `${core} Documentary: तथ्य, ग्रंथ और असली इतिहास`
           ],
           suggestionBlueprint: `• Entity Mirroring: Keep "${core}" in the first 3 words of your Title, first 150 chars of Description, and first 3 Tags so YouTube links it to top ${niche.name} videos.\n• Complementary Hook: Use an evidence/part-2 curiosity angle rather than copying competitor titles word-for-word.\n• Connect Gemini API Key for live top-video search.`,
-          youtubeDescription: `${title} — इस वीडियो में हम ${core} से जुड़े ऐतिहासिक प्रमाण, मूल ग्रंथों और वास्तविक तथ्यों का विश्लेषण कर रहे हैं।\n\n00:00 परिचय व मुख्य प्रश्न\n01:30 ऐतिहासिक व पुरातात्विक प्रमाण\n05:00 ग्रंथों में उल्लेख और विश्लेषण\n09:00 अंतिम निष्कर्ष\n\n#${core.replace(/\s+/g, '')} #History #Documentary`,
+          youtubeDescription: `${title} — क्या आप जानते हैं ${core} से जुड़ा वह प्रमाण जो ज़्यादातर किताबों में अनदेखा रह जाता है? इस वीडियो में हम मूल साक्ष्यों के साथ पूरा सच जानेंगे।\n\nइस विशेष प्रस्तुति में हमने ${core} के ऐतिहासिक, पुरातात्विक और शास्त्रीय संदर्भों की गहन पड़ताल की है। यहाँ प्रचलित मान्यताओं और वास्तविक प्रमाणों के बीच के अंतर को सरल और स्पष्ट भाषा में समझाया गया है ताकि आपको सटीक जानकारी मिल सके।\n\n⏱️ टाइमस्टैम्प\n00:00 – परिचय\n01:30 – ${core} का मुख्य ऐतिहासिक संदर्भ\n04:45 – पुरातात्विक व ग्रंथीय प्रमाण\n08:30 – निष्कर्ष\n\n🔎 मुख्य बिंदु\n• ${core} से जुड़े प्राथमिक और प्रामाणिक साक्ष्य\n• प्रचलित दावों बनाम ऐतिहासिक तथ्यों का तुलनात्मक विश्लेषण\n• मूल ग्रंथों व शिलालेखों का सटीक संदर्भ\n\n📖 संदर्भ\n• संबंधित ऐतिहासिक अभिलेख, पुरातात्विक रिपोर्ट व मूल ग्रंथ\n\n🔗 लिंक\n📚 ebook/store: [ ]\n▶️ प्लेलिस्ट: [ ]\n📲 सोशल मीडिया: [ ]\n\n🔔 ऐसे ही प्रमाण-आधारित इतिहास के लिए Sanaatan Samiksha को सब्सक्राइब करें।\n\n⚠️ डिस्क्लेमर: यह वीडियो केवल शैक्षिक, ऐतिहासिक और शोध-आधारित जानकारी के उद्देश्य से बनाया गया है।\n\n#${core.replace(/\s+/g, '')} #SanaatanSamiksha #IndianHistory`,
           viralTags: [title, core, `${core} history`, `${core} documentary`, `${core} real truth`, niche.name, 'indian history documentary', 'archaeology india', 'historical proof'],
           openingHook: `क्या आप जानते हैं ${core} से जुड़ा वह प्रमाण जो ज़्यादातर किताबों में नहीं बताया जाता? अगले 2 मिनट में हम मूल साक्ष्यों के साथ पूरा सच देखेंगे।`,
           pinnedComment: `आपके हिसाब से ${core} का सबसे बड़ा ऐतिहासिक प्रमाण क्या है? कमेंट में अपनी राय ज़रूर लिखें!`
@@ -4548,6 +4695,7 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
           const data = await resp.json();
           const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
           const aiAudit = JSON.parse(txt);
+          getTodayUsageCount(true);
           if (aiAudit && Array.isArray(aiAudit.audits)) {
             resBox.innerHTML = `
               <div class="p-3.5 rounded-xl bg-secondary/15 border border-secondary/40 text-xs text-white">
@@ -4596,6 +4744,21 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
 
     // ==================== 18. V5.1 WORKSPACE TABS & VIDEO LINK AUDITOR ====================
     let activeWorkspaceTab = 'thumb';
+
+
+    function syncTitleFromSeoTab(val) {
+      const vt = document.getElementById('videoTitleInput');
+      if (vt && vt.value !== val) vt.value = val;
+      saveStudioState();
+    }
+
+    function sendTitleToThumbnailStudio() {
+      const seoVal = (document.getElementById('seoStandaloneTopicInput')?.value || '').trim();
+      const vt = document.getElementById('videoTitleInput');
+      if (seoVal && vt) vt.value = seoVal;
+      switchWorkspaceTab('thumb');
+      showToast('🎨 Title loaded into Thumbnail Studio!');
+    }
 
     function switchWorkspaceTab(tab) {
       activeWorkspaceTab = tab;
@@ -4783,7 +4946,10 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
     }
 
     function autoFixWeakThumbnailInChatGPT(fixHint) {
-      const title = (document.getElementById('videoTitleInput')?.value || '').trim();
+      const seoInpVal = (document.getElementById('seoStandaloneTopicInput')?.value || '').trim();
+      const titleEl = document.getElementById('videoTitleInput');
+      if (seoInpVal && titleEl && !titleEl.value.trim()) titleEl.value = seoInpVal;
+      const title = (titleEl?.value || seoInpVal || '').trim();
       const prompt = `Keep the exact same YouTuber face 100% unchanged, and redesign this thumbnail for "${title}" fixing these exact CTR issues: ${fixHint}. Use high-clarity 8K Dodge & Burn sharpness, bold dark contrasting background, and true condensed Khand Bold text (#FFD700 Yellow Line 1 + #FFFFFF White Line 2).`;
       dispatchToChatGPTBridge(prompt, '🛠️ Fix prompt copied & sent to ChatGPT!');
     }
@@ -4791,6 +4957,7 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
     // ==================== 13. INITIALIZATION ====================
     window.addEventListener('DOMContentLoaded', () => {
       initThemeMode();
+      getTodayUsageCount(false);
       if (window.location.search.includes('updated=')) {
         setTimeout(() => showToast(`✅ App Updated Successfully to ${CURRENT_APP_VERSION}!`), 500);
       }
@@ -4847,9 +5014,15 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
           </h3>
           <p class="text-[11px] text-on-surface-variant">1-click to reload any past video title, research, concepts &amp; prompts.</p>
         </div>
-        <button type="button" onclick="toggleHistoryModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
-          <span class="material-symbols-outlined text-[18px]">close</span>
-        </button>
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="clearAllProjectHistory()" class="px-2.5 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-500 border border-red-500/40 font-mono text-[10px] font-extrabold flex items-center gap-1 transition">
+            <span class="material-symbols-outlined text-[14px]">delete_forever</span>
+            <span>Delete All</span>
+          </button>
+          <button type="button" onclick="toggleHistoryModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
       </div>
       <div id="historyListContainer" class="flex-1 overflow-y-auto custom-scroll space-y-2.5 pr-1"></div>
     </div>
