@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v3.6 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v4.0 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -271,7 +271,7 @@
         </span>
       </div>
       <p class="font-mono text-[9px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        Powered by SSIRO • v3.6
+        Powered by SSIRO • v4.0
       </p>
     </div>
 
@@ -810,7 +810,7 @@
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
-    const CURRENT_APP_VERSION = 'v3.6';
+    const CURRENT_APP_VERSION = 'v4.0';
 
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
@@ -1969,7 +1969,7 @@ Use Google Search to research popular and currently trending YouTube videos and 
 
 CRITICAL INSTRUCTIONS:
 1. Analyze BOTH the Video Title AND Video Details deeply.
-2. Generate 3 COMPLETELY ORIGINAL, TOPIC-SPECIFIC Thumbnail Text variations (never use generic templates like "सत्य या भ्रम?" or "अनसुना सच!"—invent fresh, punchy 2-line hooks uniquely tailored to "${title}").
+2. Generate 3 COMPLETELY ORIGINAL, TOPIC-SPECIFIC Thumbnail Text variations in PURE, PUNCHY HINDI tailored to Hindi YouTube viewers for "${title}" (never generic templates). Keep each line 2–4 crisp Hindi words that read instantly on mobile; only transliterate a rare Sanskrit proper noun to English/Hinglish if absolutely necessary to prevent typos.
 3. Generate 6 genuinely distinct Thumbnail Design Concepts with REAL, DESCRIPTIVE, TOPIC-SPECIFIC TITLES (never generic "Concept 1" titles) tailored to "${fmt.name}" and hyper-realistic 8K YouTube quality.
 4. Return a valid JSON object with these exact keys:
 {
@@ -2426,16 +2426,17 @@ STEP 3 — LOCKED TYPOGRAPHY & BRAND RULES (KHAND BOLD • YELLOW & WHITE):
 • STRICT TYPOGRAPHY & ZERO-TYPO SPELLING LOCK:
   - Font Style MUST be TRUE 'Khand Bold' (tall, narrow, condensed, sharp-edged geometric display font—NEVER rounded or bubbly).
   - Colors MUST be exact: Line 1 = SOLID GOLDEN YELLOW (#FFD700), Line 2 = SOLID PURE WHITE (#FFFFFF), with heavy black 3D drop-shadow and dark vignette scrim behind the text.
-  - DEVANAGARI / HINDI SPELLING CHECK: Render EVERY single character, matra, anusvara (ं), chandrabindu, and conjunct in "${line1}" and "${line2}" 100% VERBATIM with ZERO spelling mistakes or swapped consonants. Double-check every letter before finalizing!
+  - DEVANAGARI / HINDI SPELLING & SMART HINGLISH FALLBACK: Render "${line1}" and "${line2}" cleanly with ZERO typos. If any complex Hindi/Sanskrit conjunct word risks a spelling error or broken matra in image generation, automatically transliterate THAT tricky word into clean uppercase Hinglish/English (or use mixed Hindi + English in the EXACT SAME 'Khand Bold' font style, #FFD700 Yellow Line 1 + #FFFFFF White Line 2)—NEVER output broken or garbled Hindi letters!
 • Do NOT add any other random words, gibberish text, or extra labels anywhere on the image.
 
 ===================================================================
-STEP 4 — HYPER-REALISTIC 8K/4K COLOR GRADING & MICRO-DETAILING LOCK:
+STEP 4 — VIRAL EDITORIAL 8K SHARPNESS, COLOR SEPARATION & 3-LAYER DEPTH LOCK:
 ===================================================================
 • Format & Resolution Lock: Exact ${sz.ratio} aspect ratio (${sz.resolution}px, ${sz.orientation}) for ${sz.platform}.
-• Pro YouTube 8K Color Grading: Deep cinematic HDR contrast, rich vibrant color separation (warm golden #FFD700 / amber rim highlights vs deep obsidian shadows & electric cyan/crimson accents) so the thumbnail pops off any mobile feed.
-• 8K Micro-Detailing: Razor-sharp focus on iris catchlights, natural skin pores, individual hair strands, fabric weave, weathered stone/manuscript fiber texture, volumetric light rays, f/1.4 shallow depth-of-field bokeh, and grounded contact shadows.
-• Negative Constraints: ZERO plastic AI skin, ZERO flat/muddy colors, ZERO clutter, ZERO random extra words, ZERO watermarks, ZERO channel logos, NO historically inaccurate attire or architecture.
+• Hyper-Crisp "Dodge & Burn" Subject Sharpness: Sculpted high-clarity Photoshop editorial cutout look—razor-sharp iris catchlights, crisp eyebrows, natural micro-skin pores, individual hair strands, and clean studio-grade rim separation around shoulders/head. Keep human skin tones 100% clean and natural (NEVER muddy brown or washed-out yellow).
+• High-Contrast Background Color Separation: Background MUST sit 2–3 stops darker or in a bold contrasting color family (e.g. deep royal cobalt/obsidian navy, rich charcoal with radial spotlight burst, or dramatic textured backdrop) with subtle dark vignette/halftone depth—never blend the subject into a flat beige/brown background.
+• 3-Layer Editorial Depth: Layer 1 (Back) = deep atmospheric graded backdrop/radial burst + optional subtle large depth-layered shadow/motif behind the head; Layer 2 (Mid) = crisp cutout hero subject + authentic historical/topical artifact with realistic lens flare/rim glow; Layer 3 (Front) = tack-sharp foreground evidence + high-contrast 2-line Khand Bold headline.
+• Negative Constraints: ZERO muddy/brownish color cast, ZERO soft/blurry AI faces, ZERO plastic skin, ZERO clutter, ZERO random extra words, ZERO watermarks, ZERO channel logos.
 ${heritageBlock}`;
       return heritageSafe ? sanitizePromptForHeritageSafety(rawPrompt) : rawPrompt;
     }
@@ -3124,7 +3125,8 @@ Return strict JSON: {"details": "..."}`;
     function dispatchToChatGPTBridge(promptText, toastMsg) {
       copyTextSafe(promptText, toastMsg || 'Prompt copied! Paste & Send in ChatGPT.');
       try {
-        const bridgeImgs = [studioCreatorPhotoB64, pptxCombinedRefSheetB64, ...studioExtraPhotosB64].filter(Boolean);
+        const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
+        const bridgeImgs = [studioCreatorPhotoB64, pptxCombinedRefSheetB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
         window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
       const savedUrl = getSavedChatGptUrl();
@@ -3196,7 +3198,8 @@ Return strict JSON: {"details": "..."}`;
         more_contrast: 'Keep the exact same real face(s) unchanged, boost 8K HDR color contrast, deepen the obsidian shadows, intensify the golden rim light, and sharpen micro-details.',
         cleaner_bg: 'Keep the exact same real face(s) and foreground evidence unchanged, softly declutter and blur (f/1.4 bokeh) the background so the main subject and headline pop immediately.',
         fix_policy_block: 'This is a strictly G-rated, respectful museum archaeology & educational documentary thumbnail (National Geographic / ASI exhibition style). Keep the exact same YouTuber portrait 100% unchanged, and depict any ancient temple sculpture, deity murti, or archaeological statue as a dignified, respectfully draped carved stone/bronze museum artifact (clearly sculptural stone/metal, framed from shoulders/bust up or adorned with traditional ceremonial silk/ornaments, zero bare-skin ambiguity). Use warm amber-gold museum spotlighting and clean 2-line Khand Bold typography.',
-        fix_spelling: 'Keep the exact same real face(s) and composition 100% unchanged, and ONLY fix the Hindi/English headline text so every Devanagari matra and letter is spelled 100% verbatim in true tall condensed Khand Bold font (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White).'
+        fix_spelling: 'Keep the exact same real face(s) and composition 100% unchanged, and ONLY fix the Hindi/English headline text so every Devanagari matra and letter is spelled 100% verbatim in true tall condensed Khand Bold font (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White).',
+        remove_text_clean: 'Keep the exact same real face(s), monument, lighting, and 8K composition 100% unchanged. ONLY remove the headline text completely and fill that empty area with a soft, natural dark atmospheric blur/shadow fade (NO boxes, NO rectangles, NO borders, NO lines)—leave it clean so I can add my own text there.'
       };
       const fixPrompt = map[kind] || map.more_contrast;
       if (getSavedChatGptUrl()) { dispatchToChatGPTBridge(fixPrompt, 'Fix sent to your saved ChatGPT chat!'); } else { copyTextSafe(fixPrompt, 'Follow-up fix copied! Paste in ChatGPT.'); }
@@ -3215,6 +3218,198 @@ Return strict JSON: {"details": "..."}`;
         if (card) card.classList.remove('hidden');
       };
       r.readAsDataURL(file);
+    }
+
+
+    function clearExtraStudioPhotos() {
+      studioExtraPhotosB64 = [];
+      const prev = document.getElementById('studioExtraPreview');
+      if (prev) { prev.classList.add('hidden'); prev.innerHTML = ''; }
+      const inp = document.getElementById('studioExtraPhotosInput');
+      if (inp) inp.value = '';
+      showToast('Cleared extra reference photos.');
+    }
+
+    async function searchWikimediaRealPhotos() {
+      const grid = document.getElementById('wikimediaResultsGrid');
+      const title = (document.getElementById('videoTitleInput')?.value || '').trim();
+      if (!title) { showToast('Enter Video Title in Step 3 first!'); return; }
+      if (grid) {
+        grid.classList.remove('hidden');
+        grid.innerHTML = '<span class="font-mono text-[10px] text-secondary">⏳ Searching Wikimedia Commons for real photos...</span>';
+      }
+      try {
+        const q = encodeURIComponent(title.slice(0, 60));
+        const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${q}&gsrlimit=6&prop=imageinfo&iiprop=url|mime&iiurlwidth=640&format=json&origin=*`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const pages = Object.values(data?.query?.pages || {});
+        const imgs = pages.map(pg => pg.imageinfo?.[0]).filter(ii => ii && ii.thumburl && /^image\/(jpeg|png|webp)/.test(ii.mime || 'image/jpeg')).slice(0, 4);
+        if (!imgs.length) {
+          if (grid) grid.innerHTML = '<span class="font-mono text-[10px] text-outline">No exact Wikimedia match — upload your own photo above.</span>';
+          return;
+        }
+        if (grid) {
+          grid.innerHTML = imgs.map((im, i) => `<button type="button" onclick="addWikimediaPhotoToExtra('${im.thumburl}')" title="Tap to add real photo" class="relative w-14 h-14 rounded-lg overflow-hidden border border-secondary/50 hover:border-tertiary transition">
+            <img src="${im.thumburl}" class="w-full h-full object-cover" />
+            <span class="absolute bottom-0 right-0 px-1 bg-black/80 text-[8px] font-mono text-tertiary">+Add</span>
+          </button>`).join('');
+        }
+      } catch (e) {
+        if (grid) grid.innerHTML = '<span class="font-mono text-[10px] text-outline">Wikimedia search unavailable right now.</span>';
+      }
+    }
+
+    async function addWikimediaPhotoToExtra(imgUrl) {
+      try {
+        const resp = await fetch(imgUrl);
+        const blob = await resp.blob();
+        const r = new FileReader();
+        r.onload = () => {
+          const b64 = String(r.result || '');
+          studioExtraPhotosB64.push(b64);
+          const prev = document.getElementById('studioExtraPreview');
+          if (prev) {
+            prev.classList.remove('hidden');
+            prev.innerHTML += `<img src="${b64}" class="h-14 w-14 object-cover rounded-lg border border-secondary" />`;
+          }
+          showToast('✅ Real Wikimedia photo added to Extra References!');
+        };
+        r.readAsDataURL(blob);
+      } catch (e) {
+        showToast('Could not fetch this image directly; please save & upload it.');
+      }
+    }
+
+    let stamperImgObj = null;
+    let stamperPosX = 0.05;
+    let stamperPosY = 0.06;
+    let stamperAlign = 'left';
+    let stamperDragging = false;
+    let stamperDragBound = false;
+
+    function toggleStamperAlign() {
+      stamperAlign = stamperAlign === 'left' ? 'center' : 'left';
+      const btn = document.getElementById('stamperAlignBtn');
+      if (btn) btn.textContent = stamperAlign === 'left' ? 'Align: Left' : 'Align: Center';
+      renderInteractiveStamperCanvas();
+    }
+
+    function bindStamperDragEvents(canvas) {
+      if (!canvas || stamperDragBound) return;
+      stamperDragBound = true;
+      const updatePos = (clientX, clientY) => {
+        const rect = canvas.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        stamperPosX = Math.max(0.02, Math.min(0.95, (clientX - rect.left) / rect.width));
+        stamperPosY = Math.max(0.02, Math.min(0.88, (clientY - rect.top) / rect.height));
+        renderInteractiveStamperCanvas();
+      };
+      canvas.addEventListener('pointerdown', (e) => {
+        stamperDragging = true;
+        if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+        updatePos(e.clientX, e.clientY);
+      });
+      canvas.addEventListener('pointermove', (e) => {
+        if (stamperDragging) updatePos(e.clientX, e.clientY);
+      });
+      canvas.addEventListener('pointerup', () => { stamperDragging = false; });
+      canvas.addEventListener('pointercancel', () => { stamperDragging = false; });
+    }
+
+    function loadInteractiveStamperImage(input) {
+      const file = (input.files || [])[0];
+      if (!file) return;
+      const v = appState.variantsList[activeStudioVariantIndex];
+      const hookText = v ? v.activeHook : 'असली सच! | ऐतिहासिक प्रमाण';
+      const { line1, line2 } = splitHookIntoTwoLines(hookText);
+
+      const l1El = document.getElementById('stamperLine1Input');
+      const l2El = document.getElementById('stamperLine2Input');
+      if (l1El) l1El.value = line1;
+      if (l2El) l2El.value = line2;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const im = new Image();
+        im.onload = () => {
+          stamperImgObj = im;
+          stamperPosX = 0.05;
+          stamperPosY = 0.06;
+          const box = document.getElementById('stampedResultBox');
+          if (box) box.classList.remove('hidden');
+          const canvas = document.getElementById('interactiveStamperCanvas');
+          bindStamperDragEvents(canvas);
+          renderInteractiveStamperCanvas();
+          showToast('👆 Drag text anywhere on the image & adjust size!');
+        };
+        im.src = String(reader.result || '');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderInteractiveStamperCanvas() {
+      const canvas = document.getElementById('interactiveStamperCanvas');
+      if (!canvas || !stamperImgObj) return;
+      canvas.width = stamperImgObj.width || 1920;
+      canvas.height = stamperImgObj.height || 1080;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(stamperImgObj, 0, 0, canvas.width, canvas.height);
+
+      const line1 = (document.getElementById('stamperLine1Input')?.value || '').trim();
+      const line2 = (document.getElementById('stamperLine2Input')?.value || '').trim();
+      const sizePct = parseFloat(document.getElementById('stamperSizeSlider')?.value || '11') / 100;
+      const useShade = document.getElementById('stamperSoftShadeCheck')?.checked !== false;
+
+      const fontSize = Math.round(canvas.height * sizePct);
+      ctx.font = `700 ${fontSize}px Khand, "Noto Sans Devanagari", sans-serif`;
+      ctx.textBaseline = 'top';
+      ctx.textAlign = stamperAlign;
+
+      const x = Math.round(canvas.width * stamperPosX);
+      const y = Math.round(canvas.height * stamperPosY);
+      const y2 = y + Math.round(fontSize * 1.08);
+
+      if (useShade) {
+        const wMax = Math.max(ctx.measureText(line1).width, ctx.measureText(line2).width, fontSize * 3);
+        const cx = stamperAlign === 'center' ? x : x + wMax * 0.45;
+        const cy = y + fontSize * 0.95;
+        const rad = Math.max(wMax * 0.72, fontSize * 2.2);
+        const rg = ctx.createRadialGradient(cx, cy, rad * 0.12, cx, cy, rad);
+        rg.addColorStop(0, 'rgba(0,0,0,0.72)');
+        rg.addColorStop(0.6, 'rgba(0,0,0,0.35)');
+        rg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = rg;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      ctx.shadowColor = 'rgba(0,0,0,0.95)';
+      ctx.shadowBlur = Math.round(fontSize * 0.18);
+      ctx.shadowOffsetX = 4;
+      ctx.shadowOffsetY = 5;
+      ctx.lineWidth = Math.max(4, Math.round(fontSize * 0.08));
+      ctx.strokeStyle = '#000000';
+
+      if (line1) {
+        ctx.strokeText(line1, x, y);
+        ctx.fillStyle = '#FFD700';
+        ctx.fillText(line1, x, y);
+      }
+      if (line2) {
+        ctx.strokeText(line2, x, y2);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(line2, x, y2);
+      }
+    }
+
+    function downloadInteractiveStamperPng() {
+      const canvas = document.getElementById('interactiveStamperCanvas');
+      if (!canvas || !stamperImgObj) return;
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'thumbnail_khand_exact.png';
+      a.click();
+      showToast('✅ Downloaded 100% Typo-Free Thumbnail PNG!');
     }
 
     function computeVariantCtrScore(hookRaw, v) {
@@ -3886,8 +4081,13 @@ Return strict JSON: {"title": "...", "details": "..."}`;
           <div id="studioCreatorPreview" class="hidden pt-1 flex items-center gap-2"></div>
         </div>
         <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-2">
-          <label class="font-mono text-[11px] font-bold text-secondary block">2. Extra Reference Photos (Optional)</label>
+          <div class="flex items-center justify-between gap-1">
+            <label class="font-mono text-[11px] font-bold text-secondary">2. Extra Reference Photos (Up to 4)</label>
+            <button type="button" onclick="clearExtraStudioPhotos()" class="font-mono text-[10px] text-outline hover:text-red-400">Clear</button>
+          </div>
           <input id="studioExtraPhotosInput" type="file" accept="image/*" multiple onchange="handleStudioPhotoSelect(this, 'extra')" class="w-full text-[11px] text-on-surface-variant file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-secondary file:text-slate-950 file:font-bold" />
+          <button type="button" onclick="searchWikimediaRealPhotos()" class="w-full py-1.5 px-2.5 rounded-lg bg-secondary/15 hover:bg-secondary/25 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">🌐 Find Real Public-Domain Photos (Wikimedia)</button>
+          <div id="wikimediaResultsGrid" class="hidden flex flex-wrap gap-1.5 pt-1"></div>
           <div id="studioExtraPreview" class="hidden pt-1 flex flex-wrap gap-1.5"></div>
         </div>
       </div>
@@ -3941,6 +4141,38 @@ Return strict JSON: {"title": "...", "details": "..."}`;
           <button type="button" onclick="copyFollowUpFix('cleaner_bg')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Cleaner BG</button>
           <button type="button" onclick="copyFollowUpFix('fix_policy_block')" class="px-2.5 py-1 rounded-lg bg-secondary/20 hover:bg-secondary hover:text-slate-950 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">🛡️ Fix Policy Block</button>
           <button type="button" onclick="copyFollowUpFix('fix_spelling')" class="px-2.5 py-1 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 font-mono text-[10px] font-bold transition">🔤 Fix Hindi Spelling</button>
+          <button type="button" onclick="copyFollowUpFix('remove_text_clean')" class="px-2.5 py-1 rounded-lg bg-primary/20 hover:bg-primary hover:text-slate-950 text-primary border border-primary/40 font-mono text-[10px] font-bold transition">🧹 Remove Text (Clean Shade)</button>
+        </div>
+      </div>
+
+      <!-- OPTIONAL: PHOTOSHOP-STYLE DRAG & RESIZE KHAND BOLD TEXT EDITOR (0% TYPO) -->
+      <div class="p-3 rounded-xl bg-surface-container-lowest border border-tertiary/40 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-mono text-[11px] font-bold text-tertiary">✍️ Optional: Drag &amp; Resize Khand Bold Text (0% Typo)</span>
+          <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-extrabold">
+            Upload Clean Image
+            <input type="file" accept="image/*" onchange="loadInteractiveStamperImage(this)" class="hidden" />
+          </label>
+        </div>
+        <div id="stampedResultBox" class="hidden space-y-2.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <input id="stamperLine1Input" type="text" oninput="renderInteractiveStamperCanvas()" placeholder="Line 1 (Yellow)" class="bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-xs font-bold text-[#FFD700]" />
+            <input id="stamperLine2Input" type="text" oninput="renderInteractiveStamperCanvas()" placeholder="Line 2 (White)" class="bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-xs font-bold text-white" />
+          </div>
+          <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-on-surface-variant">
+            <label class="flex items-center gap-1.5">
+              <span>Size:</span>
+              <input id="stamperSizeSlider" type="range" min="5" max="20" value="11" oninput="renderInteractiveStamperCanvas()" class="w-24 accent-[#FFD700]" />
+            </label>
+            <button type="button" onclick="toggleStamperAlign()" id="stamperAlignBtn" class="px-2 py-1 rounded bg-surface-container border border-outline-variant/50 text-white font-bold">Align: Left</button>
+            <label class="flex items-center gap-1 cursor-pointer">
+              <input id="stamperSoftShadeCheck" type="checkbox" checked onchange="renderInteractiveStamperCanvas()" class="accent-[#FFD700]" />
+              <span>Soft Dark Shade</span>
+            </label>
+            <span class="text-tertiary font-bold">👆 Drag text anywhere!</span>
+          </div>
+          <canvas id="interactiveStamperCanvas" class="w-full rounded-xl border border-tertiary/50 bg-black cursor-move touch-none"></canvas>
+          <button type="button" onclick="downloadInteractiveStamperPng()" class="px-3.5 py-2 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">⬇️ Download Final PNG</button>
         </div>
       </div>
 
