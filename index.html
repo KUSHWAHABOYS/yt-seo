@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v3.3 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v3.5 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -271,7 +271,7 @@
         </span>
       </div>
       <p class="font-mono text-[9px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        Powered by SSIRO • v3.3
+        Powered by SSIRO • v3.5
       </p>
     </div>
 
@@ -810,7 +810,7 @@
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
-    const CURRENT_APP_VERSION = 'v3.3';
+    const CURRENT_APP_VERSION = 'v3.5';
 
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
@@ -1485,37 +1485,30 @@
         await autoDiscoverWorkingGeminiModel();
       }
       const preferred = (appState.geminiModel && appState.geminiModel !== 'gemini-1.5-flash') ? appState.geminiModel : 'gemini-2.5-flash';
-      const backup = preferred === 'gemini-2.5-flash-lite' ? 'gemini-2.5-flash' : 'gemini-2.5-flash-lite';
+      const candidateModels = [...new Set([preferred, 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'])];
 
       const steps = [];
       if (useSearchGrounding) {
         steps.push({
           model: preferred,
           grounded: true,
-          timeout: 35000,
+          timeout: 30000,
           body: {
             contents: [{ parts: [{ text: promptText + '\n\nIMPORTANT: Return ONLY valid raw JSON (no markdown fences, no commentary).' }] }],
             tools: [{ google_search: {} }]
           }
         });
       }
-      steps.push({
-        model: preferred,
-        grounded: false,
-        timeout: 25000,
-        body: {
-          contents: [{ parts: [{ text: promptText }] }],
-          generationConfig: { responseMimeType: 'application/json' }
-        }
-      });
-      steps.push({
-        model: backup,
-        grounded: false,
-        timeout: 20000,
-        body: {
-          contents: [{ parts: [{ text: promptText }] }],
-          generationConfig: { responseMimeType: 'application/json' }
-        }
+      candidateModels.forEach(mName => {
+        steps.push({
+          model: mName,
+          grounded: false,
+          timeout: 22000,
+          body: {
+            contents: [{ parts: [{ text: promptText }] }],
+            generationConfig: { responseMimeType: 'application/json' }
+          }
+        });
       });
 
       let firstErrMsg = '';
@@ -2365,6 +2358,15 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
       });
     }
 
+    function sanitizePromptForHeritageSafety(txt) {
+      return String(txt || '')
+        .replace(/\bcrimson\b/gi, 'warm amber-gold')
+        .replace(/\bblood\b/gi, 'aged patina')
+        .replace(/\bclash\b/gi, 'scholarly contrast')
+        .replace(/\bconfrontation\b/gi, 'comparative analysis')
+        .replace(/\bshocking\b/gi, 'compelling');
+    }
+
     function composeFullVariantPrompt(v, concept, niche, fmt, title, desc, refInfo, hookRaw) {
       const { line1, line2 } = splitHookIntoTwoLines(hookRaw);
       const sz = getSelectedThumbnailSize();
@@ -2373,7 +2375,13 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
 `
         : '';
 
-      return `You are a Master Social Media & YouTube Thumbnail Art Director & Senior Photoshop Compositor.
+      const heritageSafe = ['history', 'religion', 'ancient', 'mythology', 'documentary', 'mystery'].includes(niche.id);
+      const heritageBlock = heritageSafe
+        ? `• MUSEUM & HERITAGE SAFETY LOCK (PREVENT FALSE CONTENT FILTERS): This is a strictly G-rated, respectful educational & archaeological documentary cover (National Geographic / museum exhibition aesthetic). Any ancient temple sculpture, deity murti, or historical relief MUST be depicted as a dignified, clearly carved sandstone/bronze/terracotta museum artifact—respectfully draped in traditional ceremonial silk/temple ornaments or framed cleanly from the shoulders/bust up (never ambiguous bare skin).
+`
+        : '';
+
+      const rawPrompt = `You are a Master Social Media & YouTube Thumbnail Art Director & Senior Photoshop Compositor.
 Create a hyper-realistic, high-CTR ${sz.ratio} ${sz.platform} Thumbnail (${sz.resolution}px resolution, ${sz.orientation}) for the following video:
 • Niche: ${niche.name}
 • Thumbnail Format & Style: ${fmt.name} — ${concept.subStyleName} (${v.name})
@@ -2424,7 +2432,9 @@ STEP 4 — HYPER-REALISTIC 8K/4K COLOR GRADING & MICRO-DETAILING LOCK:
 • Format & Resolution Lock: Exact ${sz.ratio} aspect ratio (${sz.resolution}px, ${sz.orientation}) for ${sz.platform}.
 • Pro YouTube 8K Color Grading: Deep cinematic HDR contrast, rich vibrant color separation (warm golden #FFD700 / amber rim highlights vs deep obsidian shadows & electric cyan/crimson accents) so the thumbnail pops off any mobile feed.
 • 8K Micro-Detailing: Razor-sharp focus on iris catchlights, natural skin pores, individual hair strands, fabric weave, weathered stone/manuscript fiber texture, volumetric light rays, f/1.4 shallow depth-of-field bokeh, and grounded contact shadows.
-• Negative Constraints: ZERO plastic AI skin, ZERO flat/muddy colors, ZERO clutter, ZERO random extra words, ZERO watermarks, ZERO channel logos, NO historically inaccurate attire or architecture.`;
+• Negative Constraints: ZERO plastic AI skin, ZERO flat/muddy colors, ZERO clutter, ZERO random extra words, ZERO watermarks, ZERO channel logos, NO historically inaccurate attire or architecture.
+${heritageBlock}`;
+      return heritageSafe ? sanitizePromptForHeritageSafety(rawPrompt) : rawPrompt;
     }
 
     function selectConceptAndGenerateVariants(conceptIdx, silent) {
@@ -3181,7 +3191,8 @@ Return strict JSON: {"details": "..."}`;
         face_bigger: 'Keep the exact same real face(s) 100% unchanged (zero face morphing), just make the main YouTuber portrait 20% larger and sharper in the foreground with stronger rim lighting.',
         text_brighter: 'Keep the exact same real face(s) and composition unchanged, just make the 2-line Khand Bold text (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White) 20% larger, brighter, and add a deeper dark gradient behind the text for mobile readability.',
         more_contrast: 'Keep the exact same real face(s) unchanged, boost 8K HDR color contrast, deepen the obsidian shadows, intensify the golden rim light, and sharpen micro-details.',
-        cleaner_bg: 'Keep the exact same real face(s) and foreground evidence unchanged, softly declutter and blur (f/1.4 bokeh) the background so the main subject and headline pop immediately.'
+        cleaner_bg: 'Keep the exact same real face(s) and foreground evidence unchanged, softly declutter and blur (f/1.4 bokeh) the background so the main subject and headline pop immediately.',
+        fix_policy_block: 'This is a strictly G-rated, respectful museum archaeology & educational documentary thumbnail (National Geographic / ASI exhibition style). Keep the exact same YouTuber portrait 100% unchanged, and depict any ancient temple sculpture, deity murti, or archaeological statue as a dignified, respectfully draped carved stone/bronze museum artifact (clearly sculptural stone/metal, framed from shoulders/bust up or adorned with traditional ceremonial silk/ornaments, zero bare-skin ambiguity). Use warm amber-gold museum spotlighting and clean 2-line Khand Bold typography.'
       };
       const fixPrompt = map[kind] || map.more_contrast;
       if (getSavedChatGptUrl()) { dispatchToChatGPTBridge(fixPrompt, 'Fix sent to your saved ChatGPT chat!'); } else { copyTextSafe(fixPrompt, 'Follow-up fix copied! Paste in ChatGPT.'); }
@@ -3905,6 +3916,7 @@ Return strict JSON: {"title": "...", "details": "..."}`;
           <button type="button" onclick="copyFollowUpFix('text_brighter')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Text Brighter</button>
           <button type="button" onclick="copyFollowUpFix('more_contrast')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">8K More Contrast</button>
           <button type="button" onclick="copyFollowUpFix('cleaner_bg')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Cleaner BG</button>
+          <button type="button" onclick="copyFollowUpFix('fix_policy_block')" class="px-2.5 py-1 rounded-lg bg-secondary/20 hover:bg-secondary hover:text-slate-950 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">🛡️ Fix Policy Block</button>
         </div>
       </div>
 
