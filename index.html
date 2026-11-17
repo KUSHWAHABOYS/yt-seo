@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v3.2 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v3.3 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -134,6 +134,7 @@
       color: #ffffff !important;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body class="bg-surface text-on-surface font-sans antialiased selection:bg-tertiary selection:text-on-tertiary pb-16">
 
@@ -270,7 +271,7 @@
         </span>
       </div>
       <p class="font-mono text-[9px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        Powered by SSIRO • v3.2
+        Powered by SSIRO • v3.3
       </p>
     </div>
 
@@ -509,6 +510,39 @@
 
       <!-- STEPS 3 & 4: ONLY 2 CLEAN INPUTS (VIDEO TITLE + OPTIONAL VIDEO DETAILS) -->
       <div class="space-y-4 pt-2 border-t border-outline-variant/30">
+        <!-- RAW PPT (.pptx) AUTO-ANALYZER & SINGLE REFERENCE SHEET EXTRACTOR (24h AUTO-DELETE) -->
+        <div class="p-3.5 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-secondary text-slate-950 font-mono text-[10px] font-black whitespace-nowrap">PPTX AUTO</span>
+              <span class="font-display text-xs sm:text-sm font-bold text-white">Upload Raw PPT (.pptx) — Auto Title, Details &amp; Photos</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-secondary text-slate-950 font-mono text-[11px] font-extrabold hover:brightness-110 transition">
+                <span>📄 Choose .pptx</span>
+                <input id="rawPptxFileInput" type="file" accept=".pptx" onchange="handleRawPptxUpload(this)" class="hidden" />
+              </label>
+              <button type="button" id="deletePptxDataBtn" onclick="clearPptxTempData(true)" class="hidden px-2.5 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-500 border border-red-500/40 font-mono text-[10px] font-bold">Delete PPT</button>
+            </div>
+          </div>
+          <div id="pptxAnalyzerPanel" class="hidden space-y-2.5 pt-1 border-t border-outline-variant/30">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono">
+              <span id="pptxStatusLabel" class="text-secondary font-bold">Analyzing PPT...</span>
+              <span class="text-outline">Auto-deletes in 24h (Browser-only, never uploaded to server)</span>
+            </div>
+            <div id="pptxExtractedImagesGrid" class="flex flex-wrap gap-2"></div>
+            <div id="pptxRefSheetBox" class="hidden p-2.5 rounded-xl bg-surface-container border border-tertiary/40 space-y-2">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="font-mono text-[10px] font-bold text-tertiary">🖼️ Combined Reference Sheet (1 Image for ChatGPT)</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" onclick="copyPptxRefSheetToClipboard()" class="px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-extrabold">📋 Copy Image</button>
+                  <a id="pptxRefSheetDownloadLink" href="#" download="ppt_reference_sheet.png" class="px-2.5 py-1 rounded-lg bg-surface-container-high text-white border border-outline-variant/50 font-mono text-[10px] font-bold">⬇️ Save PNG</a>
+                </div>
+              </div>
+              <img id="pptxRefSheetPreviewImg" src="" alt="Reference Sheet" class="w-full max-h-48 object-contain rounded-lg bg-black/40 border border-outline-variant/40" />
+            </div>
+          </div>
+        </div>
         <div class="space-y-1.5">
           <label for="videoTitleInput" class="font-display text-sm font-bold text-white flex items-center gap-1.5">
             <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 3</span>
@@ -776,7 +810,7 @@
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
-    const CURRENT_APP_VERSION = 'v3.2';
+    const CURRENT_APP_VERSION = 'v3.3';
 
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
@@ -2734,6 +2768,7 @@ STEP 4 — HYPER-REALISTIC 8K/4K COLOR GRADING & MICRO-DETAILING LOCK:
 
       appState.fullHubMode = false;
       try { localStorage.removeItem(STUDIO_STATE_STORAGE_KEY); } catch (e) {}
+      enforcePptx24HourExpiry();
       autoCleanUnusedStorage();
       if (notify) showToast('🧹 पुराना सर्च और डेटा साफ कर दिया गया! अब नया वीडियो शुरू करें।');
     }
@@ -3076,7 +3111,8 @@ Return strict JSON: {"details": "..."}`;
     function dispatchToChatGPTBridge(promptText, toastMsg) {
       copyTextSafe(promptText, toastMsg || 'Prompt copied! Paste & Send in ChatGPT.');
       try {
-        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, ts: Date.now() }, '*');
+        const bridgeImgs = [studioCreatorPhotoB64, pptxCombinedRefSheetB64].filter(Boolean);
+        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
       const savedUrl = getSavedChatGptUrl();
       if (savedUrl) {
@@ -3461,7 +3497,7 @@ Return strict JSON: {"details": "..."}`;
       if (statusEl) statusEl.textContent = '⏳ Calling Gemini Image API (if supported on your key)...';
       try {
         const parts = [{ text: v.promptText.replace('STOP AND CHECK BEFORE GENERATING ANY IMAGE', 'GENERATE IMAGE NOW USING ATTACHED PHOTOS') }];
-        const allImgs = [studioCreatorPhotoB64, ...studioExtraPhotosB64].filter(Boolean);
+        const allImgs = [studioCreatorPhotoB64, pptxCombinedRefSheetB64, ...studioExtraPhotosB64].filter(Boolean);
         allImgs.forEach(dataUrl => {
           const [meta, b64] = dataUrl.split(',');
           const mime = (meta.match(/data:(.*?);/) || [])[1] || 'image/jpeg';
@@ -3488,6 +3524,216 @@ Return strict JSON: {"details": "..."}`;
       } catch (e) {
         if (statusEl) statusEl.textContent = '⚠️ Gemini Image API unavailable — Click "Copy & Open ChatGPT"!';
       }
+    }
+
+
+    // ==================== 15. V3.3 RAW PPT (.pptx) ANALYZER, SINGLE REFERENCE SHEET & 24H AUTO-DELETE ====================
+    const PPTX_TEMP_STORAGE_KEY = 'yt_seo_ssiro_pptx_temp_v33';
+    let pptxExtractedImages = [];
+    let pptxSelectedImageIndices = new Set();
+    let pptxCombinedRefSheetB64 = '';
+
+    function enforcePptx24HourExpiry() {
+      try {
+        const raw = localStorage.getItem(PPTX_TEMP_STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (!parsed.ts || (Date.now() - parsed.ts > 24 * 60 * 60 * 1000)) {
+          localStorage.removeItem(PPTX_TEMP_STORAGE_KEY);
+        }
+      } catch (e) {}
+    }
+
+    function clearPptxTempData(notify = true) {
+      pptxExtractedImages = [];
+      pptxSelectedImageIndices.clear();
+      pptxCombinedRefSheetB64 = '';
+      try { localStorage.removeItem(PPTX_TEMP_STORAGE_KEY); } catch (e) {}
+      const inp = document.getElementById('rawPptxFileInput');
+      if (inp) inp.value = '';
+      const panel = document.getElementById('pptxAnalyzerPanel');
+      if (panel) panel.classList.add('hidden');
+      const delBtn = document.getElementById('deletePptxDataBtn');
+      if (delBtn) delBtn.classList.add('hidden');
+      const refBox = document.getElementById('pptxRefSheetBox');
+      if (refBox) refBox.classList.add('hidden');
+      if (notify) showToast('🗑️ PPT file & extracted photos deleted cleanly!');
+    }
+
+    async function handleRawPptxUpload(input) {
+      const file = (input.files || [])[0];
+      if (!file) return;
+      if (typeof JSZip === 'undefined') {
+        showToast('PPT reader library loading — please retry in 2 seconds.');
+        return;
+      }
+      const panel = document.getElementById('pptxAnalyzerPanel');
+      const statusEl = document.getElementById('pptxStatusLabel');
+      const delBtn = document.getElementById('deletePptxDataBtn');
+      if (panel) panel.classList.remove('hidden');
+      if (delBtn) delBtn.classList.remove('hidden');
+      if (statusEl) statusEl.textContent = `⏳ Reading "${file.name}"...`;
+
+      try {
+        const buf = await file.arrayBuffer();
+        const zip = await JSZip.loadAsync(buf);
+
+        // Extract slide texts in order
+        const slideFiles = Object.keys(zip.files)
+          .filter(n => /^ppt\/slides\/slide\d+\.xml$/i.test(n))
+          .sort((a, b) => {
+            const na = parseInt(a.match(/\d+/)?.[0] || '0', 10);
+            const nb = parseInt(b.match(/\d+/)?.[0] || '0', 10);
+            return na - nb;
+          });
+
+        let fullText = [];
+        for (const sf of slideFiles.slice(0, 25)) {
+          const xml = await zip.files[sf].async('text');
+          const matches = [...xml.matchAll(/<a:t[^>]*>([\s\S]*?)<\/a:t>/g)].map(m => m[1].trim()).filter(Boolean);
+          if (matches.length) fullText.push(matches.join(' '));
+        }
+        const combinedSlideText = fullText.join(' | ').slice(0, 3500);
+
+        // Extract media images
+        const mediaFiles = Object.keys(zip.files)
+          .filter(n => /^ppt\/media\/.+\.(png|jpg|jpeg|webp)$/i.test(n))
+          .slice(0, 12);
+
+        pptxExtractedImages = [];
+        pptxSelectedImageIndices.clear();
+        for (const mf of mediaFiles) {
+          const ext = mf.split('.').pop().toLowerCase();
+          const mime = ext === 'png' ? 'image/png' : (ext === 'webp' ? 'image/webp' : 'image/jpeg');
+          const b64 = await zip.files[mf].async('base64');
+          pptxExtractedImages.push({ name: mf.split('/').pop(), dataUrl: `data:${mime};base64,${b64}` });
+        }
+
+        // Auto-select up to top 3 images
+        pptxExtractedImages.slice(0, 3).forEach((_, i) => pptxSelectedImageIndices.add(i));
+        renderPptxExtractedImagesGrid();
+        await rebuildPptxReferenceSheet();
+
+        // Auto-analyze slide text to fill Video Title + Video Details
+        if (statusEl) statusEl.textContent = `✅ Extracted ${slideFiles.length} slides & ${pptxExtractedImages.length} photos! Generating Title & Details...`;
+        const cleanFallbackTitle = (fullText[0] || file.name.replace(/\.pptx$/i, '')).slice(0, 90);
+        let finalTitle = cleanFallbackTitle;
+        let finalDetails = combinedSlideText.slice(0, 380);
+
+        if (appState.geminiApiKey && combinedSlideText) {
+          const pTxt = `Analyze this raw presentation slide text and suggest the best high-CTR YouTube Video Title (in the slide text's language) and a crisp 2-3 sentence Video Details summary for thumbnail creation.
+Slide Text: "${combinedSlideText.slice(0, 2200)}"
+Return strict JSON: {"title": "...", "details": "..."}`;
+          const aiRes = await callGeminiJsonAPI(pTxt, false).catch(() => null);
+          if (aiRes && aiRes.title) {
+            finalTitle = aiRes.title.trim();
+            finalDetails = (aiRes.details || finalDetails).trim();
+          }
+        }
+
+        const tInp = document.getElementById('videoTitleInput');
+        const dInp = document.getElementById('videoTopicDetailsInput');
+        if (tInp) tInp.value = finalTitle;
+        if (dInp) dInp.value = finalDetails;
+        saveStudioState();
+
+        try {
+          localStorage.setItem(PPTX_TEMP_STORAGE_KEY, JSON.stringify({ ts: Date.now(), fileName: file.name }));
+        } catch (e) {}
+
+        if (statusEl) statusEl.textContent = `✅ Ready: ${slideFiles.length} slides • ${pptxExtractedImages.length} photos (Title & Details auto-filled!)`;
+        showToast('✅ PPT analyzed! Title, Details & Reference Sheet ready.');
+      } catch (err) {
+        if (statusEl) statusEl.textContent = '⚠️ Could not read this .pptx file. Try another PowerPoint file.';
+      }
+    }
+
+    function renderPptxExtractedImagesGrid() {
+      const grid = document.getElementById('pptxExtractedImagesGrid');
+      if (!grid) return;
+      if (!pptxExtractedImages.length) {
+        grid.innerHTML = '<span class="text-[11px] text-outline font-mono">No embedded photos found inside this PPT.</span>';
+        return;
+      }
+      grid.innerHTML = pptxExtractedImages.map((img, i) => {
+        const sel = pptxSelectedImageIndices.has(i);
+        return `<button type="button" onclick="togglePptxImageSelection(${i})" class="relative w-16 h-16 rounded-lg overflow-hidden border-2 transition ${sel ? 'border-tertiary ring-2 ring-tertiary/40' : 'border-outline-variant/50 opacity-60 hover:opacity-100'}">
+          <img src="${img.dataUrl}" alt="PPT Img ${i + 1}" class="w-full h-full object-cover" />
+          <span class="absolute top-0.5 right-0.5 px-1 rounded text-[9px] font-mono font-black ${sel ? 'bg-tertiary text-on-tertiary' : 'bg-black/70 text-white'}">${sel ? '✓' : i + 1}</span>
+        </button>`;
+      }).join('');
+    }
+
+    async function togglePptxImageSelection(idx) {
+      if (pptxSelectedImageIndices.has(idx)) {
+        pptxSelectedImageIndices.delete(idx);
+      } else {
+        if (pptxSelectedImageIndices.size >= 3) {
+          showToast('Max 3 PPT photos selected for clean Reference Sheet.');
+          return;
+        }
+        pptxSelectedImageIndices.add(idx);
+      }
+      renderPptxExtractedImagesGrid();
+      await rebuildPptxReferenceSheet();
+    }
+
+    async function rebuildPptxReferenceSheet() {
+      const box = document.getElementById('pptxRefSheetBox');
+      const prevImg = document.getElementById('pptxRefSheetPreviewImg');
+      const dlLink = document.getElementById('pptxRefSheetDownloadLink');
+      const picked = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]).filter(Boolean);
+      if (!picked.length || typeof document === 'undefined' || !document.createElement) {
+        pptxCombinedRefSheetB64 = '';
+        if (box) box.classList.add('hidden');
+        return;
+      }
+      try {
+        const imgs = await Promise.all(picked.map(item => new Promise((res) => {
+          const im = new Image();
+          im.onload = () => res(im);
+          im.onerror = () => res(null);
+          im.src = item.dataUrl;
+        })));
+        const valid = imgs.filter(Boolean);
+        if (!valid.length) return;
+        const cellW = 420;
+        const cellH = 340;
+        const canvas = document.createElement('canvas');
+        canvas.width = valid.length * cellW;
+        canvas.height = cellH;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#0b0e17';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        valid.forEach((im, idx) => {
+          const x = idx * cellW;
+          const scale = Math.min((cellW - 20) / im.width, (cellH - 50) / im.height);
+          const dw = im.width * scale;
+          const dh = im.height * scale;
+          ctx.drawImage(im, x + (cellW - dw) / 2, 36 + (cellH - 46 - dh) / 2, dw, dh);
+          ctx.fillStyle = '#FFD700';
+          ctx.font = 'bold 18px sans-serif';
+          ctx.fillText(`REF PHOTO ${idx + 1}`, x + 14, 24);
+        });
+        pptxCombinedRefSheetB64 = canvas.toDataURL('image/png');
+        if (prevImg) prevImg.src = pptxCombinedRefSheetB64;
+        if (dlLink) dlLink.href = pptxCombinedRefSheetB64;
+        if (box) box.classList.remove('hidden');
+      } catch (e) {}
+    }
+
+    async function copyPptxRefSheetToClipboard() {
+      if (!pptxCombinedRefSheetB64) { showToast('No Reference Sheet ready yet.'); return; }
+      try {
+        const res = await fetch(pptxCombinedRefSheetB64);
+        const blob = await res.blob();
+        if (navigator.clipboard && window.ClipboardItem) {
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          showToast('📋 Reference Sheet Image copied! Paste directly in ChatGPT.');
+          return;
+        }
+      } catch (e) {}
+      showToast('Use "Save PNG" to download the 1-image Reference Sheet.');
     }
 
     // ==================== 13. INITIALIZATION ====================
