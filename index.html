@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v4.1 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v4.3 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -271,7 +271,7 @@
         </span>
       </div>
       <p class="font-mono text-[9px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        Powered by SSIRO • v4.1
+        Powered by SSIRO • v4.3
       </p>
     </div>
 
@@ -515,11 +515,11 @@
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-2">
               <span class="px-2 py-0.5 rounded bg-secondary text-slate-950 font-mono text-[10px] font-black whitespace-nowrap">PPTX AUTO</span>
-              <span class="font-display text-xs sm:text-sm font-bold text-white">Upload Raw PPT (.pptx) — Auto Title, Details &amp; Photos</span>
+              <span class="font-display text-xs sm:text-sm font-bold text-white">Upload Raw PPT / PPTX — Auto Title, Details &amp; Photos</span>
             </div>
             <div class="flex items-center gap-1.5">
               <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-secondary text-slate-950 font-mono text-[11px] font-extrabold hover:brightness-110 transition">
-                <span>📄 Choose .pptx</span>
+                <span>📄 Choose PPT / PPTX</span>
                 <input id="rawPptxFileInput" type="file" accept=".pptx,.ppsx,.ppt" onchange="handleRawPptxUpload(this)" class="hidden" />
               </label>
               <button type="button" id="deletePptxDataBtn" onclick="clearPptxTempData(true)" class="hidden px-2.5 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-500 border border-red-500/40 font-mono text-[10px] font-bold">Delete PPT</button>
@@ -810,7 +810,7 @@
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
-    const CURRENT_APP_VERSION = 'v4.1';
+    const CURRENT_APP_VERSION = 'v4.3';
 
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
@@ -3126,7 +3126,7 @@ Return strict JSON: {"details": "..."}`;
       copyTextSafe(promptText, toastMsg || 'Prompt copied! Paste & Send in ChatGPT.');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-        const bridgeImgs = [studioCreatorPhotoB64, pptxCombinedRefSheetB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        const bridgeImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
         window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
       const savedUrl = getSavedChatGptUrl();
@@ -3221,6 +3221,40 @@ Return strict JSON: {"details": "..."}`;
     }
 
 
+
+    function renderExtraStudioPreview() {
+      const prev = document.getElementById('studioExtraPreview');
+      if (!prev) return;
+      const pptItems = [...pptxSelectedImageIndices].map(i => ({ kind: 'ppt', idx: i, url: pptxExtractedImages[i]?.dataUrl })).filter(x => x.url);
+      const manualItems = studioExtraPhotosB64.map((url, i) => ({ kind: 'manual', idx: i, url })).filter(x => x.url);
+      const all = [...pptItems, ...manualItems];
+      if (!all.length) {
+        prev.classList.add('hidden');
+        prev.innerHTML = '';
+        return;
+      }
+      prev.classList.remove('hidden');
+      prev.innerHTML = all.map(item => `
+        <div class="relative w-14 h-14 rounded-lg overflow-hidden border ${item.kind === 'ppt' ? 'border-tertiary' : 'border-secondary'} shrink-0">
+          <img src="${item.url}" class="w-full h-full object-cover" />
+          <span class="absolute bottom-0 left-0 px-1 bg-black/75 text-[8px] font-mono text-white">${item.kind === 'ppt' ? 'PPT' : 'IMG'}</span>
+          <button type="button" onclick="removeExtraOrPptImage('${item.kind}', ${item.idx})" title="Remove photo" class="absolute top-0 right-0 w-4 h-4 bg-red-600 text-white text-[10px] font-bold flex items-center justify-center leading-none">×</button>
+        </div>
+      `).join('');
+    }
+
+    async function removeExtraOrPptImage(kind, idx) {
+      if (kind === 'ppt') {
+        pptxSelectedImageIndices.delete(idx);
+        renderPptxExtractedImagesGrid();
+        await rebuildPptxReferenceSheet();
+      } else {
+        studioExtraPhotosB64.splice(idx, 1);
+      }
+      renderExtraStudioPreview();
+      showToast('Photo removed from Extra References.');
+    }
+
     function clearExtraStudioPhotos() {
       studioExtraPhotosB64 = [];
       const prev = document.getElementById('studioExtraPreview');
@@ -3268,11 +3302,7 @@ Return strict JSON: {"details": "..."}`;
         r.onload = () => {
           const b64 = String(r.result || '');
           studioExtraPhotosB64.push(b64);
-          const prev = document.getElementById('studioExtraPreview');
-          if (prev) {
-            prev.classList.remove('hidden');
-            prev.innerHTML += `<img src="${b64}" class="h-14 w-14 object-cover rounded-lg border border-secondary" />`;
-          }
+          renderExtraStudioPreview();
           showToast('✅ Real Wikimedia photo added to Extra References!');
         };
         r.readAsDataURL(blob);
@@ -3626,6 +3656,7 @@ Return strict JSON: {"details": "..."}`;
       if (titleEl && v) titleEl.innerHTML = `<span class="material-symbols-outlined text-tertiary">auto_fix_high</span><span>Image Studio — Variant ${v.code}</span>`;
       loadSavedCreatorFace();
       const cgInp = document.getElementById('savedChatGptUrlInput'); if (cgInp) cgInp.value = getSavedChatGptUrl();
+      renderExtraStudioPreview();
       const resBox = document.getElementById('studioImageResultBox');
       if (resBox) resBox.classList.add('hidden');
       const m = document.getElementById('imageStudioModalOverlay');
@@ -3684,11 +3715,11 @@ Return strict JSON: {"details": "..."}`;
                 c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
                 const compact = c.toDataURL('image/jpeg', 0.84);
                 studioExtraPhotosB64.push(compact);
-                if (prev) prev.innerHTML += `<img src="${compact}" class="h-14 w-14 object-cover rounded-lg border border-secondary" />`;
+                renderExtraStudioPreview();
               };
               im.onerror = () => {
                 studioExtraPhotosB64.push(rawUrl);
-                if (prev) prev.innerHTML += `<img src="${rawUrl}" class="h-14 w-14 object-cover rounded-lg border border-secondary" />`;
+                renderExtraStudioPreview();
               };
               im.src = rawUrl;
             } catch (e) {
@@ -3789,6 +3820,87 @@ Return strict JSON: {"details": "..."}`;
       if (notify) showToast('🗑️ PPT file & extracted photos deleted cleanly!');
     }
 
+    function uint8ToBase64(u8) {
+      let bin = '';
+      const chunk = 0x8000;
+      for (let i = 0; i < u8.length; i += chunk) {
+        bin += String.fromCharCode.apply(null, u8.subarray(i, i + chunk));
+      }
+      return btoa(bin);
+    }
+
+    function extractFromBinaryPpt(buf) {
+      const u8 = new Uint8Array(buf);
+      const images = [];
+
+      // 1. Carve PNGs (89 50 4E 47 0D 0A 1A 0A ... 49 45 4E 44 AE 42 60 82)
+      let i = 0;
+      while (i < u8.length - 16 && images.length < 12) {
+        if (u8[i] === 0x89 && u8[i+1] === 0x50 && u8[i+2] === 0x4E && u8[i+3] === 0x47 &&
+            u8[i+4] === 0x0D && u8[i+5] === 0x0A && u8[i+6] === 0x1A && u8[i+7] === 0x0A) {
+          let end = -1;
+          for (let j = i + 8; j < Math.min(u8.length - 7, i + 4500000); j++) {
+            if (u8[j] === 0x49 && u8[j+1] === 0x45 && u8[j+2] === 0x4E && u8[j+3] === 0x44 &&
+                u8[j+4] === 0xAE && u8[j+5] === 0x42 && u8[j+6] === 0x60 && u8[j+7] === 0x82) {
+              end = j + 8;
+              break;
+            }
+          }
+          if (end > i + 1200) {
+            const slice = u8.subarray(i, end);
+            images.push({ name: `ppt_img_${images.length + 1}.png`, dataUrl: 'data:image/png;base64,' + uint8ToBase64(slice) });
+            i = end;
+            continue;
+          }
+        }
+        i++;
+      }
+
+      // 2. Carve JPEGs (FF D8 FF E0/E1/DB/EE ... FF D9)
+      i = 0;
+      while (i < u8.length - 16 && images.length < 12) {
+        if (u8[i] === 0xFF && u8[i+1] === 0xD8 && u8[i+2] === 0xFF &&
+            (u8[i+3] === 0xE0 || u8[i+3] === 0xE1 || u8[i+3] === 0xDB || u8[i+3] === 0xEE)) {
+          let end = -1;
+          for (let j = i + 4; j < Math.min(u8.length - 1, i + 4500000); j++) {
+            if (u8[j] === 0xFF && u8[j+1] === 0xD9) {
+              end = j + 2;
+              break;
+            }
+          }
+          if (end > i + 1500) {
+            const slice = u8.subarray(i, end);
+            images.push({ name: `ppt_img_${images.length + 1}.jpg`, dataUrl: 'data:image/jpeg;base64,' + uint8ToBase64(slice) });
+            i = end;
+            continue;
+          }
+        }
+        i++;
+      }
+
+      // 3. Extract clean UTF-16LE (Hindi + English) and ASCII slide text runs
+      const textRuns = [];
+      let cur = '';
+      for (let k = 0; k < u8.length - 1; k += 2) {
+        const code = u8[k] | (u8[k + 1] << 8);
+        const isDevanagari = code >= 0x0900 && code <= 0x097F;
+        const isAsciiPrint = (code >= 0x20 && code <= 0x7E);
+        if (isDevanagari || isAsciiPrint) {
+          cur += String.fromCharCode(code);
+        } else {
+          const t = cur.trim();
+          if (t.length >= 6 && !/^(PowerPoint|Root Entry|Pictures|Current User|SummaryInformation|Calibri|Arial|Times New Roman)/i.test(t)) {
+            textRuns.push(t);
+          }
+          cur = '';
+        }
+      }
+      if (cur.trim().length >= 6) textRuns.push(cur.trim());
+
+      const uniqueRuns = [...new Set(textRuns)].slice(0, 35);
+      return { images, combinedText: uniqueRuns.join(' | ').slice(0, 3500), firstHeading: uniqueRuns[0] || '' };
+    }
+
     async function handleRawPptxUpload(input) {
       const file = (input.files || [])[0];
       if (!file) return;
@@ -3797,67 +3909,71 @@ Return strict JSON: {"details": "..."}`;
       const delBtn = document.getElementById('deletePptxDataBtn');
       if (panel) panel.classList.remove('hidden');
       if (delBtn) delBtn.classList.remove('hidden');
-
-      if (/\.ppt$/i.test(file.name)) {
-        if (statusEl) statusEl.textContent = '⚠️ Old .ppt binary format is not supported. In PowerPoint/WPS/Google Slides, Save As ".pptx" and upload again.';
-        return;
-      }
-      if (typeof JSZip === 'undefined') {
-        if (statusEl) statusEl.textContent = '⚠️ PPT reader library (JSZip) failed to load. Check internet & tap Update.';
-        return;
-      }
       if (statusEl) statusEl.textContent = `⏳ Reading "${file.name}"...`;
 
       try {
         const buf = await file.arrayBuffer();
         const bytes = new Uint8Array(buf.slice(0, 4));
         const isZip = bytes[0] === 0x50 && bytes[1] === 0x4B;
-        if (!isZip) {
-          throw new Error('File is not a valid .pptx ZIP archive (may be encrypted, corrupted, or renamed .ppt).');
-        }
+        const isOle2 = bytes[0] === 0xD0 && bytes[1] === 0xCF && bytes[2] === 0x11 && bytes[3] === 0xE0;
 
-        const zip = await JSZip.loadAsync(buf);
-        const allKeys = Object.keys(zip.files);
-
-        const slideFiles = allKeys
-          .filter(n => /ppt[\\/]slides[\\/]slide\d+\.xml$/i.test(n))
-          .sort((a, b) => {
-            const na = parseInt(a.match(/\d+/)?.[0] || '0', 10);
-            const nb = parseInt(b.match(/\d+/)?.[0] || '0', 10);
-            return na - nb;
-          });
-
-        let fullText = [];
-        for (const sf of slideFiles.slice(0, 30)) {
-          try {
-            const xml = await zip.files[sf].async('text');
-            const matches = [...xml.matchAll(/<a:t[^>]*>([\s\S]*?)<\/a:t>/g)].map(m => m[1].trim()).filter(Boolean);
-            if (matches.length) fullText.push(matches.join(' '));
-          } catch (e) {}
-        }
-        const combinedSlideText = fullText.join(' | ').slice(0, 3500);
-
-        const mediaFiles = allKeys
-          .filter(n => /ppt[\\/]media[\\/].+\.(png|jpg|jpeg|webp|gif)$/i.test(n))
-          .slice(0, 12);
-
+        let combinedSlideText = '';
+        let firstHeading = '';
+        let slideCountLabel = 'PPT';
         pptxExtractedImages = [];
         pptxSelectedImageIndices.clear();
-        for (const mf of mediaFiles) {
-          try {
-            const ext = mf.split('.').pop().toLowerCase();
-            const mime = ext === 'png' ? 'image/png' : (ext === 'webp' ? 'image/webp' : (ext === 'gif' ? 'image/gif' : 'image/jpeg'));
-            const b64 = await zip.files[mf].async('base64');
-            pptxExtractedImages.push({ name: mf.split(/[\\/]/).pop(), dataUrl: `data:${mime};base64,${b64}` });
-          } catch (e) {}
+
+        if (isZip) {
+          if (typeof JSZip === 'undefined') {
+            throw new Error('PPTX reader library (JSZip) failed to load. Check internet & tap Update.');
+          }
+          const zip = await JSZip.loadAsync(buf);
+          const allKeys = Object.keys(zip.files);
+
+          const slideFiles = allKeys
+            .filter(n => /ppt[\\/]slides[\\/]slide\d+\.xml$/i.test(n))
+            .sort((a, b) => parseInt(a.match(/\d+/)?.[0] || '0', 10) - parseInt(b.match(/\d+/)?.[0] || '0', 10));
+
+          const fullText = [];
+          for (const sf of slideFiles.slice(0, 30)) {
+            try {
+              const xml = await zip.files[sf].async('text');
+              const matches = [...xml.matchAll(/<a:t[^>]*>([\s\S]*?)<\/a:t>/g)].map(m => m[1].trim()).filter(Boolean);
+              if (matches.length) fullText.push(matches.join(' '));
+            } catch (e) {}
+          }
+          combinedSlideText = fullText.join(' | ').slice(0, 3500);
+          firstHeading = fullText[0] || '';
+          slideCountLabel = `${slideFiles.length} slides`;
+
+          const mediaFiles = allKeys
+            .filter(n => /ppt[\\/]media[\\/].+\.(png|jpg|jpeg|webp|gif)$/i.test(n))
+            .slice(0, 12);
+
+          for (const mf of mediaFiles) {
+            try {
+              const ext = mf.split('.').pop().toLowerCase();
+              const mime = ext === 'png' ? 'image/png' : (ext === 'webp' ? 'image/webp' : (ext === 'gif' ? 'image/gif' : 'image/jpeg'));
+              const b64 = await zip.files[mf].async('base64');
+              pptxExtractedImages.push({ name: mf.split(/[\\/]/).pop(), dataUrl: `data:${mime};base64,${b64}` });
+            } catch (e) {}
+          }
+        } else if (isOle2) {
+          const parsed = extractFromBinaryPpt(buf);
+          pptxExtractedImages = parsed.images;
+          combinedSlideText = parsed.combinedText;
+          firstHeading = parsed.firstHeading;
+          slideCountLabel = 'Binary .ppt';
+        } else {
+          throw new Error('Unsupported or encrypted PowerPoint file.');
         }
 
         pptxExtractedImages.slice(0, 3).forEach((_, i) => pptxSelectedImageIndices.add(i));
         renderPptxExtractedImagesGrid();
         await rebuildPptxReferenceSheet();
 
-        if (statusEl) statusEl.textContent = `✅ Extracted ${slideFiles.length} slides & ${pptxExtractedImages.length} photos! Filling Title & Details...`;
-        const cleanFallbackTitle = (fullText[0] || file.name.replace(/\.(pptx|ppsx)$/i, '')).slice(0, 90);
+        if (statusEl) statusEl.textContent = `✅ Extracted (${slideCountLabel}) & ${pptxExtractedImages.length} photos! Filling Title & Details...`;
+        const cleanFallbackTitle = (firstHeading || file.name.replace(/\.(pptx|ppsx|ppt)$/i, '')).slice(0, 90);
         let finalTitle = cleanFallbackTitle;
         let finalDetails = combinedSlideText.slice(0, 380);
 
@@ -3882,10 +3998,10 @@ Return strict JSON: {"title": "...", "details": "..."}`;
           localStorage.setItem(PPTX_TEMP_STORAGE_KEY, JSON.stringify({ ts: Date.now(), fileName: file.name }));
         } catch (e) {}
 
-        if (statusEl) statusEl.textContent = `✅ Ready: ${slideFiles.length} slides • ${pptxExtractedImages.length} photos (Title & Details auto-filled!)`;
-        showToast('✅ PPT analyzed! Title, Details & Reference Sheet ready.');
+        if (statusEl) statusEl.textContent = `✅ Ready: ${slideCountLabel} • ${pptxExtractedImages.length} photos (Title & Details auto-filled!)`;
+        showToast('✅ PPT/PPTX analyzed! Title, Details & Reference Sheet ready.');
       } catch (err) {
-        if (statusEl) statusEl.textContent = `⚠️ Could not read PPT (${err?.message || 'Unknown format'}). Make sure it is an unencrypted .pptx file.`;
+        if (statusEl) statusEl.textContent = `⚠️ Could not read file (${err?.message || 'Unknown format'}).`;
       }
     }
 
