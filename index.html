@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v4.3 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v4.4 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -271,7 +271,7 @@
         </span>
       </div>
       <p class="font-mono text-[9px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        Powered by SSIRO • v4.3
+        Powered by SSIRO • v4.4
       </p>
     </div>
 
@@ -810,7 +810,7 @@
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
-    const CURRENT_APP_VERSION = 'v4.3';
+    const CURRENT_APP_VERSION = 'v4.4';
 
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
@@ -3913,21 +3913,18 @@ Return strict JSON: {"details": "..."}`;
 
       try {
         const buf = await file.arrayBuffer();
-        const bytes = new Uint8Array(buf.slice(0, 4));
-        const isZip = bytes[0] === 0x50 && bytes[1] === 0x4B;
-        const isOle2 = bytes[0] === 0xD0 && bytes[1] === 0xCF && bytes[2] === 0x11 && bytes[3] === 0xE0;
-
         let combinedSlideText = '';
         let firstHeading = '';
         let slideCountLabel = 'PPT';
         pptxExtractedImages = [];
         pptxSelectedImageIndices.clear();
 
-        if (isZip) {
-          if (typeof JSZip === 'undefined') {
-            throw new Error('PPTX reader library (JSZip) failed to load. Check internet & tap Update.');
-          }
-          const zip = await JSZip.loadAsync(buf);
+        let zip = null;
+        if (typeof JSZip !== 'undefined') {
+          try { zip = await JSZip.loadAsync(buf); } catch (e) { zip = null; }
+        }
+
+        if (zip) {
           const allKeys = Object.keys(zip.files);
 
           const slideFiles = allKeys
@@ -3958,14 +3955,22 @@ Return strict JSON: {"details": "..."}`;
               pptxExtractedImages.push({ name: mf.split(/[\\/]/).pop(), dataUrl: `data:${mime};base64,${b64}` });
             } catch (e) {}
           }
-        } else if (isOle2) {
+        } else {
           const parsed = extractFromBinaryPpt(buf);
           pptxExtractedImages = parsed.images;
           combinedSlideText = parsed.combinedText;
           firstHeading = parsed.firstHeading;
-          slideCountLabel = 'Binary .ppt';
-        } else {
-          throw new Error('Unsupported or encrypted PowerPoint file.');
+          if (!combinedSlideText) {
+            try {
+              const rawTxt = new TextDecoder('utf-8', { fatal: false }).decode(new Uint8Array(buf.slice(0, 250000)));
+              const xmlRuns = [...rawTxt.matchAll(/<a:t[^>]*>([\s\S]*?)<\/a:t>/g)].map(m => m[1].trim()).filter(Boolean);
+              if (xmlRuns.length) {
+                combinedSlideText = xmlRuns.join(' | ').slice(0, 3500);
+                firstHeading = xmlRuns[0];
+              }
+            } catch (e) {}
+          }
+          slideCountLabel = 'PPT';
         }
 
         pptxExtractedImages.slice(0, 3).forEach((_, i) => pptxSelectedImageIndices.add(i));
