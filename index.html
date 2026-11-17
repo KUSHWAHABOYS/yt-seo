@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v5.6 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v1.0 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -272,7 +272,7 @@
         </span>
       </div>
       <p class="font-mono text-[8px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        <span class="hidden sm:inline">Powered by </span>SSIRO • v5.6
+        <span class="hidden sm:inline">Powered by </span>SSIRO • v1.0
       </p>
     </div>
 
@@ -638,7 +638,7 @@
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-2 min-w-0">
             <span id="liveProgressSpinner" class="w-2.5 h-2.5 rounded-full bg-tertiary animate-ping shrink-0"></span>
-            <span id="liveProgressHeadline" class="font-mono text-xs font-bold text-white">Running Live YouTube &amp; AI Thumbnail Intelligence...</span>
+            <span id="liveProgressHeadline" class="font-mono text-xs font-bold text-white break-words min-w-0">Running Live YouTube &amp; AI Thumbnail Intelligence...</span>
           </div>
           <span id="liveProgressSourceBadge" class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container text-tertiary border border-tertiary/30">Checking API...</span>
         </div>
@@ -705,7 +705,7 @@
             <span class="material-symbols-outlined text-secondary text-[17px]">smart_display</span>
             <span>YouTube Viral Thumbnail Trend &amp; Reference Video Analysis</span>
           </h3>
-          <span id="ytResearchMethodNote" class="font-mono text-[10px] text-outline">No search executed yet</span>
+          <span id="ytResearchMethodNote" class="font-mono text-[10px] text-outline break-words">No search executed yet</span>
         </div>
         <div id="youtubeViralVideosGrid" class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="col-span-full py-4 text-center text-xs text-outline font-mono">
@@ -791,7 +791,7 @@
           <table class="w-full min-w-[560px] text-left border-collapse text-xs">
             <thead>
               <tr class="border-b border-outline-variant/40 font-mono text-[10px] uppercase text-outline">
-                <th class="py-2 pr-3">Visual Dimension</th>
+                <th class="py-2 pr-2 w-28 sm:w-40">Dimension</th>
                 <th class="py-2 px-3 text-tertiary">Variant A (Angle 1)</th>
                 <th class="py-2 px-3 text-secondary">Variant B (Angle 2)</th>
                 <th class="py-2 pl-3 text-primary">Variant C (Angle 3)</th>
@@ -968,7 +968,7 @@
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
-    const CURRENT_APP_VERSION = 'v5.6';
+    const CURRENT_APP_VERSION = 'v1.0';
 
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
@@ -2366,9 +2366,9 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
       if (vidGrid && Array.isArray(ins.observedViralVideos)) {
         vidGrid.innerHTML = ins.observedViralVideos.slice(0, 3).map((vid, idx) => `
           <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/40 space-y-1.5">
-            <div class="flex items-center justify-between gap-2 font-mono text-[10px]">
-              <span class="px-2 py-0.5 rounded bg-secondary/15 text-secondary font-bold truncate">${vid.channel || 'Creator'}</span>
-              <span class="text-tertiary shrink-0">${vid.views || ''}</span>
+            <div class="flex flex-wrap items-center justify-between gap-1.5 font-mono text-[10px]">
+              <span class="px-2 py-0.5 rounded bg-secondary/15 text-secondary font-bold break-words">${vid.channel || 'Creator'}</span>
+              <span class="text-tertiary break-words">${vid.views || ''}</span>
             </div>
             <h4 class="font-display text-xs font-bold text-white leading-snug">${vid.title || 'Reference Video ' + (idx + 1)}</h4>
             <p class="text-[11px] text-on-surface-variant leading-relaxed"><strong class="text-primary">Thumbnail Pattern:</strong> ${vid.pattern || ''}</p>
@@ -2730,7 +2730,7 @@ ${heritageBlock}`;
         ];
         tbody.innerHTML = rows.map(r => `
           <tr>
-            <td class="py-2.5 pr-3 font-mono text-[11px] font-bold text-white align-top whitespace-nowrap">${r[0]}</td>
+            <td class="py-2.5 pr-2 font-mono text-[10px] sm:text-[11px] font-bold text-white align-top w-28 sm:w-40">${r[0]}</td>
             <td class="py-2.5 px-3 align-top leading-relaxed">${r[1]}</td>
             <td class="py-2.5 px-3 align-top leading-relaxed">${r[2]}</td>
             <td class="py-2.5 pl-3 align-top leading-relaxed">${r[3]}</td>
@@ -2914,7 +2914,7 @@ ${heritageBlock}`;
         dispatchToChatGPTBridge(v.promptText, `Prompt ${v.code} copied & sent to ChatGPT!`);
         return;
       }
-      window.open('https://gemini.google.com/app', '_blank', 'noopener');
+      smartSendToGemini(idx);
       showToast(`Variant ${v.code} Prompt copied! Opening ${target === 'chatgpt' ? 'ChatGPT' : 'Gemini'}...`);
     }
 
@@ -3343,13 +3343,8 @@ Return strict JSON: {"details": "..."}`;
         const bridgeImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
         window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
-      const savedUrl = getSavedChatGptUrl();
-      if (savedUrl) {
-        window.open(savedUrl, 'ssiro_chatgpt_bridge', 'noopener');
-      } else {
-        const qParam = promptText.length <= 3200 ? '?q=' + encodeURIComponent(promptText) : '';
-        window.open('https://chatgpt.com/' + qParam, 'ssiro_chatgpt_bridge', 'noopener');
-      }
+      const qParam = promptText.length <= 3200 ? '?q=' + encodeURIComponent(promptText) : '';
+      window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener');
     }
 
     const CREATOR_FACE_STORAGE_KEY = 'yt_seo_ssiro_creator_face_v31';
@@ -3416,7 +3411,7 @@ Return strict JSON: {"details": "..."}`;
         remove_text_clean: 'Keep the exact same real face(s), monument, lighting, and 8K composition 100% unchanged. ONLY remove the headline text completely and fill that empty area with a soft, natural dark atmospheric blur/shadow fade (NO boxes, NO rectangles, NO borders, NO lines)—leave it clean so I can add my own text there.'
       };
       const fixPrompt = map[kind] || map.more_contrast;
-      if (getSavedChatGptUrl()) { dispatchToChatGPTBridge(fixPrompt, 'Fix sent to your saved ChatGPT chat!'); } else { copyTextSafe(fixPrompt, 'Follow-up fix copied! Paste in ChatGPT.'); }
+      copyTextSafe(fixPrompt, 'Follow-up fix copied! Paste in ChatGPT.');
     }
 
     function previewInYouTubeFeed(input) {
@@ -3910,7 +3905,6 @@ Return strict JSON: {"details": "..."}`;
       const titleEl = document.getElementById('imageStudioModalTitle');
       if (titleEl && v) titleEl.innerHTML = `<span class="material-symbols-outlined text-tertiary">auto_fix_high</span><span>Image Studio — Variant ${v.code}</span>`;
       loadSavedCreatorFace();
-      const cgInp = document.getElementById('savedChatGptUrlInput'); if (cgInp) cgInp.value = getSavedChatGptUrl();
       renderExtraStudioPreview();
       const resBox = document.getElementById('studioImageResultBox');
       if (resBox) resBox.classList.add('hidden');
@@ -3985,6 +3979,76 @@ Return strict JSON: {"details": "..."}`;
           r.readAsDataURL(f);
         });
       }
+    }
+
+
+
+
+    function dispatchToGeminiBridge(promptText, toastMsg) {
+      copyTextSafe(promptText, toastMsg || 'Prompt copied & sent to Gemini!');
+      try {
+        const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
+        const bridgeImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        window.postMessage({ type: 'SSIRO_GEMINI_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
+      } catch (e) {}
+      window.open('https://gemini.google.com/app', 'ssiro_gemini_bridge', 'noopener');
+    }
+
+    function smartSendToGemini(idxOverride) {
+      if (typeof idxOverride === 'number') activeStudioVariantIndex = idxOverride;
+      const v = appState.variantsList[activeStudioVariantIndex];
+      if (!v) return;
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+      if (isMobile && navigator.share) {
+        shareToMobileChatGPT('gemini');
+      } else {
+        dispatchToGeminiBridge(v.promptText, `Prompt ${v.code} copied & sent to Gemini!`);
+      }
+    }
+
+    function smartSendToChatGPT() {
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+      if (isMobile && navigator.share) {
+        shareToMobileChatGPT();
+      } else {
+        launchChatGPTPluginBridge();
+      }
+    }
+
+    async function shareToMobileChatGPT(target = "chatgpt") {
+      const v = appState.variantsList[activeStudioVariantIndex];
+      if (!v) return;
+      await copyTextSafe(v.promptText, '');
+      const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
+      const allDataUrls = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+
+      const files = [];
+      allDataUrls.forEach((dUrl, idx) => {
+        try {
+          const [meta, b64] = dUrl.split(',');
+          const mime = (meta.match(/data:(.*?);/) || [])[1] || 'image/jpeg';
+          const bin = atob(b64);
+          const arr = new Uint8Array(bin.length);
+          for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+          const ext = mime.includes('png') ? 'png' : 'jpg';
+          files.push(new File([arr], `ref_${idx + 1}.${ext}`, { type: mime }));
+        } catch (e) {}
+      });
+
+      if (navigator.share && files.length && (!navigator.canShare || navigator.canShare({ files }))) {
+        try {
+          await navigator.share({ files, text: v.promptText, title: 'YT Thumbnail Prompt' });
+          showToast(target === 'gemini' ? '📱 Shared Photos + Prompt! Select Gemini.' : '📱 Shared Photos + Prompt! Select ChatGPT.');
+          return;
+        } catch (e) {}
+      }
+      if (navigator.share) {
+        try {
+          await navigator.share({ text: v.promptText, title: 'YT Thumbnail Prompt' });
+          return;
+        } catch (e) {}
+      }
+      dispatchToChatGPTBridge(v.promptText, 'Prompt copied! Paste in ChatGPT & attach photos.');
     }
 
     function launchChatGPTPluginBridge() {
@@ -5088,20 +5152,6 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
         </div>
       </div>
 
-      <div class="p-3 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2">
-        <div class="flex flex-wrap items-center justify-between gap-1">
-          <label for="savedChatGptUrlInput" class="font-mono text-[11px] font-bold text-secondary">🔗 Permanent ChatGPT Chat Link (Phone + PC):</label>
-          <span class="font-mono text-[9px] text-outline">Keep 1 chat with your photo!</span>
-        </div>
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          <input id="savedChatGptUrlInput" type="url" placeholder="https://chatgpt.com/c/... (paste your Thumbnail Studio chat link)" class="flex-1 bg-surface-container border border-outline-variant/60 rounded-lg px-3 py-2 font-mono text-[11px] text-white focus:outline-none focus:border-secondary" />
-          <div class="flex items-center gap-1.5">
-            <button type="button" onclick="saveChatGptChatUrl()" class="px-3 py-2 rounded-lg bg-secondary text-slate-950 font-mono text-[11px] font-extrabold whitespace-nowrap">Save Link</button>
-            <button type="button" onclick="clearChatGptChatUrl()" class="px-2.5 py-2 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-mono text-[11px]">Clear</button>
-          </div>
-        </div>
-      </div>
-
       <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/50 space-y-2">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="font-mono text-[11px] font-bold text-white">Generate Options:</span>
@@ -5112,9 +5162,13 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
             <span class="material-symbols-outlined text-[17px]">bolt</span>
             <span>Try Gemini Image API</span>
           </button>
-          <button type="button" onclick="launchChatGPTPluginBridge()" class="py-2.5 px-3 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
+          <button type="button" onclick="smartSendToChatGPT()" class="py-2.5 px-3 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
             <span>🚀</span>
-            <span>Copy &amp; Open ChatGPT</span>
+            <span>Send to ChatGPT</span>
+          </button>
+          <button type="button" onclick="smartSendToGemini()" class="sm:col-span-2 py-2.5 px-3 rounded-xl bg-secondary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
+            <span>✨</span>
+            <span>Send to Gemini</span>
           </button>
         </div>
       </div>
