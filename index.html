@@ -2595,7 +2595,7 @@ STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
 • ONCE UPLOADED:
   1. STRICT ZERO-FACE-CHANGE IDENTITY LOCK (FOR ALL UPLOADED PEOPLE — YOUTUBER & ANY 2ND/3RD PERSON): Keep EVERY uploaded person's exact real face, eyes, nose, jawline, skin tone, hairline, glasses/beard, and natural skin pores 100% identical to their uploaded photo—NEVER morph or replace any face with a lookalike!
   1B. TOPIC-ADAPTIVE EXPRESSION & BODY LANGUAGE: While keeping the face 100% unchanged, naturally adapt ONLY their facial emotion, eye gaze, hand gesture, and upper-body posture to fit the video topic & selected mood (${getSelectedMoodDirective(v)}).
-  2. For EVERY extra uploaded image (monuments, inscriptions, manuscripts, screenshots, products, or additional people): do NOT paste it flatly—redesign, relight, upscale to 8K photorealism, match camera perspective/depth-of-field, and seamlessly blend it into the scene with studio rim lighting, contact shadows, and unified HDR color grading.
+  2. For EVERY extra uploaded image (monuments, inscriptions, manuscripts, slides, PDF pages, or additional people): if the image contains a slide/page border or surrounding text, ISOLATE & CROP ONLY the central subject/statue/monument/artifact (NEVER paste white page margins or slide text). Redesign, relight, upscale to 8K photorealism, match camera perspective, and seamlessly blend it with studio rim lighting and contact shadows.
   3. REAL-WORLD WEB REFERENCE RULE (NO FAKE BUILDINGS OR INVENTED ARTIFACTS): For any real-world monument, temple, book cover, inscription, or historical site NOT uploaded by the user, USE YOUR WEB SEARCH TOOL FIRST to look up real, authentic photographs/Wikimedia references of that exact site/book so every architectural detail and proportion is 100% historically real—never invent generic fake temples or fictional objects.
 ${refDetailsLine}
 ===================================================================
@@ -3336,15 +3336,37 @@ Return strict JSON: {"details": "..."}`;
       showToast('ChatGPT link cleared.');
     }
 
-    function dispatchToChatGPTBridge(promptText, toastMsg) {
+    async function compressDataUrlForBridge(dUrl, maxDim = 1280) {
+      if (!dUrl || typeof document === 'undefined' || !document.createElement) return dUrl;
+      if (dUrl.length < 180000) return dUrl;
+      return new Promise((res) => {
+        const im = new Image();
+        im.onload = () => {
+          try {
+            const c = document.createElement('canvas');
+            const sc = Math.min(1, maxDim / Math.max(im.width, im.height));
+            c.width = Math.round(im.width * sc);
+            c.height = Math.round(im.height * sc);
+            c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+            res(c.toDataURL('image/jpeg', 0.90));
+          } catch (e) { res(dUrl); }
+        };
+        im.onerror = () => res(dUrl);
+        im.src = dUrl;
+      });
+    }
+
+    async function dispatchToChatGPTBridge(promptText, toastMsg) {
       copyTextSafe(promptText, toastMsg || 'Prompt copied! Paste & Send in ChatGPT.');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-        const bridgeImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        const rawImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
         window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
-      const qParam = promptText.length <= 3200 ? '?q=' + encodeURIComponent(promptText) : '';
-      window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener');
+      setTimeout(() => {
+        window.open('https://chatgpt.com/', '_blank', 'noopener');
+      }, 200);
     }
 
     const CREATOR_FACE_STORAGE_KEY = 'yt_seo_ssiro_creator_face_v31';
@@ -3431,6 +3453,136 @@ Return strict JSON: {"details": "..."}`;
 
 
 
+
+    let cropTargetKind = 'ppt';
+    let cropTargetIndex = 0;
+    let cropImgObj = null;
+    let cropRect = { x: 0.1, y: 0.1, w: 0.8, h: 0.8 };
+    let cropDragging = false;
+    let cropStartPt = null;
+    let cropEventsBound = false;
+
+    async function filterValidPptImages(rawImages) {
+      if (typeof Image === 'undefined') return rawImages;
+      const checked = await Promise.all(rawImages.map(item => new Promise((res) => {
+        const im = new Image();
+        im.onload = () => {
+          if (im.width < 95 || im.height < 95) { res(null); return; }
+          res(item);
+        };
+        im.onerror = () => res(item);
+        im.src = item.dataUrl;
+      })));
+      const valid = checked.filter(Boolean);
+      return valid.length ? valid : rawImages;
+    }
+
+    function openFigureCropModal(kind, idx) {
+      cropTargetKind = kind;
+      cropTargetIndex = idx;
+      const srcUrl = kind === 'ppt' ? pptxExtractedImages[idx]?.dataUrl : studioExtraPhotosB64[idx];
+      if (!srcUrl) return;
+      const modal = document.getElementById('figureCropModalOverlay');
+      if (modal) modal.classList.remove('hidden');
+
+      const im = new Image();
+      im.onload = () => {
+        cropImgObj = im;
+        cropRect = { x: 0.08, y: 0.08, w: 0.84, h: 0.84 };
+        const c = document.getElementById('figureCropCanvas');
+        bindCropCanvasEvents(c);
+        drawFigureCropCanvas();
+      };
+      im.src = srcUrl;
+    }
+
+    function closeFigureCropModal() {
+      const modal = document.getElementById('figureCropModalOverlay');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function resetCropSelection() {
+      cropRect = { x: 0.05, y: 0.05, w: 0.9, h: 0.9 };
+      drawFigureCropCanvas();
+    }
+
+    function bindCropCanvasEvents(canvas) {
+      if (!canvas || cropEventsBound) return;
+      cropEventsBound = true;
+      const getNorm = (e) => {
+        const r = canvas.getBoundingClientRect();
+        return {
+          x: Math.max(0, Math.min(1, (e.clientX - r.left) / (r.width || 1))),
+          y: Math.max(0, Math.min(1, (e.clientY - r.top) / (r.height || 1)))
+        };
+      };
+      canvas.addEventListener('pointerdown', (e) => {
+        cropDragging = true;
+        if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+        cropStartPt = getNorm(e);
+        cropRect = { x: cropStartPt.x, y: cropStartPt.y, w: 0.05, h: 0.05 };
+        drawFigureCropCanvas();
+      });
+      canvas.addEventListener('pointermove', (e) => {
+        if (!cropDragging || !cropStartPt) return;
+        const cur = getNorm(e);
+        cropRect = {
+          x: Math.min(cropStartPt.x, cur.x),
+          y: Math.min(cropStartPt.y, cur.y),
+          w: Math.max(0.05, Math.abs(cur.x - cropStartPt.x)),
+          h: Math.max(0.05, Math.abs(cur.y - cropStartPt.y))
+        };
+        drawFigureCropCanvas();
+      });
+      canvas.addEventListener('pointerup', () => { cropDragging = false; });
+      canvas.addEventListener('pointercancel', () => { cropDragging = false; });
+    }
+
+    function drawFigureCropCanvas() {
+      const canvas = document.getElementById('figureCropCanvas');
+      if (!canvas || !cropImgObj) return;
+      canvas.width = cropImgObj.width;
+      canvas.height = cropImgObj.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(cropImgObj, 0, 0);
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const sx = Math.round(cropRect.x * canvas.width);
+      const sy = Math.round(cropRect.y * canvas.height);
+      const sw = Math.max(20, Math.round(cropRect.w * canvas.width));
+      const sh = Math.max(20, Math.round(cropRect.h * canvas.height));
+      ctx.drawImage(cropImgObj, sx, sy, sw, sh, sx, sy, sw, sh);
+      ctx.strokeStyle = '#FFD700';
+      ctx.lineWidth = Math.max(3, Math.round(canvas.width * 0.005));
+      ctx.strokeRect(sx, sy, sw, sh);
+    }
+
+    async function applyFigureCrop() {
+      if (!cropImgObj) return;
+      const sx = Math.round(cropRect.x * cropImgObj.width);
+      const sy = Math.round(cropRect.y * cropImgObj.height);
+      const sw = Math.max(20, Math.round(cropRect.w * cropImgObj.width));
+      const sh = Math.max(20, Math.round(cropRect.h * cropImgObj.height));
+
+      const outC = document.createElement('canvas');
+      outC.width = sw;
+      outC.height = sh;
+      outC.getContext('2d').drawImage(cropImgObj, sx, sy, sw, sh, 0, 0, sw, sh);
+      const croppedUrl = outC.toDataURL('image/jpeg', 0.92);
+
+      if (cropTargetKind === 'ppt' && pptxExtractedImages[cropTargetIndex]) {
+        pptxExtractedImages[cropTargetIndex].dataUrl = croppedUrl;
+        renderPptxExtractedImagesGrid();
+        await rebuildPptxReferenceSheet();
+      } else if (cropTargetKind === 'manual' && studioExtraPhotosB64[cropTargetIndex]) {
+        studioExtraPhotosB64[cropTargetIndex] = croppedUrl;
+      }
+      renderExtraStudioPreview();
+      closeFigureCropModal();
+      showToast('✂️ Figure cropped cleanly in HD!');
+    }
+
     function renderExtraStudioPreview() {
       const prev = document.getElementById('studioExtraPreview');
       if (!prev) return;
@@ -3447,6 +3599,7 @@ Return strict JSON: {"details": "..."}`;
         <div class="relative w-14 h-14 rounded-lg overflow-hidden border ${item.kind === 'ppt' ? 'border-tertiary' : 'border-secondary'} shrink-0">
           <img src="${item.url}" class="w-full h-full object-cover" />
           <span class="absolute bottom-0 left-0 px-1 bg-black/75 text-[8px] font-mono text-white">${item.kind === 'ppt' ? 'PPT' : 'IMG'}</span>
+          <button type="button" onclick="openFigureCropModal('${item.kind}', ${item.idx})" title="Crop Figure" class="absolute top-0 left-0 w-4 h-4 bg-tertiary text-on-tertiary text-[9px] font-bold flex items-center justify-center leading-none">✂</button>
           <button type="button" onclick="removeExtraOrPptImage('${item.kind}', ${item.idx})" title="Remove photo" class="absolute top-0 right-0 w-4 h-4 bg-red-600 text-white text-[10px] font-bold flex items-center justify-center leading-none">×</button>
         </div>
       `).join('');
@@ -3958,11 +4111,11 @@ Return strict JSON: {"details": "..."}`;
               const im = new Image();
               im.onload = () => {
                 const c = document.createElement('canvas');
-                const scale = Math.min(1, 768 / Math.max(im.width, im.height));
+                const scale = Math.min(1, 1280 / Math.max(im.width, im.height));
                 c.width = Math.round(im.width * scale);
                 c.height = Math.round(im.height * scale);
                 c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
-                const compact = c.toDataURL('image/jpeg', 0.84);
+                const compact = c.toDataURL('image/jpeg', 0.90);
                 studioExtraPhotosB64.push(compact);
                 renderExtraStudioPreview();
               };
@@ -3984,14 +4137,17 @@ Return strict JSON: {"details": "..."}`;
 
 
 
-    function dispatchToGeminiBridge(promptText, toastMsg) {
+    async function dispatchToGeminiBridge(promptText, toastMsg) {
       copyTextSafe(promptText, toastMsg || 'Prompt copied & sent to Gemini!');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-        const bridgeImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        const rawImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
         window.postMessage({ type: 'SSIRO_GEMINI_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
-      window.open('https://gemini.google.com/app', 'ssiro_gemini_bridge', 'noopener');
+      setTimeout(() => {
+        window.open('https://gemini.google.com/app', '_blank', 'noopener');
+      }, 200);
     }
 
     function smartSendToGemini(idxOverride) {
@@ -4437,6 +4593,7 @@ Return strict JSON: {"details": "..."}`;
           }
         }
 
+        pptxExtractedImages = await filterValidPptImages(pptxExtractedImages);
         pptxExtractedImages.slice(0, 3).forEach((_, i) => pptxSelectedImageIndices.add(i));
         renderPptxExtractedImagesGrid();
         await rebuildPptxReferenceSheet();
@@ -5251,6 +5408,27 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== 1-TAP FIGURE CROPPER MODAL (PPT / PDF / EXTRA IMAGES) ==================== -->
+  <div id="figureCropModalOverlay" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-xl bg-surface-container-low border border-tertiary/50 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3">
+      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-2.5">
+        <div>
+          <h3 class="font-display text-sm sm:text-base font-extrabold text-white">✂️ Crop Exact Figure / Subject</h3>
+          <p class="text-[11px] text-on-surface-variant">Drag a box over only the statue, temple, map or figure you want to send.</p>
+        </div>
+        <button type="button" onclick="closeFigureCropModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <canvas id="figureCropCanvas" class="w-full max-h-[60vh] object-contain rounded-xl border border-outline-variant/50 bg-black cursor-crosshair touch-none"></canvas>
+      <div class="flex items-center justify-between gap-2 pt-1">
+        <button type="button" onclick="resetCropSelection()" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface-variant border border-outline-variant/50 font-mono text-xs font-bold">Reset Box</button>
+        <button type="button" onclick="applyFigureCrop()" class="px-4 py-2 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold shadow">✅ Apply Crop</button>
       </div>
     </div>
   </div>
