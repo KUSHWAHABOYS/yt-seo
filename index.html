@@ -133,6 +133,9 @@
       background-color: #090b10 !important;
       color: #ffffff !important;
     }
+    html.light-mode .dark-badge-keep .text-white {
+      color: #ffffff !important;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" onerror="var s=document.createElement('script');s.src='https://unpkg.com/jszip@3.10.1/dist/jszip.min.js';document.head.appendChild(s);"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -1650,7 +1653,7 @@
         steps.push({
           model: preferred,
           grounded: true,
-          timeout: 30000,
+          timeout: 55000,
           body: {
             contents: [{ parts: [{ text: promptText + '\n\nIMPORTANT: Return ONLY valid raw JSON (no markdown fences, no commentary).' }] }],
             tools: [{ google_search: {} }]
@@ -1661,7 +1664,7 @@
         steps.push({
           model: mName,
           grounded: false,
-          timeout: 22000,
+          timeout: 35000,
           body: {
             contents: [{ parts: [{ text: promptText }] }],
             generationConfig: { responseMimeType: 'application/json' }
@@ -1985,7 +1988,7 @@
         .map(w => w.trim())
         .filter(w => w.length > 1 && !stopWords.has(w.toLowerCase()));
 
-      const core = words.slice(0, 2).join(' ') || 'यह विषय';
+      const core = words.slice(0, 4).join(' ') || 'यह विषय';
       return { core, isHindi };
     }
 
@@ -2008,57 +2011,40 @@
     }
 
     function buildContextAwareTopicHooks(title, desc, fmtId) {
-      const cleanT = String(title || '').replace(/[?!।|]+/g, ' ').replace(/\s+/g, ' ').trim();
-      const words = cleanT.split(/\s+/).filter(Boolean);
-      const part1 = words.slice(0, Math.min(3, Math.ceil(words.length / 2))).join(' ') || 'यह विषय';
-      const part2 = words.slice(Math.min(3, Math.ceil(words.length / 2)), 7).join(' ') || 'असली कहानी';
+      const stopWords = new Set(['है', 'हैं', 'था', 'थे', 'थी', 'का', 'की', 'के', 'में', 'को', 'से', 'पर', 'और', 'या', 'कि', 'यह', 'वह', 'इस', 'उस', 'क्या', 'आपको', 'लगता', 'कैसे', 'क्यों', 'सब', 'सबसे', 'दुनिया', 'भारत', 'नहीं', 'ही', 'भी', 'तो', 'एक', 'जो', 'कर', 'रहा', 'रहे']);
+      const cleanT = String(title || '').replace(/[?!।|,]+/g, ' ').replace(/\s+/g, ' ').trim();
+      const rawWords = cleanT.split(/\s+/).filter(Boolean);
 
-      const cleanD = String(desc || '').replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
-      const dWords = cleanD.split(/\s+/).filter(w => w.length > 2 && !['है', 'हैं', 'का', 'की', 'के', 'में', 'को', 'से', 'और', 'था', 'थे', 'इस', 'यह', 'हम'].includes(w));
-      const dPhrase1 = dWords.slice(0, 3).join(' ') || part2;
-      const dPhrase2 = dWords.slice(3, 6).join(' ') || part1;
+      const combinedWords = (cleanT + ' ' + String(desc || '')).replace(/[?!।|,]+/g, ' ').split(/\s+/).filter(w => w.length > 1);
+      const keyNouns = [];
+      for (const w of combinedWords) {
+        if (!stopWords.has(w) && !keyNouns.includes(w)) keyNouns.push(w);
+        if (keyNouns.length >= 6) break;
+      }
+      const mainSubject = keyNouns.slice(0, 2).join(' ') || rawWords.slice(0, 3).join(' ') || 'इतिहास';
+      const subSubject = keyNouns.slice(2, 4).join(' ') || mainSubject;
 
-      const splitVersus = cleanT.split(/नहीं[, ]+|vs\.?|बनाम|या/i).map(s => s.trim()).filter(Boolean);
-      const vsA = splitVersus[0] ? splitVersus[0].split(/\s+/).slice(0, 3).join(' ') : part1;
-      const vsB = splitVersus[1] ? splitVersus[1].split(/\s+/).slice(0, 3).join(' ') : dPhrase1;
+      const vsMatch = cleanT.match(/([^,?!।]+?)\s*(?:नहीं|बनाम|vs\.?)\s+([^?!।]+)/i);
+      if (vsMatch) {
+        const sideA = vsMatch[1].replace(/^(क्या आपको लगता है कि|क्या)\s+/i, '').trim().split(/\s+/).slice(-2).join(' ');
+        const sideB = vsMatch[2].trim().split(/\s+/).slice(0, 2).join(' ');
+        return [
+          { hiA: `${sideA} नहीं, ${sideB}! | असली प्रमाण क्या?`, hiB: `${sideB} का सच | ऐतिहासिक साक्ष्य`, hg: `${sideA.toUpperCase()} NAHI, ${sideB.toUpperCase()}! | REAL PROOF`, en: `${sideB}, NOT ${sideA}! | REAL EVIDENCE` },
+          { hiA: `${sideB} vs ${sideA} | कौन था पहले?`, hiB: `किसका दावा सच? | मूल प्रमाण`, hg: `${sideB.toUpperCase()} VS ${sideA.toUpperCase()} | WHO WAS FIRST?`, en: `${sideB} VS ${sideA} | TRUE ORIGIN` },
+          { hiA: `${mainSubject} का सच | क्या कहते हैं साक्ष्य?`, hiB: `तथ्य और प्रमाण | पूरा विश्लेषण`, hg: `${mainSubject.toUpperCase()} | WHAT PROOFS SAY`, en: `THE REAL ${mainSubject.toUpperCase()} | HARD PROOF` },
+          { hiA: `क्यों बदला इतिहास? | ${sideB} का प्रमाण`, hiB: `${sideB} की कहानी | शिलालेख व ग्रंथ`, hg: `REAL STORY OF ${sideB.toUpperCase()} | ARCHAEOLOGY`, en: `HIDDEN RECORD | ${sideB.toUpperCase()} PROOF` },
+          { hiA: `${sideA} का दावा गलत? | ${sideB} के सबूत`, hiB: `साक्ष्यों की पड़ताल | ${mainSubject}`, hg: `${sideA.toUpperCase()} CLAIM? | ${sideB.toUpperCase()} PROOF`, en: `FACT CHECK | ${sideB.toUpperCase()} EVIDENCE` },
+          { hiA: `${mainSubject} | अंतिम निष्कर्ष`, hiB: `इतिहास का पूरा सच | ${sideB}`, hg: `${mainSubject.toUpperCase()} | FINAL VERDICT`, en: `FINAL VERDICT | ${sideB.toUpperCase()}` }
+        ];
+      }
 
       return [
-        {
-          hiA: `${part1} | ${part2}`,
-          hiB: `${vsA} | ${vsB}?`,
-          hg: `${vsA.toUpperCase()} | ${vsB.toUpperCase()}`,
-          en: `${part1} | ${dPhrase1}`
-        },
-        {
-          hiA: `${vsA}? | ${dPhrase1}`,
-          hiB: `${part1} | ${dPhrase2}`,
-          hg: `${part1.toUpperCase()} | ${dPhrase1.toUpperCase()}`,
-          en: `${vsA} vs ${vsB}`
-        },
-        {
-          hiA: `${dPhrase1} | ${vsA}`,
-          hiB: `${part2} | ${dPhrase1}`,
-          hg: `${dPhrase1.toUpperCase()} | ${part2.toUpperCase()}`,
-          en: `${dPhrase1} | ${part2}`
-        },
-        {
-          hiA: `${vsA} नहीं! | ${vsB}`,
-          hiB: `${part1}? | ${dPhrase2}`,
-          hg: `${vsA.toUpperCase()}? | ${dPhrase2.toUpperCase()}`,
-          en: `${vsA} | ${dPhrase2}`
-        },
-        {
-          hiA: `${part1} | ${dPhrase1}?`,
-          hiB: `${dPhrase2} | ${part2}`,
-          hg: `${part2.toUpperCase()} | ${dPhrase1.toUpperCase()}`,
-          en: `${part2} | ${dPhrase1}`
-        },
-        {
-          hiA: `${vsB} | ${dPhrase2}`,
-          hiB: `${part1} — ${part2}`,
-          hg: `${vsB.toUpperCase()} | ${part1.toUpperCase()}`,
-          en: `${vsB} | ${part1}`
-        }
+        { hiA: `${mainSubject} | क्या है असली सच?`, hiB: `${mainSubject} | ऐतिहासिक प्रमाण`, hg: `${mainSubject.toUpperCase()} | REAL HISTORY`, en: `${mainSubject.toUpperCase()} | REAL PROOF` },
+        { hiA: `${mainSubject} का सच | ${subSubject}`, hiB: `मूल ग्रंथ व साक्ष्य | ${mainSubject}`, hg: `${mainSubject.toUpperCase()} | ${subSubject.toUpperCase()}`, en: `${mainSubject.toUpperCase()} | EVIDENCE` },
+        { hiA: `क्या जानते हैं आप? | ${mainSubject}`, hiB: `तथ्य बनाम भ्रम | ${mainSubject}`, hg: `FACT CHECK | ${mainSubject.toUpperCase()}`, en: `MYTH VS FACT | ${mainSubject.toUpperCase()}` },
+        { hiA: `${subSubject} | ${mainSubject} की कहानी`, hiB: `प्रमाणित इतिहास | ${mainSubject}`, hg: `${subSubject.toUpperCase()} | ${mainSubject.toUpperCase()}`, en: `TRUE STORY | ${mainSubject.toUpperCase()}` },
+        { hiA: `${mainSubject} | पूरा विश्लेषण`, hiB: `शिलालेख और ग्रंथ | ${subSubject}`, hg: `FULL ANALYSIS | ${mainSubject.toUpperCase()}`, en: `FULL BREAKDOWN | ${mainSubject.toUpperCase()}` },
+        { hiA: `${mainSubject} | अंतिम निष्कर्ष`, hiB: `साक्ष्यों का सच | ${subSubject}`, hg: `${mainSubject.toUpperCase()} | CONCLUSION`, en: `FINAL VERDICT | ${mainSubject.toUpperCase()}` }
       ];
     }
 
@@ -2428,7 +2414,7 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
               <div class="dark-badge-keep p-2.5 rounded-xl bg-[#090b10] border border-tertiary/30 space-y-0.5">
                 <span class="font-mono text-[9px] uppercase text-slate-400 block">Suggested Khand Bold Hook:</span>
                 <p class="font-khand text-base font-bold text-[#FFD700] leading-tight khand-thumb-shadow">${line1}</p>
-                <p class="font-khand text-sm font-bold text-white leading-tight khand-thumb-shadow">${line2}</p>
+                <p class="font-khand text-sm font-bold text-[#FFFFFF] leading-tight khand-thumb-shadow">${line2}</p>
               </div>
 
               <div class="space-y-2 text-xs text-on-surface-variant leading-relaxed">
@@ -2649,7 +2635,10 @@ STEP 4 — VIRAL EDITORIAL 8K SHARPNESS, COLOR SEPARATION & 3-LAYER DEPTH LOCK:
 ===================================================================
 • Format & Resolution Lock: Exact ${sz.ratio} aspect ratio (${sz.resolution}px, ${sz.orientation}) for ${sz.platform}.
 • Hyper-Crisp "Dodge & Burn" Subject Sharpness: Sculpted high-clarity Photoshop editorial cutout look—razor-sharp iris catchlights, crisp eyebrows, natural micro-skin pores, individual hair strands, and clean studio-grade rim separation around shoulders/head. Keep human skin tones 100% clean and natural (NEVER muddy brown or washed-out yellow).
-• High-Contrast Background Color Separation: Background MUST sit 2–3 stops darker or in a bold contrasting color family (e.g. deep royal cobalt/obsidian navy, rich charcoal with radial spotlight burst, or dramatic textured backdrop) with subtle dark vignette/halftone depth—never blend the subject into a flat beige/brown background.
+• Studio Color Separation (MagnatesMedia / Pro Editorial Standard):
+  1. Subject Skin Key Light: Clean, neutral-natural daylight studio key light on the face (ZERO yellow/brown color cast on skin!).
+  2. Contrasting Cool/Dark Backdrop: Background MUST sit 2–3 stops darker in a cool/contrasting palette (Deep Royal Cobalt Navy #0B1A33, Charcoal Obsidian #0A0D14, or Deep Slate-Teal with a subtle radial spotlight burst & dark vignette)—NEVER wash the whole scene in muddy beige/sepia.
+  3. Razor-Sharp Edge Rim Light: Crisp 2px electric gold (#FFD700) or cool cyan/white rim light tracing ONLY the outer hair & shoulders to pop the cutout off the background in 3D.
 • 3-Layer Editorial Depth: Layer 1 (Back) = deep atmospheric graded backdrop/radial burst + optional subtle large depth-layered shadow/motif behind the head; Layer 2 (Mid) = crisp cutout hero subject + authentic historical/topical artifact with realistic lens flare/rim glow; Layer 3 (Front) = tack-sharp foreground evidence + high-contrast 2-line Khand Bold headline.
 • Negative Constraints: ZERO muddy/brownish color cast, ZERO soft/blurry AI faces, ZERO plastic skin, ZERO clutter, ZERO random extra words, ZERO watermarks, ZERO channel logos.
 ${heritageBlock}`;
@@ -2805,7 +2794,7 @@ ${heritageBlock}`;
                   <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-secondary/20 text-secondary font-bold">CTR Score: ${computeVariantCtrScore(v.activeHook, v).score}/100</span>
                 </div>
                 <p id="varLine1_${idx}" class="font-khand text-lg font-bold text-[#FFD700] leading-tight khand-thumb-shadow">${line1}</p>
-                <p id="varLine2_${idx}" class="font-khand text-base font-bold text-white leading-tight khand-thumb-shadow">${line2}</p>
+                <p id="varLine2_${idx}" class="font-khand text-base font-bold text-[#FFFFFF] leading-tight khand-thumb-shadow">${line2}</p>
                 <p class="font-mono text-[9px] text-slate-400">${computeVariantCtrScore(v.activeHook, v).tip}</p>
               </div>
 
@@ -3177,7 +3166,7 @@ Return strict JSON: {"details": "..."}`;
             <span class="font-mono text-[9px] text-tertiary">Khand Bold</span>
           </div>
           <p class="font-khand text-base font-bold text-[#FFD700] leading-tight khand-thumb-shadow">${line1}</p>
-          <p class="font-khand text-sm font-bold text-white leading-tight khand-thumb-shadow">${line2}</p>
+          <p class="font-khand text-sm font-bold text-[#FFFFFF] leading-tight khand-thumb-shadow">${line2}</p>
         </div>`;
       }).join('');
     }
@@ -3841,7 +3830,7 @@ Return strict JSON: {"details": "..."}`;
           <div class="text-center pt-1">
             <span class="font-mono text-[8px] px-1.5 py-0.5 rounded bg-white/10 text-slate-300">${sz.ratio} SAFE</span>
             <p class="font-khand text-xs font-bold text-[#FFD700] leading-tight mt-1 truncate">${escHtml(line1)}</p>
-            <p class="font-khand text-[11px] font-bold text-white leading-tight truncate">${escHtml(line2)}</p>
+            <p class="font-khand text-[11px] font-bold text-[#FFFFFF] leading-tight truncate">${escHtml(line2)}</p>
           </div>
           <div class="my-auto mx-auto w-14 h-14 rounded-full bg-tertiary/20 border border-tertiary/60 flex items-center justify-center text-[10px] font-mono text-tertiary font-bold text-center leading-tight">👤 Face<br/>Center</div>
           <div class="text-center pb-2">
@@ -3855,7 +3844,7 @@ Return strict JSON: {"details": "..."}`;
         <div class="${isSplit ? 'col-span-6' : 'col-span-7'} space-y-0.5 z-10">
           <span class="font-mono text-[8px] px-1.5 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold">${sz.ratio} TEXT ZONE</span>
           <p class="font-khand text-sm font-bold text-[#FFD700] leading-tight truncate">${escHtml(line1)}</p>
-          <p class="font-khand text-xs font-bold text-white leading-tight truncate">${escHtml(line2)}</p>
+          <p class="font-khand text-xs font-bold text-[#FFFFFF] leading-tight truncate">${escHtml(line2)}</p>
           <span class="inline-block mt-1 px-1.5 py-0.5 rounded bg-secondary/20 text-secondary font-mono text-[8px] font-bold">🔍 Focal Proof</span>
         </div>
         <div class="${isSplit ? 'col-span-6' : 'col-span-5'} h-full flex items-center justify-center">
