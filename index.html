@@ -211,6 +211,17 @@
           <input id="geminiApiKeyInput" type="password" placeholder="AIzaSy..." class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2.5 font-mono text-xs text-white focus:outline-none focus:border-tertiary" />
         </div>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label for="geminiApiKey2Input" class="block font-mono text-[10px] uppercase text-secondary font-bold mb-1">Backup Gemini Key 2 (Auto-Rotate)</label>
+            <input id="geminiApiKey2Input" type="password" placeholder="Optional AIzaSy..." class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3 py-2 font-mono text-xs text-white focus:outline-none focus:border-secondary" />
+          </div>
+          <div>
+            <label for="geminiApiKey3Input" class="block font-mono text-[10px] uppercase text-secondary font-bold mb-1">Backup Gemini Key 3 (Auto-Rotate)</label>
+            <input id="geminiApiKey3Input" type="password" placeholder="Optional AIzaSy..." class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3 py-2 font-mono text-xs text-white focus:outline-none focus:border-secondary" />
+          </div>
+        </div>
+
         <div>
           <label for="geminiModelSelect" class="block font-mono text-[11px] uppercase text-on-surface-variant font-bold mb-1">Preferred Gemini Model (Auto-Discovers Working Model):</label>
           <select id="geminiModelSelect" class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2 font-mono text-xs text-white focus:outline-none focus:border-tertiary">
@@ -437,12 +448,14 @@
             <span class="px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 1</span>
             <span>Select Niche</span> <button type="button" onclick="openHindiHelp('niche')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
           </label>
-          <span id="activeNicheBadge" class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-tertiary/15 text-tertiary border border-tertiary/40 font-bold">
-            1. History &amp; Archaeology
-          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="activeNicheBadge" class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-tertiary/15 text-tertiary border border-tertiary/40 font-bold">
+            1. History &amp; Archaeology</span>
+            <button type="button" onclick="toggleCompactSection('nicheCollapseWrap', this)" class="px-2 py-0.5 rounded-lg bg-surface-container text-[10px] font-mono text-outline hover:text-white border border-outline-variant/40">Minimize</button>
+          </div>
         </div>
 
-        <div id="nicheButtonsGrid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2"></div>
+        <div id="nicheCollapseWrap" class="space-y-3"><div id="nicheButtonsGrid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2"></div>
 
         <!-- Custom Niche Input (Shown when #20 Other / Custom Niche is selected) -->
         <div id="customNicheContainer" class="hidden p-3 rounded-xl bg-surface-container-lowest border border-tertiary/50 space-y-1.5">
@@ -478,6 +491,7 @@
         </div>
       </div>
 
+      </div>
       <!-- STEP 2: THUMBNAIL FORMAT & SUB-STYLE SELECTION SYSTEM (6 FORMATS • 49 SUB-STYLES) -->
       <div class="space-y-3 pt-2 border-t border-outline-variant/30">
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -485,12 +499,14 @@
             <span class="px-2 py-0.5 rounded bg-secondary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 2</span>
             <span>Select Format</span> <button type="button" onclick="openHindiHelp('format')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
           </label>
-          <span id="activeFormatBadge" class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/40 font-bold">
-            A. Documentary Thumbnail
-          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="activeFormatBadge" class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/40 font-bold">
+            A. Documentary Thumbnail</span>
+            <button type="button" onclick="toggleCompactSection('formatCollapseWrap', this)" class="px-2 py-0.5 rounded-lg bg-surface-container text-[10px] font-mono text-outline hover:text-white border border-outline-variant/40">Minimize</button>
+          </div>
         </div>
 
-        <!-- 6 Format Cards -->
+        <div id="formatCollapseWrap" class="space-y-3"><!-- 6 Format Cards -->
         <div id="formatButtonsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
 
         <!-- Sub-Style Selector + Format Visual Blueprint Preview -->
@@ -512,6 +528,7 @@
         </div>
       </div>
 
+      </div>
       <!-- STEP 2B: MULTI-PLATFORM SOCIAL MEDIA THUMBNAIL SIZE SELECTOR -->
       <div class="space-y-3 pt-2 border-t border-outline-variant/30">
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -926,6 +943,21 @@
         <button type="button" onclick="toggleCtrPreviewMode('bw')" class="px-2.5 py-1 rounded-lg bg-surface-container text-secondary border border-secondary/40 font-mono text-[10px] font-bold">⬛ B&amp;W Contrast Test</button>
       </div>
       <div id="ctrAuditResultsBox" class="hidden space-y-3"></div>
+
+      <!-- REAL 4-VIEW YOUTUBE MULTI-DEVICE LIVE PREVIEW STUDIO (VIDIQ STYLE) -->
+      <div id="realYtPreviewStudio" class="hidden p-4 rounded-2xl bg-surface-container-lowest border border-secondary/40 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/30 pb-2.5">
+          <div>
+            <span class="font-mono text-[10px] uppercase text-secondary font-bold block">Real YouTube Multi-Device Preview</span>
+            <h3 class="font-display text-sm font-extrabold text-white">See How Your Thumbnail Looks Live on YouTube</h3>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <div id="ytPreviewThumbPicker" class="flex items-center gap-1"></div>
+            <button type="button" onclick="toggleYtSimTheme()" id="ytSimThemeBtn" class="px-2.5 py-1 rounded-lg bg-surface-container text-white border border-outline-variant/50 font-mono text-[10px] font-bold">🌙 YT Dark</button>
+          </div>
+        </div>
+        <div id="realYtViewsGrid" class="space-y-4"></div>
+      </div>
     </section>
 
 
@@ -1305,6 +1337,8 @@
 
     const appState = {
       geminiApiKey: '',
+      geminiApiKey2: '',
+      geminiApiKey3: '',
       geminiModel: 'gemini-2.5-flash',
       youtubeApiKey: '',
       selectedNicheId: 'history',
@@ -1325,6 +1359,8 @@
 
     const ESSENTIAL_STORAGE_KEYS = new Set([
       'yt_seo_ssrio_gemini_key',
+      'yt_seo_ssiro_gemini_key_2',
+      'yt_seo_ssiro_gemini_key_3',
       'yt_seo_ssrio_gemini_model',
       'yt_seo_ssiro_yt_key',
       'yt_seo_ssiro_ai_usage',
@@ -1575,7 +1611,11 @@
         return;
       }
       document.getElementById('geminiApiKeyInput').value = val;
+      const val2 = (document.getElementById('geminiApiKey2Input')?.value || '').trim().replace(/\s+/g, '');
+      const val3 = (document.getElementById('geminiApiKey3Input')?.value || '').trim().replace(/\s+/g, '');
       appState.geminiApiKey = val;
+      appState.geminiApiKey2 = val2;
+      appState.geminiApiKey3 = val3;
       __discoveredModelsCache = null;
       try { localStorage.setItem('yt_seo_ssrio_gemini_key', val); } catch (e) {}
       updateEngineBadgeUI(true);
@@ -1594,8 +1634,11 @@
       const inlineEl = document.getElementById('inlineGeminiKeyInput');
       if (inlineEl) inlineEl.value = val;
       try {
-        if (val) localStorage.setItem('yt_seo_ssrio_gemini_key', val);
-        else localStorage.removeItem('yt_seo_ssrio_gemini_key');
+        if (val) localStorage.setItem('yt_seo_ssrio_gemini_key', val); else localStorage.removeItem('yt_seo_ssrio_gemini_key');
+        localStorage.removeItem('yt_seo_ssiro_gemini_key_2');
+        localStorage.removeItem('yt_seo_ssiro_gemini_key_3');
+        if (val2) localStorage.setItem('yt_seo_ssiro_gemini_key_2', val2); else localStorage.removeItem('yt_seo_ssiro_gemini_key_2');
+        if (val3) localStorage.setItem('yt_seo_ssiro_gemini_key_3', val3); else localStorage.removeItem('yt_seo_ssiro_gemini_key_3');
         if (ytVal) localStorage.setItem('yt_seo_ssiro_yt_key', ytVal);
         else localStorage.removeItem('yt_seo_ssiro_yt_key');
         localStorage.setItem('yt_seo_ssrio_gemini_model', mod);
@@ -1673,11 +1716,13 @@
       });
 
       let firstErrMsg = '';
+      const activeKeys = [appState.geminiApiKey, appState.geminiApiKey2, appState.geminiApiKey3].filter(Boolean);
+      for (const apiKeyToUse of activeKeys) {
       for (const step of steps) {
         const ctrl = new AbortController();
         const timer = setTimeout(() => ctrl.abort(), step.timeout);
         try {
-          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${step.model}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
+          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${step.model}:generateContent?key=${encodeURIComponent(apiKeyToUse)}`;
           const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1716,6 +1761,7 @@
         const cLbl = document.getElementById('aiCompactStatusLabel');
         if (cLbl) cLbl.textContent = `⚠️ ${firstErrMsg.slice(0, 38)}`;
         showToast(`Gemini Error: ${firstErrMsg.slice(0, 80)}`);
+      }
       }
       return null;
     }
@@ -3316,33 +3362,6 @@ Return strict JSON: {"details": "..."}`;
 
 
 
-    const CHATGPT_CHAT_URL_KEY = 'yt_seo_ssiro_chatgpt_chat_url_v32';
-
-    function getSavedChatGptUrl() {
-      try { return (localStorage.getItem(CHATGPT_CHAT_URL_KEY) || '').trim(); } catch (e) { return ''; }
-    }
-
-    function saveChatGptChatUrl() {
-      const inp = document.getElementById('savedChatGptUrlInput');
-      const val = (inp?.value || '').trim();
-      if (val && !val.startsWith('https://chatgpt.com')) {
-        showToast('Please paste a valid https://chatgpt.com/... link!');
-        return;
-      }
-      try {
-        if (val) localStorage.setItem(CHATGPT_CHAT_URL_KEY, val);
-        else localStorage.removeItem(CHATGPT_CHAT_URL_KEY);
-      } catch (e) {}
-      showToast(val ? '✅ Permanent ChatGPT chat link saved!' : 'Cleared ChatGPT link (will open new chat).');
-    }
-
-    function clearChatGptChatUrl() {
-      const inp = document.getElementById('savedChatGptUrlInput');
-      if (inp) inp.value = '';
-      try { localStorage.removeItem(CHATGPT_CHAT_URL_KEY); } catch (e) {}
-      showToast('ChatGPT link cleared.');
-    }
-
     function dispatchToChatGPTBridge(promptText, toastMsg) {
       copyTextSafe(promptText, toastMsg || 'Prompt copied! Sending to ChatGPT...');
       try {
@@ -3456,6 +3475,86 @@ Return strict JSON: {"details": "..."}`;
     let cropDragging = false;
     let cropStartPt = null;
     let cropEventsBound = false;
+
+
+    function fixBrokenDevanagariSpacing(str) {
+      let s = String(str || '').replace(/\s+/g, ' ').trim();
+      // Remove illegal spaces before Devanagari matras, anusvara, halant, nukta
+      s = s.replace(/\s+([\u0900-\u0903\u093A-\u094F\u0951-\u0957\u0962-\u0963])/g, '$1');
+      // Remove illegal space after halant (virama) before next consonant
+      s = s.replace(/\u094D\s+([\u0915-\u0939\u0958-\u095F])/g, '\u094D$1');
+      return s.trim();
+    }
+
+    async function cropImageByNormalizedBox(dataUrl, box) {
+      if (!box || !Array.isArray(box) || box.length !== 4 || typeof document === 'undefined' || !document.createElement) return dataUrl;
+      const [ymin, xmin, ymax, xmax] = box.map(n => Math.max(0, Math.min(1000, Number(n) || 0)));
+      if (ymax - ymin < 80 || xmax - xmin < 80) return dataUrl;
+      return new Promise((res) => {
+        const im = new Image();
+        im.onload = () => {
+          try {
+            const sx = Math.round((xmin / 1000) * im.width);
+            const sy = Math.round((ymin / 1000) * im.height);
+            const sw = Math.max(40, Math.round(((xmax - xmin) / 1000) * im.width));
+            const sh = Math.max(40, Math.round(((ymax - ymin) / 1000) * im.height));
+            const c = document.createElement('canvas');
+            c.width = sw;
+            c.height = sh;
+            c.getContext('2d').drawImage(im, sx, sy, sw, sh, 0, 0, sw, sh);
+            res(c.toDataURL('image/jpeg', 0.92));
+          } catch (e) { res(dataUrl); }
+        };
+        im.onerror = () => res(dataUrl);
+        im.src = dataUrl;
+      });
+    }
+
+    async function smartAiFilterAndCropImages(images, topicHint) {
+      if (!images || !images.length || !appState.geminiApiKey) return images;
+      try {
+        const candidateSlice = images.slice(0, 6);
+        const parts = [{
+          text: `You are an expert YouTube Thumbnail Picture Editor. Inspect these ${candidateSlice.length} images extracted from a presentation/document for the topic: "${topicHint || 'History / Educational'}".
+For EACH image (index 0 to ${candidateSlice.length - 1}):
+1. Decide "keep": true ONLY if it contains a useful visual subject (real photo, statue, temple, map, book cover, portrait, or clear scientific/historical diagram). Set "keep": false if it is ONLY a plain text screenshot, phone UI screenshot, title slide with no illustration, or decorative background.
+2. If "keep": true, return a tight "box": [ymin, xmin, ymax, xmax] (0 to 1000) that CROPS OUT all white page margins, paragraphs of text, and phone status bars—leaving ONLY the main figure, diagram, photo, or book cover!
+Return strict JSON: {"decisions": [{"index": 0, "keep": true, "box": [120, 150, 880, 850], "label": "short label"}]}`
+        }];
+        candidateSlice.forEach(im => {
+          const [meta, b64] = (im.dataUrl || '').split(',');
+          const mime = (meta?.match(/data:(.*?);/) || [])[1] || 'image/jpeg';
+          if (b64) parts.push({ inlineData: { mimeType: mime, data: b64 } });
+        });
+
+        const model = (appState.geminiModel && appState.geminiModel !== 'gemini-1.5-flash') ? appState.geminiModel : 'gemini-2.5-flash-lite';
+        const ep = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
+        const resp = await fetch(ep, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseMimeType: 'application/json' } })
+        });
+        if (!resp.ok) return images;
+        const data = await resp.json();
+        const rawTxt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const cleaned = rawTxt.replace(/```json|```/gi, '').trim();
+        const parsed = JSON.parse(cleaned);
+        if (!parsed || !Array.isArray(parsed.decisions)) return images;
+        getTodayUsageCount(true);
+
+        const kept = [];
+        for (const dec of parsed.decisions) {
+          const idx = Number(dec.index);
+          if (dec.keep && candidateSlice[idx]) {
+            const croppedUrl = await cropImageByNormalizedBox(candidateSlice[idx].dataUrl, dec.box);
+            kept.push({ ...candidateSlice[idx], name: dec.label || candidateSlice[idx].name, dataUrl: croppedUrl });
+          }
+        }
+        return kept.length ? kept : candidateSlice.slice(0, 3);
+      } catch (e) {
+        return images;
+      }
+    }
 
     async function filterValidPptImages(rawImages) {
       if (typeof Image === 'undefined') return rawImages;
@@ -4435,7 +4534,8 @@ Return strict JSON: {"details": "..."}`;
       if (isCleanHumanText(cur.trim())) textRuns.push(cur.trim());
 
       const uniqueRuns = [...new Set(textRuns)].slice(0, 35);
-      return { images, combinedText: uniqueRuns.join(' | ').slice(0, 3500), firstHeading: uniqueRuns[0] || '' };
+      const cleanJoined = fixBrokenDevanagariSpacing(uniqueRuns.join(' | '));
+      return { images, combinedText: cleanJoined.slice(0, 3500), firstHeading: fixBrokenDevanagariSpacing(uniqueRuns[0] || '') };
     }
 
     async function extractFromPdfBuffer(buf) {
@@ -4454,7 +4554,7 @@ Return strict JSON: {"details": "..."}`;
       for (let pNum = 1; pNum <= maxTextPages; pNum++) {
         const page = await pdf.getPage(pNum);
         const tc = await page.getTextContent();
-        const line = (tc.items || []).map(it => it.str || '').join(' ').trim();
+        const line = fixBrokenDevanagariSpacing((tc.items || []).map(it => it.str || '').join(''));
         if (line) texts.push(line);
 
         if (pNum <= 4 && typeof document !== 'undefined' && document.createElement) {
@@ -4543,8 +4643,8 @@ Return strict JSON: {"details": "..."}`;
             const isDocx = allKeys.some(n => /^word\/document\.xml$/i.test(n));
             if (isDocx) {
               const docXml = await zip.files[allKeys.find(n => /^word\/document\.xml$/i.test(n))].async('text');
-              const wRuns = [...docXml.matchAll(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g)].map(m => m[1].trim()).filter(Boolean);
-              combinedSlideText = wRuns.join(' ').slice(0, 3500);
+              const wRuns = [...docXml.matchAll(/<w:t[^>]*>([\s\S]*?)<\/w:t>/g)].map(m => m[1]).filter(Boolean);
+              combinedSlideText = fixBrokenDevanagariSpacing(wRuns.join('')).slice(0, 3500);
               firstHeading = wRuns.slice(0, 8).join(' ');
               slideCountLabel = 'Word (.docx)';
               const mediaFiles = allKeys.filter(n => /^word\/media\/.+\.(png|jpg|jpeg|webp|gif)$/i.test(n)).slice(0, 12);
@@ -4562,8 +4662,8 @@ Return strict JSON: {"details": "..."}`;
               for (const sf of slideFiles.slice(0, 30)) {
                 try {
                   const xml = await zip.files[sf].async('text');
-                  const matches = [...xml.matchAll(/<a:t[^>]*>([\s\S]*?)<\/a:t>/g)].map(m => m[1].trim()).filter(Boolean);
-                  if (matches.length) fullText.push(matches.join(' '));
+                  const matches = [...xml.matchAll(/<a:t[^>]*>([\s\S]*?)<\/a:t>/g)].map(m => m[1]).filter(Boolean);
+                  if (matches.length) fullText.push(fixBrokenDevanagariSpacing(matches.join('')));
                 } catch (e) {}
               }
               combinedSlideText = fullText.join(' | ').slice(0, 3500);
@@ -4589,6 +4689,10 @@ Return strict JSON: {"details": "..."}`;
         }
 
         pptxExtractedImages = await filterValidPptImages(pptxExtractedImages);
+        if (pptxExtractedImages.length && appState.geminiApiKey) {
+          if (statusEl) statusEl.textContent = '🤖 AI selecting & cropping relevant figures/diagrams...';
+          pptxExtractedImages = await smartAiFilterAndCropImages(pptxExtractedImages, firstHeading || file.name);
+        }
         pptxExtractedImages.slice(0, 3).forEach((_, i) => pptxSelectedImageIndices.add(i));
         renderPptxExtractedImagesGrid();
         await rebuildPptxReferenceSheet();
@@ -4610,6 +4714,8 @@ Return strict JSON: {"title": "...", "details": "..."}`;
 
         const tInp = document.getElementById('videoTitleInput');
         const dInp = document.getElementById('videoTopicDetailsInput');
+        finalTitle = fixBrokenDevanagariSpacing(finalTitle);
+        finalDetails = fixBrokenDevanagariSpacing(finalDetails);
         if (tInp) tInp.value = finalTitle;
         if (dInp) dInp.value = finalDetails;
         saveStudioState();
@@ -4637,6 +4743,7 @@ Return strict JSON: {"title": "...", "details": "..."}`;
         return `<button type="button" onclick="togglePptxImageSelection(${i})" class="relative w-16 h-16 rounded-lg overflow-hidden border-2 transition ${sel ? 'border-tertiary ring-2 ring-tertiary/40' : 'border-outline-variant/50 opacity-60 hover:opacity-100'}">
           <img src="${img.dataUrl}" alt="PPT Img ${i + 1}" class="w-full h-full object-cover" />
           <span class="absolute top-0.5 right-0.5 px-1 rounded text-[9px] font-mono font-black ${sel ? 'bg-tertiary text-on-tertiary' : 'bg-black/70 text-white'}">${sel ? '✓' : i + 1}</span>
+          <span onclick="event.stopPropagation(); openFigureCropModal('ppt', ${i})" title="Crop Figure" class="absolute bottom-0.5 left-0.5 px-1 rounded bg-tertiary text-on-tertiary text-[9px] font-bold">✂</span>
         </button>`;
       }).join('');
     }
@@ -4833,6 +4940,7 @@ Return strict JSON with ONLY these keys:
         r.onload = () => {
           const dataUrl = String(r.result || '');
           ctrCompareImages.push({ name: f.name, dataUrl });
+          renderRealYouTube4Views();
           if (grid) {
             grid.innerHTML += `<div class="p-2 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-1">
               <span class="font-mono text-[10px] font-bold text-tertiary block">Thumbnail #${idx + 1}</span>
@@ -5143,6 +5251,122 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
       showToast('✅ Selected fixes completed!');
     }
 
+
+    function toggleCompactSection(wrapId, btn) {
+      const el = document.getElementById(wrapId);
+      if (!el) return;
+      const hidden = el.classList.toggle('hidden');
+      if (btn) btn.textContent = hidden ? 'Expand' : 'Minimize';
+    }
+
+    let ytSimDarkMode = true;
+    let ytSimActiveThumbIdx = 0;
+
+    function toggleYtSimTheme() {
+      ytSimDarkMode = !ytSimDarkMode;
+      const btn = document.getElementById('ytSimThemeBtn');
+      if (btn) btn.textContent = ytSimDarkMode ? '🌙 YT Dark' : '☀️ YT Light';
+      renderRealYouTube4Views();
+    }
+
+    function selectYtSimThumb(idx) {
+      ytSimActiveThumbIdx = idx;
+      renderRealYouTube4Views();
+    }
+
+    function renderRealYouTube4Views() {
+      const studio = document.getElementById('realYtPreviewStudio');
+      const grid = document.getElementById('realYtViewsGrid');
+      const picker = document.getElementById('ytPreviewThumbPicker');
+      if (!studio || !grid || !ctrCompareImages.length) return;
+      studio.classList.remove('hidden');
+
+      if (ytSimActiveThumbIdx >= ctrCompareImages.length) ytSimActiveThumbIdx = 0;
+      const activeImg = ctrCompareImages[ytSimActiveThumbIdx]?.dataUrl || '';
+      const title = (document.getElementById('videoTitleInput')?.value || document.getElementById('seoStandaloneTopicInput')?.value || 'मुंडेश्वरी मंदिर का ऐतिहासिक सच और प्रमाण').trim();
+
+      if (picker) {
+        picker.innerHTML = ctrCompareImages.map((_, i) => `<button type="button" onclick="selectYtSimThumb(${i})" class="px-2 py-1 rounded font-mono text-[10px] font-bold ${i === ytSimActiveThumbIdx ? 'bg-tertiary text-on-tertiary' : 'bg-surface-container text-outline'}">#${i + 1}</button>`).join('');
+      }
+
+      const bgCls = ytSimDarkMode ? 'bg-[#0f0f0f] text-white border-white/10' : 'bg-white text-[#0f0f0f] border-slate-300';
+      const subCls = ytSimDarkMode ? 'text-[#aaaaaa]' : 'text-[#606060]';
+
+      grid.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div class="lg:col-span-5 p-3 rounded-xl border ${bgCls} space-y-2">
+            <span class="font-mono text-[10px] uppercase text-tertiary font-bold block">1. 📱 Mobile Home Feed</span>
+            <div class="max-w-[330px] mx-auto rounded-lg overflow-hidden border border-white/10">
+              <div class="relative aspect-video bg-black">
+                <img src="${activeImg}" class="w-full h-full object-cover" />
+                <span class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/85 text-white font-mono text-[10px] font-bold">12:45</span>
+              </div>
+              <div class="p-2.5 flex items-start gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-950 font-black text-xs flex items-center justify-center shrink-0">SS</div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-[13px] font-semibold leading-snug line-clamp-2">${escHtml(title)}</p>
+                  <p class="text-[11px] ${subCls} mt-0.5">Sanaatan Samiksha • 125K views • 2 hours ago</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 p-3 rounded-xl border ${bgCls} space-y-2">
+            <span class="font-mono text-[10px] uppercase text-secondary font-bold block">2. 💻 Laptop / PC Home Grid (Among Competitors)</span>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div class="space-y-1.5">
+                <div class="relative aspect-video rounded-lg overflow-hidden bg-black ring-2 ring-[#FFD700]">
+                  <img src="${activeImg}" class="w-full h-full object-cover" />
+                  <span class="absolute bottom-1 right-1 px-1 py-0.5 rounded bg-black/85 text-white font-mono text-[9px] font-bold">12:45</span>
+                </div>
+                <p class="text-[11px] font-bold leading-tight line-clamp-2">${escHtml(title)}</p>
+                <p class="text-[10px] ${subCls}">Sanaatan Samiksha • 125K</p>
+              </div>
+              <div class="space-y-1.5 opacity-75">
+                <div class="relative aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-slate-800 to-slate-950 flex items-center justify-center text-[10px] font-mono text-slate-400">Competitor #1<span class="absolute bottom-1 right-1 px-1 py-0.5 rounded bg-black/85 text-white text-[9px]">18:20</span></div>
+                <p class="text-[11px] font-semibold leading-tight line-clamp-2">प्राचीन भारत का अनदेखा इतिहास और मंदिर शिल्प</p>
+                <p class="text-[10px] ${subCls}">History Channel • 480K</p>
+              </div>
+              <div class="space-y-1.5 opacity-75">
+                <div class="relative aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-amber-950 to-black flex items-center justify-center text-[10px] font-mono text-amber-300">Competitor #2<span class="absolute bottom-1 right-1 px-1 py-0.5 rounded bg-black/85 text-white text-[9px]">14:05</span></div>
+                <p class="text-[11px] font-semibold leading-tight line-clamp-2">5000 साल पुरानी खोज जिसने सबको चौंकाया</p>
+                <p class="text-[10px] ${subCls}">Documentary Lab • 210K</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 p-3 rounded-xl border ${bgCls} space-y-2">
+            <span class="font-mono text-[10px] uppercase text-primary font-bold block">3. 📺 Suggested Sidebar (168×94px Tiny Test)</span>
+            <div class="flex items-start gap-2.5 max-w-sm">
+              <div class="relative w-[168px] h-[94px] rounded-lg overflow-hidden bg-black shrink-0">
+                <img src="${activeImg}" class="w-full h-full object-cover" />
+                <span class="absolute bottom-1 right-1 px-1 py-0.5 rounded bg-black/85 text-white font-mono text-[9px] font-bold">12:45</span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-xs font-semibold leading-snug line-clamp-2">${escHtml(title)}</p>
+                <p class="text-[10px] ${subCls} mt-1">Sanaatan Samiksha</p>
+                <p class="text-[10px] ${subCls}">125K views • 2 hours ago</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 p-3 rounded-xl border ${bgCls} space-y-2">
+            <span class="font-mono text-[10px] uppercase text-tertiary font-bold block">4. 🔍 YouTube Search Results View</span>
+            <div class="flex flex-col sm:flex-row items-start gap-3">
+              <div class="relative w-full sm:w-52 aspect-video rounded-lg overflow-hidden bg-black shrink-0">
+                <img src="${activeImg}" class="w-full h-full object-cover" />
+                <span class="absolute bottom-1 right-1 px-1 py-0.5 rounded bg-black/85 text-white font-mono text-[9px] font-bold">12:45</span>
+              </div>
+              <div class="min-w-0 flex-1 space-y-1">
+                <p class="text-sm font-semibold leading-snug">${escHtml(title.slice(0, 70))}${title.length > 70 ? '...' : ''}</p>
+                <p class="text-[10px] ${subCls}">125K views • 2 hours ago • Sanaatan Samiksha</p>
+                <p class="text-[11px] ${subCls} line-clamp-2">साक्ष्य-आधारित भारतीय इतिहास, अभिलेख व पुरातत्त्व प्रमाणों का संपूर्ण विश्लेषण...</p>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
     function toggleCtrPreviewMode(mode) {
       document.querySelectorAll('.ctr-thumb-img').forEach(img => {
         img.classList.remove('max-w-[160px]', 'mx-auto', 'grayscale', 'contrast-125');
@@ -5182,6 +5406,11 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
 
       try {
         const savedKey = localStorage.getItem('yt_seo_ssrio_gemini_key');
+        const savedKey2 = localStorage.getItem('yt_seo_ssiro_gemini_key_2') || '';
+        const savedKey3 = localStorage.getItem('yt_seo_ssiro_gemini_key_3') || '';
+        appState.geminiApiKey2 = savedKey2; appState.geminiApiKey3 = savedKey3;
+        if (document.getElementById('geminiApiKey2Input')) document.getElementById('geminiApiKey2Input').value = savedKey2;
+        if (document.getElementById('geminiApiKey3Input')) document.getElementById('geminiApiKey3Input').value = savedKey3;
         const savedYtKey = localStorage.getItem('yt_seo_ssiro_yt_key');
         const savedModel = localStorage.getItem('yt_seo_ssrio_gemini_model');
         if (savedModel && savedModel !== 'gemini-1.5-flash') {
