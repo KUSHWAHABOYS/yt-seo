@@ -2007,47 +2007,65 @@
       };
     }
 
-    function getUniqueConceptHooks(coreSubject, fmtId) {
-      const subj = (coreSubject || 'इतिहास').trim();
-      const subjUpper = subj.toUpperCase();
+    function buildContextAwareTopicHooks(title, desc, fmtId) {
+      const cleanT = String(title || '').replace(/[?!।|]+/g, ' ').replace(/\s+/g, ' ').trim();
+      const words = cleanT.split(/\s+/).filter(Boolean);
+      const part1 = words.slice(0, Math.min(3, Math.ceil(words.length / 2))).join(' ') || 'यह विषय';
+      const part2 = words.slice(Math.min(3, Math.ceil(words.length / 2)), 7).join(' ') || 'असली कहानी';
+
+      const cleanD = String(desc || '').replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim();
+      const dWords = cleanD.split(/\s+/).filter(w => w.length > 2 && !['है', 'हैं', 'का', 'की', 'के', 'में', 'को', 'से', 'और', 'था', 'थे', 'इस', 'यह', 'हम'].includes(w));
+      const dPhrase1 = dWords.slice(0, 3).join(' ') || part2;
+      const dPhrase2 = dWords.slice(3, 6).join(' ') || part1;
+
+      const splitVersus = cleanT.split(/नहीं[, ]+|vs\.?|बनाम|या/i).map(s => s.trim()).filter(Boolean);
+      const vsA = splitVersus[0] ? splitVersus[0].split(/\s+/).slice(0, 3).join(' ') : part1;
+      const vsB = splitVersus[1] ? splitVersus[1].split(/\s+/).slice(0, 3).join(' ') : dPhrase1;
+
       return [
         {
-          hiA: `${subj} : अनसुना सच! | ऐतिहासिक प्रमाण`,
-          hiB: `छुपाया गया इतिहास? | 100% असली सबूत`,
-          hg: `${subjUpper} : ASLI SACH! | BIGGEST PROOF`,
-          en: `THE UNTOLD TRUTH! | HARD EVIDENCE`
+          hiA: `${part1} | ${part2}`,
+          hiB: `${vsA} | ${vsB}?`,
+          hg: `${vsA.toUpperCase()} | ${vsB.toUpperCase()}`,
+          en: `${part1} | ${dPhrase1}`
         },
         {
-          hiA: `${subj} — सबसे बड़ा रहस्य! | चौंकाने वाला खुलासा`,
-          hiB: `आखिर सच क्या है? | प्राचीन साक्ष्य`,
-          hg: `SABSE BADA RAHASYA! | REAL EVIDENCE`,
-          en: `HIDDEN FOR CENTURIES! | FINALLY DECODED`
+          hiA: `${vsA}? | ${dPhrase1}`,
+          hiB: `${part1} | ${dPhrase2}`,
+          hg: `${part1.toUpperCase()} | ${dPhrase1.toUpperCase()}`,
+          en: `${vsA} vs ${vsB}`
         },
         {
-          hiA: `दावे बनाम प्रमाण! | ${subj} : पूरा सच`,
-          hiB: `सिर्फ मान्यता या सच? | देखें असली सबूत`,
-          hg: `MYTH VS REALITY! | ASLI ITIHAS`,
-          en: `CLAIM VS EVIDENCE! | THE REAL STORY`
+          hiA: `${dPhrase1} | ${vsA}`,
+          hiB: `${part2} | ${dPhrase1}`,
+          hg: `${dPhrase1.toUpperCase()} | ${part2.toUpperCase()}`,
+          en: `${dPhrase1} | ${part2}`
         },
         {
-          hiA: `99% लोग नहीं जानते! | ${subj} : गुप्त अध्याय`,
-          hiB: `इतिहास का पन्ना पलटा! | अनदेखा सच`,
-          hg: `99% NAHI JAANTE! | SHOCKING TRUTH`,
-          en: `99% MISSED THIS! | FORGOTTEN RECORD`
+          hiA: `${vsA} नहीं! | ${vsB}`,
+          hiB: `${part1}? | ${dPhrase2}`,
+          hg: `${vsA.toUpperCase()}? | ${dPhrase2.toUpperCase()}`,
+          en: `${vsA} | ${dPhrase2}`
         },
         {
-          hiA: `${subj} : शुरुआत कैसे हुई? | मूल ग्रंथ और प्रमाण`,
-          hiB: `हजारों साल पुराना राज़! | पुरातत्व का सच`,
-          hg: `ASLI ORIGIN KAHAN? | PRIMARY PROOF`,
-          en: `THE TRUE ORIGIN! | ARCHIVAL PROOF`
+          hiA: `${part1} | ${dPhrase1}?`,
+          hiB: `${dPhrase2} | ${part2}`,
+          hg: `${part2.toUpperCase()} | ${dPhrase1.toUpperCase()}`,
+          en: `${part2} | ${dPhrase1}`
         },
         {
-          hiA: `${subj} — अंतिम निष्कर्ष! | सबूतों की पड़ताल`,
-          hiB: `भ्रम टूटा, सच सामने! | पूरी पड़ताल`,
-          hg: `SACH SAMNE AAYA! | FINAL VERDICT`,
-          en: `THE FINAL VERDICT! | UNSEALED PROOF`
+          hiA: `${vsB} | ${dPhrase2}`,
+          hiB: `${part1} — ${part2}`,
+          hg: `${vsB.toUpperCase()} | ${part1.toUpperCase()}`,
+          en: `${vsB} | ${part1}`
         }
       ];
+    }
+
+    function getUniqueConceptHooks(coreSubject, fmtId) {
+      const titleVal = (typeof document !== 'undefined' && document.getElementById('videoTitleInput')?.value) || coreSubject || '';
+      const descVal = (typeof document !== 'undefined' && document.getElementById('videoTopicDetailsInput')?.value) || '';
+      return buildContextAwareTopicHooks(titleVal, descVal, fmtId);
     }
 
     // ==================== 9. BILINGUAL CONCEPT & RESEARCH BUILDER ====================
@@ -2166,7 +2184,7 @@ Use Google Search to research popular and currently trending YouTube videos and 
 
 CRITICAL INSTRUCTIONS:
 1. Analyze BOTH the Video Title AND Video Details deeply.
-2. Apply the YOUTUBE THUMBNAIL TEXT SKILL: Understand the main Video Title "${title}" deeply and generate 3 COMPLETELY ORIGINAL, SHORT, HIGH-IMPACT 2-line Thumbnail Text variations in PURE, PUNCHY HINDI (2–4 words per line) that complement—NOT repeat—the main title, paired with concrete visual ideas (never generic templates). Keep each line 2–4 crisp Hindi words that read instantly on mobile; only transliterate a rare Sanskrit proper noun to English/Hinglish if absolutely necessary to prevent typos.
+2. Apply the YOUTUBE THUMBNAIL TEXT SKILL: Understand the main Video Title "${title}" deeply and generate 3 COMPLETELY ORIGINAL, SHORT, HIGH-IMPACT 2-line Thumbnail Text variations in PURE, PUNCHY HINDI (2–4 words per line) that complement—NOT repeat—the main title, paired with concrete visual ideas (STRICTLY FORBIDDEN: never use generic clichés like "अनसुना सच", "सबसे बड़ा रहस्य", "दावे बनाम प्रमाण", or "99% लोग नहीं जानते" — write natural, topic-specific Hindi directly from the Title & Description!). Keep each line 2–4 crisp Hindi words that read instantly on mobile; only transliterate a rare Sanskrit proper noun to English/Hinglish if absolutely necessary to prevent typos.
 3. Generate 6 genuinely distinct Thumbnail Design Concepts with REAL, DESCRIPTIVE, TOPIC-SPECIFIC TITLES (never generic "Concept 1" titles) tailored to "${fmt.name}" and hyper-realistic 8K YouTube quality.
 4. Return a valid JSON object with these exact keys:
 {
@@ -3336,37 +3354,25 @@ Return strict JSON: {"details": "..."}`;
       showToast('ChatGPT link cleared.');
     }
 
-    async function compressDataUrlForBridge(dUrl, maxDim = 1280) {
-      if (!dUrl || typeof document === 'undefined' || !document.createElement) return dUrl;
-      if (dUrl.length < 180000) return dUrl;
-      return new Promise((res) => {
-        const im = new Image();
-        im.onload = () => {
-          try {
-            const c = document.createElement('canvas');
-            const sc = Math.min(1, maxDim / Math.max(im.width, im.height));
-            c.width = Math.round(im.width * sc);
-            c.height = Math.round(im.height * sc);
-            c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
-            res(c.toDataURL('image/jpeg', 0.90));
-          } catch (e) { res(dUrl); }
-        };
-        im.onerror = () => res(dUrl);
-        im.src = dUrl;
-      });
-    }
-
-    async function dispatchToChatGPTBridge(promptText, toastMsg) {
-      copyTextSafe(promptText, toastMsg || 'Prompt copied! Paste & Send in ChatGPT.');
+    function dispatchToChatGPTBridge(promptText, toastMsg) {
+      copyTextSafe(promptText, toastMsg || 'Prompt copied! Sending to ChatGPT...');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-        const rawImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
-        const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
+        const bridgeImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
         window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
-      setTimeout(() => {
-        window.open('https://chatgpt.com/', '_blank', 'noopener');
-      }, 200);
+      const qParam = (!studioCreatorPhotoB64 && !studioExtraPhotosB64.length && promptText.length <= 2800) ? '?q=' + encodeURIComponent(promptText) : '';
+      window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener');
+    }
+
+    function dispatchToGeminiBridge(promptText, toastMsg) {
+      copyTextSafe(promptText, toastMsg || 'Prompt copied! Sending to Gemini...');
+      try {
+        const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
+        const bridgeImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        window.postMessage({ type: 'SSIRO_GEMINI_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
+      } catch (e) {}
+      window.open('https://gemini.google.com/app', '_blank', 'noopener');
     }
 
     const CREATOR_FACE_STORAGE_KEY = 'yt_seo_ssiro_creator_face_v31';
