@@ -391,17 +391,19 @@
             <span id="aiCompactStatusLabel" class="font-mono text-[11px] font-bold text-emerald-300 truncate">AI Ready</span>
             <span class="material-symbols-outlined text-[13px] text-emerald-300 shrink-0">monitoring</span>
           </button>
-          <button type="button" id="globalCompactToggleBtn" onclick="toggleGlobalCompactView(this)" title="Collapse or Expand Step 1 & Step 2 grids so page stays short" class="px-2 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-on-surface-variant hover:text-white font-mono text-[10px] font-bold flex items-center gap-1 shrink-0 transition">
-            <span class="material-symbols-outlined text-[13px]">compress</span>
-            <span>Compact</span>
-          </button>
+          <div class="flex items-center justify-between gap-2 w-full sm:w-auto">
+            <button type="button" id="globalCompactToggleBtn" onclick="toggleGlobalCompactView(this)" title="Collapse or Expand Step 1 & Step 2 grids so page stays short" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-on-surface-variant hover:text-white font-mono text-[10px] font-bold flex items-center gap-1 shrink-0 transition">
+              <span class="material-symbols-outlined text-[13px]">compress</span>
+              <span>Compact</span>
+            </button>
+            <span id="aiDailyUsageBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 whitespace-nowrap shrink-0">
+              Calls Today: 0 / 1,500
+            </span>
+          </div>
         </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <span class="hidden sm:inline-block font-mono text-[10px] px-2 py-0.5 rounded bg-tertiary/15 text-tertiary border border-tertiary/30 font-bold">
+        <div class="hidden sm:flex items-center gap-2 shrink-0">
+          <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-tertiary/15 text-tertiary border border-tertiary/30 font-bold">
             Khand Bold • #FFD700 + #FFFFFF Locked
-          </span>
-          <span id="aiDailyUsageBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 whitespace-nowrap">
-            Calls Today: 0 / 1,500
           </span>
         </div>
       </div>
