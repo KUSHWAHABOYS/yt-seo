@@ -141,11 +141,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body class="bg-surface text-on-surface font-sans antialiased selection:bg-tertiary selection:text-on-tertiary overflow-x-hidden pb-24 sm:pb-12">
-
-  
   <!-- ==================== REAL-TIME AI API HEALTH MODAL ==================== -->
-  <div id="aiHealthModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="w-full max-w-lg bg-surface-container-low border border-outline-variant/60 rounded-2xl p-5 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+  <div id="aiHealthModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain p-3 sm:p-4 hidden" style="-webkit-overflow-scrolling: touch;">
+    <div class="min-h-full flex items-start sm:items-center justify-center py-2">
+    <div class="w-full max-w-lg bg-surface-container-low border border-outline-variant/60 rounded-2xl p-4 sm:p-6 shadow-2xl space-y-4 my-auto">
       <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-secondary">monitoring</span>
@@ -166,6 +165,7 @@
           ⚙️ Edit API Keys
         </button>
       </div>
+    </div>
     </div>
   </div>
 
@@ -215,8 +215,9 @@
   </div>
 
   <!-- ==================== API SETTINGS MODAL (GEMINI + OPTIONAL YOUTUBE DATA API V3) ==================== -->
-  <div id="aiEngineModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="w-full max-w-lg bg-surface-container-low border border-outline-variant/60 rounded-2xl p-5 sm:p-6 shadow-2xl space-y-4">
+  <div id="aiEngineModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain p-3 sm:p-4 hidden" style="-webkit-overflow-scrolling: touch;">
+    <div class="min-h-full flex items-start sm:items-center justify-center py-2">
+    <div class="w-full max-w-lg bg-surface-container-low border border-outline-variant/60 rounded-2xl p-4 sm:p-6 shadow-2xl space-y-4 my-auto">
       <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-tertiary">bolt</span>
@@ -303,6 +304,8 @@
   </div>
 
   
+    </div>
+
   <!-- ==================== HINDI FEATURE EXPLAINER POP-UP MODAL ==================== -->
   <div id="hindiHelpModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden" onclick="if(event.target===this) closeHindiHelp()">
     <div class="w-full max-w-md bg-surface-container-low border border-tertiary/50 rounded-2xl p-5 shadow-2xl space-y-3.5">
@@ -371,7 +374,7 @@
     <section class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
       <!-- Compact AI Status + Update + Daily Limit Bar (Shown when key is saved) -->
       <div id="aiKeyCompactStatusBar" class="hidden px-3 py-2 rounded-xl bg-surface-container-lowest border border-secondary/35 flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-2 min-w-0">
+        <div class="flex flex-wrap items-center gap-1.5 min-w-0 w-full sm:w-auto">
           <button type="button" onclick="toggleAiEngineModal()" title="API Key Settings" class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-on-surface-variant hover:text-white flex items-center justify-center shrink-0 transition">
             <span class="material-symbols-outlined text-[16px]">settings</span>
           </button>
@@ -1348,9 +1351,9 @@
         platform: 'Reels / Shorts',
         icon: '📱',
         orientation: 'Vertical Full-Screen Portrait',
-        layoutRule: 'Vertical 9:16 top-to-bottom stacked composition: place the bold 2-line Khand headline in the upper-middle sky/dark scrim zone (top 18%-34%), the expressive hero face/subject centered in the middle focal zone (35%-70%), and foreground evidence/artifact in the lower-middle zone.',
-        textSafeZone: 'CRITICAL VERTICAL SAFE ZONE: Keep all faces and text strictly away from the right-side 15% edge (Like/Comment/Share icons) and bottom 22% (channel name & caption overlay).',
-        hindiLayoutTip: '9:16 वर्टिकल (Shorts/Reels): ऊपर-बीच में बोल्ड टाइटल, बीच में मुख्य चेहरा व सीन और नीचे-बीच में सबूत रहेगा; दाईं किनारी (Like/Share आइकन) और सबसे निचला हिस्सा खाली रहेगा।'
+        layoutRule: 'Vertical 9:16 YouTube Shorts Feed-Safe composition: place the expressive hero face/subject + primary artifact in the UPPER-CENTER focal zone (18%-52% from top), and anchor the bold 2-line Khand headline in the LOWER-CENTER FEED-SAFE BAND (54%-72% from top, horizontally centered or left-aligned inside a dark gradient scrim). NEVER place title text in the top 18% or bottom 26%.',
+        textSafeZone: 'YOUTUBE SHORTS FEED-SAFE LOCK: Keep ALL title text strictly inside 54%-72% from top (and 15% clear from right edge for Like/Share icons), completely avoiding the top 18% (Shorts shelf crop) and bottom 26% (channel name & caption bar) so the full title is 100% readable in both Shorts Feed & Player.',
+        hindiLayoutTip: '9:16 वर्टिकल (Shorts/Reels Feed-Safe): ऊपर 18%-52% में मुख्य चेहरा व सबूत रहेगा, और टाइटल ठीक उसके नीचे वाले सुरक्षित मध्य हिस्से (54%-72% ऊपर से) में रहेगा — ताकि YouTube Shorts फीड में ऊपर-नीचे से क्रॉप होने पर भी पूरा टाइटल साफ दिखे।'
       },
       {
         id: 'insta_4_5',
@@ -1359,9 +1362,9 @@
         platform: 'IG / FB Feed',
         icon: '📸',
         orientation: 'Tall Feed Portrait',
-        layoutRule: 'Tall 4:5 Instagram/Facebook feed-dominating vertical framing: bold 2-line Khand headline anchored cleanly in the upper 25% dark vignette, tight hero portrait + primary proof filling the central 55%, and atmospheric foreground depth at the bottom 20%.',
-        textSafeZone: 'Keep key eyes and typography inside the central 85% safe box so Instagram feed cropping never clips letters or faces.',
-        hindiLayoutTip: '4:5 पोर्ट्रेट (Instagram/FB Feed): ऊपरी हिस्से में बड़ा टाइटल और बीच में पूरा फोकस चेहरे व सबूत पर रहेगा ताकि मोबाइल फीड में पूरा स्क्रीन कवर हो।'
+        layoutRule: 'Tall 4:5 Instagram/Facebook Grid-Safe framing: keep the hero portrait & primary artifact in the upper-center (16%-54% height) and anchor the bold 2-line Khand headline in the lower-center grid-safe band (56%-78% height) inside a deep obsidian gradient scrim—fully visible even when Instagram crops 4:5 down to a 1:1 profile grid.',
+        textSafeZone: 'INSTAGRAM 1:1 GRID-SAFE LOCK: Keep ALL text & faces strictly inside the central 14%-86% vertical zone and 8% side margins so neither Feed nor 1:1 Profile Grid ever clips a single letter.',
+        hindiLayoutTip: '4:5 पोर्ट्रेट (IG/FB Feed): मुख्य चेहरा 16%-54% में और बोल्ड टाइटल 56%-78% वाले सुरक्षित मध्य हिस्से में रहेगा, ताकि Instagram की 1:1 प्रोफ़ाइल ग्रिड में भी टाइटल बिल्कुल न कटे।'
       },
       {
         id: 'square_1_1',
@@ -1917,6 +1920,19 @@
 
     async function autoDiscoverWorkingGeminiModel() {
       if (!appState.geminiApiKey && !appState.geminiApiKey2 && !appState.geminiApiKey3 && !appState.groqApiKey && !appState.mistralApiKey && !appState.openrouterApiKey) return null;
+      const tryBackupProvidersFirst = async () => {
+        if (appState.groqApiKey) {
+          const gModels = await discoverGroqModels(appState.groqApiKey);
+          const gRes = await callOpenAICompatibleJson('groq', 'https://api.groq.com/openai/v1/chat/completions', appState.groqApiKey, gModels, promptText);
+          if (gRes) { __preferredLiveProvider = 'groq'; return gRes; }
+        }
+        return null;
+      };
+      if (__preferredLiveProvider === 'groq' && appState.groqApiKey) {
+        const fastGroq = await tryBackupProvidersFirst();
+        if (fastGroq) return fastGroq;
+        __preferredLiveProvider = 'gemini'; // Groq failed/rate-limited -> switch back to Gemini immediately!
+      }
       try {
         const ctrl = new AbortController();
         const timer = setTimeout(() => ctrl.abort(), 6000);
@@ -2056,6 +2072,8 @@
       }
     }
 
+        let __preferredLiveProvider = 'gemini';
+
     async function callGeminiJsonAPI(promptText, useSearchGrounding = true) {
       if (!appState.geminiApiKey) return null;
       if (!__discoveredModelsCache) {
@@ -2069,7 +2087,7 @@
         steps.push({
           model: preferred,
           grounded: true,
-          timeout: 55000,
+          timeout: 18000,
           body: {
             contents: [{ parts: [{ text: promptText + '\n\nIMPORTANT: Return ONLY valid raw JSON (no markdown fences, no commentary).' }] }],
             tools: [{ google_search: {} }]
@@ -2080,7 +2098,7 @@
         steps.push({
           model: mName,
           grounded: false,
-          timeout: 35000,
+          timeout: 12000,
           body: {
             contents: [{ parts: [{ text: promptText }] }],
             generationConfig: { responseMimeType: 'application/json' }
@@ -2121,6 +2139,7 @@
               parsed.__usedGroundedSearch = step.grounded;
               parsed.__modelUsed = step.model;
               parsed.__providerUsed = keySlot;
+              __preferredLiveProvider = 'gemini';
               setProviderHealth(keySlot, 'ok', step.model, 'Live call succeeded');
               getTodayUsageCount(true);
               return parsed;
@@ -2144,7 +2163,7 @@
             if (appState.groqApiKey) {
         const gModels = await discoverGroqModels(appState.groqApiKey);
         const gRes = await callOpenAICompatibleJson('groq', 'https://api.groq.com/openai/v1/chat/completions', appState.groqApiKey, gModels, promptText);
-        if (gRes) return gRes;
+        if (gRes) { __preferredLiveProvider = 'groq'; return gRes; }
       }
       if (appState.mistralApiKey) {
         const mModels = await discoverMistralModels(appState.mistralApiKey);
