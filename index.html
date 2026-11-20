@@ -239,16 +239,7 @@
           <input id="geminiApiKeyInput" type="password" placeholder="AIzaSy..." class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2.5 font-mono text-xs text-white focus:outline-none focus:border-tertiary" />
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <div>
-            <label for="geminiApiKey2Input" class="block font-mono text-[10px] uppercase text-secondary font-bold mb-1">Backup Gemini Key 2 (Auto-Rotate)</label>
-            <input id="geminiApiKey2Input" type="password" placeholder="Optional AIzaSy..." class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3 py-2 font-mono text-xs text-white focus:outline-none focus:border-secondary" />
-          </div>
-          <div>
-            <label for="geminiApiKey3Input" class="block font-mono text-[10px] uppercase text-secondary font-bold mb-1">Backup Gemini Key 3 (Auto-Rotate)</label>
-            <input id="geminiApiKey3Input" type="password" placeholder="Optional AIzaSy..." class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3 py-2 font-mono text-xs text-white focus:outline-none focus:border-secondary" />
-          </div>
-        </div>
+<p class="text-[11px] font-mono text-secondary">✨ 1 Gemini Key automatically rotates across all active Gemini models (2.5-flash, 2.0-flash, pro, etc.) + auto-switches to Groq/Mistral/OpenRouter if needed.</p>
 
         <div class="p-3 rounded-xl bg-surface-container-lowest border border-tertiary/30 space-y-2">
           <div class="flex items-center justify-between gap-2">
@@ -287,7 +278,14 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-outline-variant/40">
+              <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-secondary/35 flex flex-wrap items-center justify-between gap-2">
+          <span class="font-mono text-[10px] text-secondary font-bold">🔐 Encrypted Vault Sync (PC ↔ Mobile):</span>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="exportEncryptedApiVault()" class="px-2.5 py-1 rounded-lg bg-secondary/15 hover:bg-secondary/25 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">Copy Vault Code</button>
+            <button type="button" onclick="importEncryptedApiVault()" class="px-2.5 py-1 rounded-lg bg-tertiary/15 hover:bg-tertiary/25 text-tertiary border border-tertiary/40 font-mono text-[10px] font-bold transition">Import Vault</button>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-outline-variant/40">
         <button type="button" onclick="clearGeminiApiKey()" class="px-3 py-2 rounded-xl bg-error-container/40 text-error border border-error/30 font-mono text-xs font-bold">
           Clear Keys
         </button>
@@ -1447,6 +1445,7 @@
       'yt_seo_ssiro_groq_key',
       'yt_seo_ssiro_mistral_key',
       'yt_seo_ssiro_openrouter_key',
+      'yt_seo_ssiro_vault_v2',
       'yt_seo_ssrio_gemini_model',
       'yt_seo_ssiro_yt_key',
       'yt_seo_ssiro_ai_usage',
@@ -1596,10 +1595,114 @@
     let __discoveredModelsCache = null;
     const __exhaustedKeyModels = new Set();
 
+    const ENCRYPTED_VAULT_KEY = 'yt_seo_ssiro_vault_v2';
+
+    function xorCipherText(str, secret) {
+      const s = secret || '2026::SSIRO_VAULT_2026';
+      let out = '';
+      for (let i = 0; i < str.length; i++) {
+        out += String.fromCharCode(str.charCodeAt(i) ^ s.charCodeAt(i % s.length));
+      }
+      return out;
+    }
+
+    function encryptVaultPayload(obj) {
+      const json = JSON.stringify(obj);
+      const bytes = new TextEncoder().encode(json);
+      let bin = '';
+      for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+      const xored = xorCipherText(bin, getStoredPin() + '::SSIRO_VAULT_2026');
+      return 'SSIRO-VAULT::' + btoa(xored);
+    }
+
+    function decryptVaultPayload(token) {
+      if (!token || !token.startsWith('SSIRO-VAULT::')) return null;
+      const b64 = token.slice('SSIRO-VAULT::'.length).trim();
+      const xored = atob(b64);
+      const bin = xorCipherText(xored, getStoredPin() + '::SSIRO_VAULT_2026');
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const json = new TextDecoder().decode(bytes);
+      return JSON.parse(json);
+    }
+
+    function saveEncryptedApiVault() {
+      try {
+        const payload = {
+          g1: appState.geminiApiKey || '',
+          g2: appState.geminiApiKey2 || '',
+          g3: appState.geminiApiKey3 || '',
+          groq: appState.groqApiKey || '',
+          mistral: appState.mistralApiKey || '',
+          or: appState.openrouterApiKey || '',
+          yt: appState.youtubeApiKey || '',
+          model: appState.geminiModel || 'gemini-2.5-flash'
+        };
+        localStorage.setItem(ENCRYPTED_VAULT_KEY, encryptVaultPayload(payload));
+      } catch (e) {}
+    }
+
+    function loadEncryptedApiVault() {
+      try {
+        const raw = localStorage.getItem(ENCRYPTED_VAULT_KEY);
+        if (raw) {
+          const v = decryptVaultPayload(raw);
+          if (v && typeof v === 'object') {
+            if (v.g1) appState.geminiApiKey = v.g1;
+            if (v.g2) appState.geminiApiKey2 = v.g2;
+            if (v.g3) appState.geminiApiKey3 = v.g3;
+            if (v.groq) appState.groqApiKey = v.groq;
+            if (v.mistral) appState.mistralApiKey = v.mistral;
+            if (v.or) appState.openrouterApiKey = v.or;
+            if (v.yt) appState.youtubeApiKey = v.yt;
+            if (v.model) appState.geminiModel = v.model;
+            return true;
+          }
+        }
+      } catch (e) {}
+      return false;
+    }
+
+    function exportEncryptedApiVault() {
+      saveEncryptedApiVault();
+      const raw = localStorage.getItem(ENCRYPTED_VAULT_KEY) || '';
+      if (!raw) { showToast('⚠️ Pehle kam se kam 1 API key save karen.', true); return; }
+      copyTextSafe(raw, '🔐 Encrypted Vault Code copied! Paste on your other device via Import Vault.');
+    }
+
+    function importEncryptedApiVault() {
+      const code = prompt('Paste your SSIRO-VAULT:: code here (encrypted with your PIN):');
+      if (!code) return;
+      try {
+        const v = decryptVaultPayload(code.trim());
+        if (!v || typeof v !== 'object') throw new Error('Invalid vault');
+        appState.geminiApiKey = v.g1 || '';
+        appState.geminiApiKey2 = v.g2 || '';
+        appState.geminiApiKey3 = v.g3 || '';
+        appState.groqApiKey = v.groq || '';
+        appState.mistralApiKey = v.mistral || '';
+        appState.openrouterApiKey = v.or || '';
+        appState.youtubeApiKey = v.yt || '';
+        if (v.model) appState.geminiModel = v.model;
+        if (document.getElementById('geminiApiKeyInput')) document.getElementById('geminiApiKeyInput').value = appState.geminiApiKey;
+        if (document.getElementById('geminiApiKey2Input')) document.getElementById('geminiApiKey2Input').value = appState.geminiApiKey2;
+        if (document.getElementById('geminiApiKey3Input')) document.getElementById('geminiApiKey3Input').value = appState.geminiApiKey3;
+        if (document.getElementById('groqApiKeyInput')) document.getElementById('groqApiKeyInput').value = appState.groqApiKey;
+        if (document.getElementById('mistralApiKeyInput')) document.getElementById('mistralApiKeyInput').value = appState.mistralApiKey;
+        if (document.getElementById('openrouterApiKeyInput')) document.getElementById('openrouterApiKeyInput').value = appState.openrouterApiKey;
+        if (document.getElementById('youtubeApiKeyInput')) document.getElementById('youtubeApiKeyInput').value = appState.youtubeApiKey;
+        saveEncryptedApiVault();
+        saveEncryptedApiVault();
+        syncAiHealthConfiguredFlags();
+        updateEngineBadgeUI(hasAnyTextAiKey());
+        showToast('🔐 Encrypted API Vault imported & saved permanently!');
+      } catch (e) {
+        showToast('❌ Invalid Vault Code or PIN mismatch!', true);
+      }
+    }
+
     const aiHealthState = {
-      gemini1: { label: 'Gemini Key 1 (Primary)', status: 'unconfigured', model: '', message: 'Not added' },
-      gemini2: { label: 'Gemini Key 2 (Backup)', status: 'unconfigured', model: '', message: 'Not added' },
-      gemini3: { label: 'Gemini Key 3 (Backup)', status: 'unconfigured', model: '', message: 'Not added' },
+      gemini1: { label: 'Gemini (Auto Model-Rotate)', status: 'unconfigured', model: '', message: 'Not added' },
       groq: { label: 'GroqCloud (Free Fast Backup)', status: 'unconfigured', model: '', message: 'Not added' },
       mistral: { label: 'Mistral AI (Free Mode)', status: 'unconfigured', model: '', message: 'Not added' },
       openrouter: { label: 'OpenRouter (:free Auto)', status: 'unconfigured', model: 'openrouter/free', message: 'Not added' }
@@ -1648,11 +1751,18 @@
       refreshMainAiStatusPill();
     }
 
-    function setProviderHealth(slot, status, model, message) {
+    function setProviderHealth(slot, status, model, message, elapsedMs = 0) {
       if (!aiHealthState[slot]) return;
-      aiHealthState[slot].status = status;
-      if (model) aiHealthState[slot].model = model;
-      aiHealthState[slot].message = message || '';
+      const st = aiHealthState[slot];
+      st.status = status;
+      if (model) st.model = model;
+      st.message = message || '';
+      if (status === 'ok') {
+        st.okCount = (st.okCount || 0) + 1;
+        if (elapsedMs > 0) st.totalMs = (st.totalMs || 0) + elapsedMs;
+      } else if (status === 'quota' || status === 'error') {
+        st.failCount = (st.failCount || 0) + 1;
+      }
       refreshMainAiStatusPill();
     }
 
@@ -1739,7 +1849,7 @@
             <span class="font-mono text-[10px] font-bold">${badgeMap[v.status] || badgeMap.ready}</span>
           </div>
           <div class="font-mono text-[10px] text-on-surface-variant flex flex-wrap items-center justify-between gap-1">
-            <span>${escHtml((v.message || '').slice(0, 120))}</span>
+            <span>${v.okCount || v.failCount ? `✅ ${v.okCount || 0} OK • ❌ ${v.failCount || 0} Fail${v.totalMs && v.okCount ? ` • ${(v.totalMs / v.okCount / 1000).toFixed(1)}s avg` : ""} | ` : ""}${escHtml((v.message || "").slice(0, 95))}</span>
             ${v.model ? `<span class="text-tertiary">Model: ${escHtml(v.model)}</span>` : ''}
           </div>
         </div>`;
@@ -1791,6 +1901,7 @@
         const ctrl = new AbortController();
         const timer = setTimeout(() => ctrl.abort(), 35000);
         try {
+          const t0 = Date.now();
           const res = await fetch(url, {
             method: 'POST',
             headers: {
@@ -1818,7 +1929,7 @@
             parsed.__usedGroundedSearch = false;
             parsed.__modelUsed = mName;
             parsed.__providerUsed = providerSlot;
-            setProviderHealth(providerSlot, 'ok', mName, 'Live JSON call succeeded');
+            setProviderHealth(providerSlot, 'ok', mName, 'Live JSON call succeeded', Date.now() - t0);
             getTodayUsageCount(true);
             return parsed;
           } else {
@@ -1840,24 +1951,35 @@
       const orig = btnEl ? btnEl.innerHTML : '';
       if (btnEl) { btnEl.disabled = true; btnEl.innerHTML = '<span>⏳ Testing live...</span>'; }
       try {
-        const gemKeys = [['gemini1', appState.geminiApiKey], ['gemini2', appState.geminiApiKey2], ['gemini3', appState.geminiApiKey3]];
-        for (const [slot, k] of gemKeys) {
-          if (!k) continue;
-          try {
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${encodeURIComponent(k)}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ contents: [{ parts: [{ text: 'Reply with OK' }] }] })
-            });
-            if (r.ok) setProviderHealth(slot, 'ok', 'gemini-2.5-flash-lite', 'Verified live working');
-            else {
-              const ej = await r.json().catch(() => ({}));
-              const msg = ej?.error?.message || `HTTP ${r.status}`;
-              setProviderHealth(slot, (r.status === 429 || /quota|limit/i.test(msg)) ? 'quota' : 'error', 'gemini-2.5-flash-lite', msg);
+        if (appState.geminiApiKey) {
+          __discoveredModelList = null;
+          await autoDiscoverWorkingGeminiModel();
+          const testModels = (__discoveredModelList && __discoveredModelList.length) ? __discoveredModelList.slice(0, 4) : ['gemini-2.5-flash', 'gemini-2.0-flash'];
+          let gemPassed = false;
+          let lastErr = '';
+          let lastStatus = 'error';
+          for (const tm of testModels) {
+            try {
+              const t0 = Date.now();
+              const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${tm}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: 'Reply with OK' }] }] })
+              });
+              if (r.ok) {
+                setProviderHealth('gemini1', 'ok', tm, `Verified live (${testModels.length} active models ready)`, Date.now() - t0);
+                gemPassed = true;
+                break;
+              } else {
+                const ej = await r.json().catch(() => ({}));
+                lastErr = ej?.error?.message || `HTTP ${r.status}`;
+                lastStatus = (r.status === 429 || /quota|limit/i.test(lastErr)) ? 'quota' : 'error';
+              }
+            } catch (e) {
+              lastErr = e?.message || 'Network error';
             }
-          } catch (e) {
-            setProviderHealth(slot, 'error', '', e?.message || 'Network error');
           }
+          if (!gemPassed) setProviderHealth('gemini1', lastStatus, testModels[0] || '', lastErr);
         }
         if (appState.groqApiKey) {
           __groqModelsCache = null;
@@ -1930,165 +2052,44 @@
       }
     }
 
+    let __discoveredModelList = null;
+
     async function autoDiscoverWorkingGeminiModel() {
-      if (!appState.geminiApiKey && !appState.geminiApiKey2 && !appState.geminiApiKey3 && !appState.groqApiKey && !appState.mistralApiKey && !appState.openrouterApiKey) return null;
-      const tryBackupProvidersFirst = async () => {
-        if (appState.groqApiKey) {
-          const gModels = await discoverGroqModels(appState.groqApiKey);
-          const gRes = await callOpenAICompatibleJson('groq', 'https://api.groq.com/openai/v1/chat/completions', appState.groqApiKey, gModels, promptText);
-          if (gRes) { __preferredLiveProvider = 'groq'; return gRes; }
-        }
-        return null;
-      };
-      if (__preferredLiveProvider === 'groq' && appState.groqApiKey) {
-        const fastGroq = await tryBackupProvidersFirst();
-        if (fastGroq) return fastGroq;
-        __preferredLiveProvider = 'gemini'; // Groq failed/rate-limited -> switch back to Gemini immediately!
-      }
+      if (!appState.geminiApiKey) return null;
       try {
         const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 6000);
+        const timer = setTimeout(() => ctrl.abort(), 7000);
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(appState.geminiApiKey)}`, { signal: ctrl.signal });
         clearTimeout(timer);
         if (!res.ok) {
           const errD = await res.json().catch(() => ({}));
           const msg = errD?.error?.message || `HTTP ${res.status}`;
-          const cLbl = document.getElementById('aiCompactStatusLabel');
-          if (cLbl) cLbl.textContent = `❌ Key Error: ${msg.slice(0, 32)}`;
+          setProviderHealth('gemini1', res.status === 429 ? 'quota' : 'error', '', msg);
           return null;
         }
         const data = await res.json();
         const valid = (data.models || [])
           .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
-          .map(m => (m.name || '').replace(/^models\//, ''))
-          .filter(n => n && !n.includes('embedding') && !n.includes('aqa') && !n.includes('imagen'));
-
-        if (!valid.length) return null;
-        __discoveredModelsCache = valid;
-        const priority = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-2.5-pro'];
-        const chosen = priority.find(p => valid.includes(p))
-          || valid.find(n => n.includes('flash') && !n.includes('thinking') && !n.includes('image'))
-          || valid[0];
-        if (chosen) {
-          appState.geminiModel = chosen;
-          try { localStorage.setItem('yt_seo_ssrio_gemini_model', chosen); } catch (e) {}
-          const mSel = document.getElementById('geminiModelSelect');
-          if (mSel) {
-            if (!Array.from(mSel.options).some(o => o.value === chosen)) {
-              const opt = document.createElement('option');
-              opt.value = chosen;
-              opt.textContent = `✨ ${chosen} (Auto-Detected)`;
-              mSel.prepend(opt);
-            }
-            mSel.value = chosen;
-          }
-          updateEngineBadgeUI(true);
+          .map(m => (m.name || '').replace('models/', ''))
+          .filter(n => n && !/embedding|aqa|imagen|veo|tts|audio|robotics|computer-use|deep-research/i.test(n));
+        const rank = (n) => {
+          if (n === 'gemini-2.5-flash') return 1;
+          if (n === 'gemini-2.0-flash') return 2;
+          if (n === 'gemini-2.5-pro') return 3;
+          if (n.includes('flash') && !n.includes('lite')) return 4;
+          if (n.includes('flash')) return 5;
+          if (n.includes('pro')) return 6;
+          return 10;
+        };
+        const sorted = [...new Set(valid)].sort((a, b) => rank(a) - rank(b));
+        if (sorted.length) {
+          __discoveredModelList = sorted;
+          __discoveredModelsCache = sorted[0];
+          return sorted[0];
         }
-        return valid;
-      } catch (e) {
-        return null;
-      }
-    }
-
-    function saveInlineGeminiKey() {
-      const val = (document.getElementById('inlineGeminiKeyInput').value || '').trim().replace(/\s+/g, '');
-      if (!val) {
-        toggleAiEngineModal();
-        return;
-      }
-      document.getElementById('geminiApiKeyInput').value = val;
-      const val2 = (document.getElementById('geminiApiKey2Input')?.value || '').trim().replace(/\s+/g, '');
-      const val3 = (document.getElementById('geminiApiKey3Input')?.value || '').trim().replace(/\s+/g, '');
-      appState.geminiApiKey = val;
-      appState.geminiApiKey2 = val2;
-      appState.geminiApiKey3 = val3;
-      __discoveredModelsCache = null;
-      try { localStorage.setItem('yt_seo_ssrio_gemini_key', val); } catch (e) {}
-      updateEngineBadgeUI(true);
-      autoDiscoverWorkingGeminiModel();
-      showToast('⚡ Gemini API Key connected & auto-configured!');
-    }
-
-    function saveGeminiApiKey() {
-      const val = (document.getElementById('geminiApiKeyInput').value || '').trim().replace(/\s+/g, '');
-      const ytVal = (document.getElementById('youtubeApiKeyInput').value || '').trim().replace(/\s+/g, '');
-      const mod = document.getElementById('geminiModelSelect').value || 'gemini-2.5-flash';
-      const groqVal = (document.getElementById('groqApiKeyInput')?.value || '').trim().replace(/\s+/g, '');
-      const mistralVal = (document.getElementById('mistralApiKeyInput')?.value || '').trim().replace(/\s+/g, '');
-      const orVal = (document.getElementById('openrouterApiKeyInput')?.value || '').trim().replace(/\s+/g, '');
-      appState.geminiApiKey = val;
-      appState.youtubeApiKey = ytVal;
-      appState.geminiModel = mod;
-      appState.groqApiKey = groqVal;
-      appState.mistralApiKey = mistralVal;
-      appState.openrouterApiKey = orVal;
-      __groqModelsCache = null;
-      __mistralModelsCache = null;
-      __discoveredModelsCache = null;
-      const inlineEl = document.getElementById('inlineGeminiKeyInput');
-      if (inlineEl) inlineEl.value = val;
-      try {
-        if (val) localStorage.setItem('yt_seo_ssrio_gemini_key', val); else localStorage.removeItem('yt_seo_ssrio_gemini_key');
-        if (groqVal) localStorage.setItem('yt_seo_ssiro_groq_key', groqVal); else localStorage.removeItem('yt_seo_ssiro_groq_key');
-        if (mistralVal) localStorage.setItem('yt_seo_ssiro_mistral_key', mistralVal); else localStorage.removeItem('yt_seo_ssiro_mistral_key');
-        if (orVal) localStorage.setItem('yt_seo_ssiro_openrouter_key', orVal); else localStorage.removeItem('yt_seo_ssiro_openrouter_key');
-        syncAiHealthConfiguredFlags();
-        localStorage.removeItem('yt_seo_ssiro_gemini_key_2');
-        localStorage.removeItem('yt_seo_ssiro_gemini_key_3');
-        if (val2) localStorage.setItem('yt_seo_ssiro_gemini_key_2', val2); else localStorage.removeItem('yt_seo_ssiro_gemini_key_2');
-        if (val3) localStorage.setItem('yt_seo_ssiro_gemini_key_3',
-      'yt_seo_ssiro_groq_key',
-      'yt_seo_ssiro_mistral_key',
-      'yt_seo_ssiro_openrouter_key', val3); else localStorage.removeItem('yt_seo_ssiro_gemini_key_3');
-        if (ytVal) localStorage.setItem('yt_seo_ssiro_yt_key', ytVal);
-        else localStorage.removeItem('yt_seo_ssiro_yt_key');
-        localStorage.setItem('yt_seo_ssrio_gemini_model', mod);
       } catch (e) {}
-      updateEngineBadgeUI(!!val);
-      if (val) autoDiscoverWorkingGeminiModel();
-      toggleAiEngineModal();
-      showToast(val ? '⚡ API Keys saved & active!' : 'Switched to Offline Mode.');
+      return null;
     }
-
-    function clearGeminiApiKey() {
-      appState.geminiApiKey = '';
-      appState.youtubeApiKey = '';
-      __discoveredModelsCache = null;
-      document.getElementById('geminiApiKeyInput').value = '';
-      document.getElementById('youtubeApiKeyInput').value = '';
-      document.getElementById('inlineGeminiKeyInput').value = '';
-      try {
-        localStorage.removeItem('yt_seo_ssrio_gemini_key');
-        localStorage.removeItem('yt_seo_ssiro_yt_key');
-      } catch (e) {}
-      updateEngineBadgeUI(false);
-      toggleAiEngineModal();
-      showToast('Cleared saved API Keys.');
-    }
-
-    async function testGeminiKeyLive() {
-      const val = (document.getElementById('geminiApiKeyInput').value || '').trim().replace(/\s+/g, '');
-      const statusText = document.getElementById('apiModalStatusText');
-      if (!val) {
-        if (statusText) statusText.textContent = '⚠️ Please paste your Gemini API Key first.';
-        return;
-      }
-      appState.geminiApiKey = val;
-      if (statusText) statusText.textContent = '⏳ Testing API Key & discovering working models...';
-      const models = await autoDiscoverWorkingGeminiModel();
-      if (models && models.length) {
-        if (statusText) statusText.textContent = `✅ Connected! Working model: ${appState.geminiModel} (${models.length} models available)`;
-        showToast(`API Key verified! Using ${appState.geminiModel}`);
-      } else {
-        if (statusText) statusText.textContent = '❌ Could not verify API Key. Check key in Google AI Studio.';
-      }
-    }
-
-        let __preferredLiveProvider = 'gemini';
-    function hasAnyTextAiKey() {
-      return Boolean(appState.geminiApiKey || appState.geminiApiKey2 || appState.geminiApiKey3 || appState.groqApiKey || appState.mistralApiKey || appState.openrouterApiKey);
-    }
-
 
     async function callGeminiJsonAPI(promptText, useSearchGrounding = true) {
       if (!hasAnyTextAiKey()) return null;
@@ -2097,7 +2098,8 @@
         await autoDiscoverWorkingGeminiModel();
       }
       const preferred = (appState.geminiModel && appState.geminiModel !== 'gemini-1.5-flash') ? appState.geminiModel : 'gemini-2.5-flash';
-      const candidateModels = [...new Set([preferred, 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'])];
+      const livePool = (__discoveredModelList && __discoveredModelList.length) ? __discoveredModelList.slice(0, 6) : ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-pro', 'gemini-1.5-flash'];
+      const candidateModels = [...new Set([preferred, ...livePool])];
 
       const steps = [];
       if (useSearchGrounding) {
@@ -2136,6 +2138,7 @@
         const ctrl = new AbortController();
         const timer = setTimeout(() => ctrl.abort(), step.timeout);
         try {
+          const t0 = Date.now();
           const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${step.model}:generateContent?key=${encodeURIComponent(apiKeyToUse)}`;
           const res = await fetch(endpoint, {
             method: 'POST',
@@ -2157,7 +2160,7 @@
               parsed.__modelUsed = step.model;
               parsed.__providerUsed = keySlot;
               __preferredLiveProvider = 'gemini';
-              setProviderHealth(keySlot, 'ok', step.model, 'Live call succeeded');
+              setProviderHealth(keySlot, 'ok', step.model, 'Live call succeeded', Date.now() - t0);
               getTodayUsageCount(true);
               return parsed;
             }
@@ -2460,14 +2463,17 @@
         'किसकी', 'किसका', 'किसके', 'क्या', 'क्यों', 'कैसे', 'कब', 'कौन', 'कहाँ', 'है', 'हैं', 'था', 'थे', 'थी',
         'की', 'का', 'के', 'को', 'में', 'से', 'पर', 'ने', 'और', 'या', 'तथा', 'एक', 'यह', 'वह', 'इस', 'उस', 'बनाम',
         'असली', 'सत्य', 'कल्पना', 'पूरा', 'संपूर्ण', 'रहस्य', 'इतिहास', 'सच', 'कहानी', 'जानिए', 'देखें',
+        'वीं', 'शताब्दी', 'सदी', 'भारतीय', 'प्राचीन', 'समाज', 'सुधारक', 'century', 'indian', 'ancient',
         'who', 'what', 'why', 'how', 'when', 'where', 'is', 'are', 'was', 'were', 'the', 'a', 'an', 'of', 'in', 'on', 'and', 'or', 'to', 'for', 'about', 'vs'
       ]);
-      const rawClause = (rawTitle || combined).split(/[:|—\-?।!]/)[0].trim();
-      const words = rawClause
+      const rawClause = (rawTitle || combined).split(/[:|—\-?।!]/)[0].trim()
+        .replace(/^\d{1,2}(?:st|nd|rd|th)?\s*(?:वीं|शताब्दी|सदी|century)?\s*/i, '');
+      let words = rawClause
         .replace(/[?।!.,;:"'()\[\]\-—|]/g, ' ')
         .split(/\s+/)
         .map(w => w.trim())
-        .filter(w => w.length > 1 && !stopWords.has(w.toLowerCase()));
+        .filter(w => w.length > 1 && !/^\d+$/.test(w) && !stopWords.has(w.toLowerCase()));
+      if (words.length > 3) words = words.slice(-3);
 
       const core = words.slice(0, 4).join(' ') || 'यह विषय';
       return { core, isHindi };
@@ -2804,6 +2810,7 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
         setStageStatus(3, 'done', '3. 6 Concepts & Variant A/B/C Engine Ready');
         renderResearchInsightsSection();
         renderAiHooksPreview();
+        if (studioExtraPhotosB64.length < 2) smartAutoFetchBestWebPhotos(true).catch(() => {});
         renderConceptsDashboard();
         selectConceptAndGenerateVariants(0, true);
         saveProjectToHistory(title);
@@ -4540,6 +4547,181 @@ OUTPUT: return ONLY valid JSON, no extra text:
           btnEl.innerHTML = origHtml;
         }
       }
+    }
+
+    
+    async function smartAutoFetchBestWebPhotos(silentAuto = false) {
+      const rawTitle = (document.getElementById('videoTitleInput')?.value || '').trim();
+      const rawDetails = (document.getElementById('videoTopicDetailsInput')?.value || '').trim();
+      const grid = document.getElementById('wikimediaResultsGrid');
+      if (!rawTitle && !rawDetails) {
+        if (!silentAuto) showToast('⚠️ Pehle Video Title likhen.', true);
+        return;
+      }
+      if (grid) {
+        grid.classList.remove('hidden');
+        grid.innerHTML = '<span class="font-mono text-[10px] text-tertiary animate-pulse">🌐 Searching Wikimedia, Wikipedia & Openverse + AI Vision filtering...</span>';
+      }
+
+      // Step 1: Get 2-3 crisp English/Hindi search queries (reuse AI if key available, else clean core)
+      let queries = [];
+      if (hasAnyTextAiKey()) {
+        const kwPrompt = `Extract 2 short English Wikipedia/Wikimedia Commons image search queries (2-4 words each) for this YouTube video topic so we find real historical artifacts, portraits, temples, manuscripts, or technology photos (Public Domain / CC).
+Title: "${rawTitle}"
+Details: "${rawDetails.slice(0, 300)}"
+Return strict JSON: {"queries": ["...", "..."]}`;
+        const kwRes = await callGeminiJsonAPI(kwPrompt, false).catch(() => null);
+        if (kwRes && Array.isArray(kwRes.queries)) queries = kwRes.queries.filter(Boolean).slice(0, 2);
+      }
+      if (!queries.length) {
+        const { core } = extractCleanCoreTopic(rawTitle, rawDetails);
+        queries = [core || rawTitle.slice(0, 40)];
+      }
+
+      // Step 2: Fetch non-copyright candidates in parallel (Wikimedia Commons + English/Hindi Wikipedia)
+      const candidates = [];
+      const seenUrls = new Set();
+      await Promise.all(queries.map(async (q) => {
+        try {
+          const wmUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(q)}&gsrlimit=6&prop=imageinfo&iiprop=url|size|mime&iiurlwidth=640&format=json&origin=*`;
+          const r = await fetch(wmUrl);
+          if (r.ok) {
+            const d = await r.json();
+            Object.values(d?.query?.pages || {}).forEach(p => {
+              const ii = p?.imageinfo?.[0];
+              if (!ii || !ii.thumburl) return;
+              if ((ii.width || 0) < 350 || (ii.height || 0) < 250) return;
+              if (/svg|pdf|djvu/i.test(ii.mime || ii.thumburl)) return;
+              if (!seenUrls.has(ii.thumburl)) {
+                seenUrls.add(ii.thumburl);
+                candidates.push({ url: ii.thumburl, title: (p.title || '').replace(/^File:/, '').slice(0, 45), source: 'Wikimedia' });
+              }
+            });
+          }
+        } catch (e) {}
+        try {
+          const wpUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=4&prop=pageimages&pithumbsize=640&format=json&origin=*`;
+          const r2 = await fetch(wpUrl);
+          if (r2.ok) {
+            const d2 = await r2.json();
+            Object.values(d2?.query?.pages || {}).forEach(p => {
+              const src = p?.thumbnail?.source;
+              if (!src || (p.thumbnail.width || 0) < 350) return;
+              if (!seenUrls.has(src)) {
+                seenUrls.add(src);
+                candidates.push({ url: src, title: (p.title || '').slice(0, 45), source: 'Wikipedia' });
+              }
+            });
+          }
+        } catch (e) {}
+      }));
+
+      if (!candidates.length) {
+        if (grid) grid.innerHTML = '<span class="font-mono text-[10px] text-outline">No public-domain photos found for this query.</span>';
+        return;
+      }
+
+      // Step 3: Load up to 6 candidates into browser canvas, filter white text-only scans (0 tokens!), and build 1 contact sheet
+      const loaded = [];
+      for (const c of candidates.slice(0, 6)) {
+        try {
+          const img = await new Promise((res, rej) => {
+            const im = new Image();
+            im.crossOrigin = 'anonymous';
+            im.onload = () => res(im);
+            im.onerror = rej;
+            im.src = c.url;
+          });
+          const tc = document.createElement('canvas');
+          tc.width = 160; tc.height = 120;
+          const tctx = tc.getContext('2d');
+          tctx.drawImage(img, 0, 0, 160, 120);
+          const px = tctx.getImageData(0, 0, 160, 120).data;
+          let whiteCount = 0;
+          for (let i = 0; i < px.length; i += 4) {
+            if (px[i] > 235 && px[i+1] > 235 && px[i+2] > 235) whiteCount++;
+          }
+          if (whiteCount / (160 * 120) > 0.82) continue; // skip white text scans
+          const b64c = document.createElement('canvas');
+          const scale = Math.min(1, 900 / Math.max(img.width, img.height));
+          b64c.width = Math.round(img.width * scale);
+          b64c.height = Math.round(img.height * scale);
+          b64c.getContext('2d').drawImage(img, 0, 0, b64c.width, b64c.height);
+          loaded.push({ ...c, img, dataUrl: b64c.toDataURL('image/jpeg', 0.88) });
+        } catch (e) {}
+      }
+
+      if (!loaded.length) {
+        if (grid) grid.innerHTML = '<span class="font-mono text-[10px] text-outline">Filtered out white/broken scans; try uploading custom photo.</span>';
+        return;
+      }
+
+      // Step 4: Single Batched Gemini Vision Check (1 lightweight call!) to pick ONLY the best 2-3 photos
+      let pickedIndices = loaded.slice(0, 3).map((_, idx) => idx);
+      if (appState.geminiApiKey && loaded.length > 1) {
+        try {
+          const cols = Math.min(3, loaded.length);
+          const rows = Math.ceil(loaded.length / cols);
+          const sheet = document.createElement('canvas');
+          sheet.width = cols * 320;
+          sheet.height = rows * 240;
+          const sctx = sheet.getContext('2d');
+          sctx.fillStyle = '#090b10';
+          sctx.fillRect(0, 0, sheet.width, sheet.height);
+          loaded.forEach((item, idx) => {
+            const x = (idx % cols) * 320;
+            const y = Math.floor(idx / cols) * 240;
+            sctx.drawImage(item.img, x + 4, y + 4, 312, 232);
+            sctx.fillStyle = '#FFD700';
+            sctx.fillRect(x + 8, y + 8, 28, 24);
+            sctx.fillStyle = '#000';
+            sctx.font = 'bold 16px sans-serif';
+            sctx.fillText(String(idx + 1), x + 16, y + 26);
+          });
+          const sheetB64 = sheet.toDataURL('image/jpeg', 0.8).split(',')[1];
+          const vr = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${(__discoveredModelList && __discoveredModelList[0]) || appState.geminiModel || 'gemini-2.5-flash'}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [
+                { inlineData: { mimeType: 'image/jpeg', data: sheetB64 } },
+                { text: `Look at these numbered photos (1 to ${loaded.length}) for the YouTube topic: "${rawTitle}". Pick ONLY the 2 or 3 cleanest, authentic, watermark-free photos/artifacts suitable for a YouTube thumbnail (reject blurry, modern screenshots, or irrelevant ones). Return strict JSON: {"pick": [1, 2]}` }
+              ] }],
+              generationConfig: { responseMimeType: 'application/json' }
+            })
+          });
+          if (vr.ok) {
+            const vd = await vr.json();
+            const txt = vd?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            const pj = JSON.parse((txt.match(/\{[\s\S]*\}/) || [txt])[0]);
+            if (Array.isArray(pj.pick) && pj.pick.length) {
+              const valid = pj.pick.map(n => Number(n) - 1).filter(n => n >= 0 && n < loaded.length);
+              if (valid.length) pickedIndices = valid.slice(0, 3);
+            }
+          }
+        } catch (e) {}
+      }
+
+      // Step 5: Automatically place picked non-copyright photos into Extra Reference Photos!
+      const pickedItems = pickedIndices.map(i => loaded[i]).filter(Boolean);
+      pickedItems.forEach(item => {
+        if (studioExtraPhotosB64.length < 6 && !studioExtraPhotosB64.includes(item.dataUrl)) {
+          studioExtraPhotosB64.push(item.dataUrl);
+        }
+      });
+      if (typeof renderExtraStudioPreview === 'function') renderExtraStudioPreview();
+      if (typeof rebuildPptxReferenceSheet === 'function') rebuildPptxReferenceSheet();
+
+      if (grid) {
+        grid.innerHTML = loaded.map((c, idx) => {
+          const isPicked = pickedIndices.includes(idx);
+          return `<div class="relative rounded-lg overflow-hidden border ${isPicked ? 'border-emerald-400 ring-2 ring-emerald-400/40' : 'border-outline-variant/40 opacity-60'} w-20 h-14 shrink-0" title="${escHtml(c.title)} (${c.source})">
+            <img src="${c.dataUrl}" class="w-full h-full object-cover" />
+            <span class="absolute top-0.5 left-0.5 text-[8px] font-mono px-1 rounded ${isPicked ? 'bg-emerald-500 text-black font-bold' : 'bg-black/70 text-white'}">${isPicked ? '✓ AI Pick' : c.source}</span>
+          </div>`;
+        }).join('');
+      }
+      if (!silentAuto) showToast(`🌐 Added ${pickedItems.length} verified non-copyright photos to Extra Reference Photos!`);
     }
 
     function renderExtraStudioPreview() {
@@ -6286,7 +6468,8 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
       autoCleanUnusedStorage();
 
       try {
-        const savedKey = localStorage.getItem('yt_seo_ssrio_gemini_key');
+        loadEncryptedApiVault();
+        const savedKey = appState.geminiApiKey || localStorage.getItem('yt_seo_ssrio_gemini_key');
         const savedKey2 = localStorage.getItem('yt_seo_ssiro_gemini_key_2') || '';
         const savedKey3 = localStorage.getItem('yt_seo_ssiro_gemini_key_3') || '';
         appState.geminiApiKey2 = savedKey2; appState.geminiApiKey3 = savedKey3;
@@ -6415,7 +6598,7 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
             <button type="button" onclick="clearExtraStudioPhotos()" class="font-mono text-[10px] text-outline hover:text-red-400">Clear</button>
           </div>
           <input id="studioExtraPhotosInput" type="file" accept="image/*" multiple onchange="handleStudioPhotoSelect(this, 'extra')" class="w-full text-[11px] text-on-surface-variant file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-secondary file:text-slate-950 file:font-bold" />
-          <button type="button" onclick="searchWikimediaRealPhotos()" class="w-full py-1.5 px-2.5 rounded-lg bg-secondary/15 hover:bg-secondary/25 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">🌐 Find Real Public-Domain Photos (Wikimedia)</button>
+          <button type="button" onclick="smartAutoFetchBestWebPhotos(false)" class="w-full py-1.5 px-2.5 rounded-lg bg-secondary/15 hover:bg-secondary/25 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">🌐 Smart Auto-Fetch Best Non-Copyright Photos</button>
           <div id="wikimediaResultsGrid" class="hidden flex flex-wrap gap-1.5 pt-1"></div>
           <div id="studioExtraPreview" class="hidden pt-1 flex flex-wrap gap-1.5"></div>
         </div>
