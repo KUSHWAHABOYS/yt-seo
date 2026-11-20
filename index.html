@@ -822,11 +822,19 @@
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="font-mono text-[11px] uppercase text-tertiary font-extrabold flex items-center gap-1.5">
             <span class="material-symbols-outlined text-[16px]">title</span>
-            <span>3 AI Thumbnail Text Variations (Khand Bold)</span>
+            <span>Pick &amp; Lock 1 Thumbnail Title (Applies to Variants A, B &amp; C)</span>
           </span>
-          <span class="font-mono text-[10px] text-secondary">Unique to This Topic</span>
+          <button type="button" id="useAll3HooksBtn" onclick="selectLockedThumbnailHook('all')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-secondary/20 border border-outline-variant/50 text-[10px] font-mono font-bold text-on-surface-variant hover:text-white transition">
+            ✨ Use All 3 (A/B/C)
+          </button>
         </div>
         <div id="aiHooksPreviewGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5"></div>
+        <div class="flex items-center gap-2 pt-1">
+          <input id="customLockedHookInput" type="text" placeholder="Or type custom Thumbnail Title (Line 1 | Line 2) to lock across all 3 designs..." class="flex-1 bg-surface-container border border-outline-variant/50 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-tertiary" />
+          <button type="button" onclick="applyCustomLockedHook()" class="px-3 py-2 rounded-xl bg-tertiary text-on-tertiary font-mono text-[11px] font-bold shrink-0 hover:opacity-90 transition">
+            🔒 Lock
+          </button>
+        </div>
       </div>
 
       <div id="conceptsDashboardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1423,6 +1431,8 @@
       researchSource: 'none',
       researchInsights: null,
       thumbnailHooksPreview: [],
+      lockedThumbnailHookIdx: 0,
+      customLockedHookText: '',
       conceptsList: [],
       selectedConceptIndex: 0,
       variantsList: [],
@@ -1673,8 +1683,8 @@
         btn.className = 'px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 flex items-center gap-1.5 min-w-0 transition';
         dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0';
         lbl.className = 'font-mono text-[11px] font-bold text-amber-300 truncate';
-        const activeNames = okList.map(x => x.label.split(' ')[0]).filter((v, i, a) => a.indexOf(v) === i).join('+');
-        lbl.textContent = `Backup Active (${activeNames})`;
+        const activeNames = okList.map(x => x.label.split(' ')[0]).filter((v, i, a) => a.indexOf(v) === i).join(' + ');
+        lbl.textContent = `Multi-AI Active (${activeNames})`;
       } else {
         btn.className = 'px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 flex items-center gap-1.5 min-w-0 transition';
         dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0';
@@ -2075,10 +2085,15 @@
     }
 
         let __preferredLiveProvider = 'gemini';
+    function hasAnyTextAiKey() {
+      return Boolean(appState.geminiApiKey || appState.geminiApiKey2 || appState.geminiApiKey3 || appState.groqApiKey || appState.mistralApiKey || appState.openrouterApiKey);
+    }
+
 
     async function callGeminiJsonAPI(promptText, useSearchGrounding = true) {
-      if (!appState.geminiApiKey) return null;
-      if (!__discoveredModelsCache) {
+      if (!hasAnyTextAiKey()) return null;
+      const hasAnyGem = Boolean(appState.geminiApiKey || appState.geminiApiKey2 || appState.geminiApiKey3);
+      if (hasAnyGem && __preferredLiveProvider === 'gemini' && !__discoveredModelsCache) {
         await autoDiscoverWorkingGeminiModel();
       }
       const preferred = (appState.geminiModel && appState.geminiModel !== 'gemini-1.5-flash') ? appState.geminiModel : 'gemini-2.5-flash';
@@ -2637,6 +2652,7 @@ Use Google Search to research popular and currently trending YouTube videos and 
 CRITICAL INSTRUCTIONS:
 1. Analyze BOTH the Video Title AND Video Details deeply.
 2. Apply the YOUTUBE THUMBNAIL TEXT SKILL: Understand the main Video Title "${title}" deeply and generate 3 COMPLETELY ORIGINAL, SHORT, HIGH-IMPACT 2-line Thumbnail Text variations in PURE, PUNCHY HINDI (2–4 words per line) that complement—NOT repeat—the main title, paired with concrete visual ideas (STRICTLY FORBIDDEN: never use generic clichés like "अनसुना सच", "सबसे बड़ा रहस्य", "दावे बनाम प्रमाण", or "99% लोग नहीं जानते" — write natural, topic-specific Hindi directly from the Title & Description!). Keep each line 2–4 crisp Hindi words that read instantly on mobile; only transliterate a rare Sanskrit proper noun to English/Hinglish if absolutely necessary to prevent typos.
+- NO CLICHÉ TEMPLATES: NEVER use generic recycled phrases like "यही असली इतिहास", "जानिए चौंकाने वाला सच", or "सबसे बड़ा रहस्य". Generate 3 fresh, vivid, topic-specific hooks.
 - THUMBNAIL TEXT RULE: Thumbnail text is NOT the video title. It must be a separate 2–5 word Hindi hook (max ~25 characters total) that adds curiosity, with ZERO repetition of the Video Title's words.
 - AUTHENTIC PROOF + CINEMATIC SHOCK RULE: Keep the uploaded material/artifact/diagram/book as the real hero proof (never swap it for unrelated fake props), AND elevate the scene around it with bold, jaw-dropping YouTube visual drama—dramatic chiaroscuro lighting, glowing rim-light, forensic zoom/spotlight, intense human reaction, and atmospheric historical depth so it is factually faithful yet visually shocking and impossible to scroll past.
 - 3 DISTINCT ANGLES: Variation 1 = Evidence-focused (artifact/inscription close-up, minimal text); Variation 2 = Curiosity/Question (bold question text + highlighted element); Variation 3 = Story/Emotion (face or dramatic scene, contrasting color mood).
@@ -2730,8 +2746,8 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
         } else {
           // Honest, transparent reporting when API is not connected or failed!
           appState.researchSource = directYtVideos ? 'youtube_api_only' : 'offline_niche_engine';
-          const reason = !appState.geminiApiKey
-            ? 'No Gemini API Key connected'
+          const reason = !hasAnyTextAiKey()
+            ? 'No AI API Key connected'
             : `Live Gemini Search unavailable (${window.__lastGeminiError || 'Quota/Network'})`;
 
           const { core } = extractCleanCoreTopic(title, desc);
@@ -2910,7 +2926,21 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
     // ==================== 12. STEPS 9, 10 & 11: THREE DISTINCT VARIANTS (A, B, C) + FULL 9-VARIANT HUB ====================
     appState.fullHubMode = false;
 
-    function buildThreeDistinctVariantsForConcept(concept, regenSeed = 0) {
+        function getCategoryColorGradingSpec(niche) {
+      const nId = (niche?.id || 'history').toLowerCase();
+      const baseDslr = 'DSLR 85mm f/2.8 NATURAL HUMAN REALISM & STUDIO GRADING: Real human skin micro-texture (visible pores, natural beard/hair strands, authentic skin tones, ZERO waxy/plastic AI airbrushing), crystal-clear eye catchlights, clean edge sharpness without over-sharpened halos, smooth Dodge-and-Burn facial depth, and crisp #FFD700/#FFFFFF typography over deep negative space.';
+      const moodMap = {
+        history: 'Warm Amber-Gold Rim Light (#FF9F33 / #FFD700) wrapping shoulders & hair against a smooth charcoal-obsidian museum backdrop (#14110E to #08080A) with subtle cool neutral shadow fill.',
+        technology: 'Crisp Electric Cyan (#00E5FF) secondary edge light + Warm Amber (#FF7A1A) hero rim light over a sleek matte slate-charcoal studio backdrop (#0D1117 to #07090D).',
+        mystery: 'Moody Teal-Charcoal shadows (#0B1316) contrasted with warm amber spotlight (#FF8A1F) and subtle crimson tension accent.',
+        finance: 'High-trust Emerald & Warm Gold rim light (#10B981 + #FFD700) against deep obsidian studio charcoal (#0B0E14).',
+        science: 'Clean Studio Cobalt-Blue (#38BDF8) + Warm Tungsten (#FF9F33) key/rim contrast on deep space-charcoal (#090D16).'
+      };
+      const catTone = moodMap[nId] || (niche?.lighting ? `${niche.lighting} paired with smooth charcoal-obsidian (#14110E) studio gradient and warm amber (#FF7A1A) rim glow.` : moodMap.history);
+      return `${baseDslr} CATEGORY COLOR PALETTE: ${catTone}`;
+    }
+
+function buildThreeDistinctVariantsForConcept(concept, regenSeed = 0) {
       const niche = getActiveNicheObj();
       const fmt = getActiveFormatObj();
       const title = (document.getElementById('videoTitleInput').value || concept.title || 'YouTube Video').trim();
@@ -2921,10 +2951,21 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
       const fallbackPacks = getUniqueConceptHooks(core, fmt.id);
       const pack = fallbackPacks[((concept.num || 1) - 1 + regenSeed) % fallbackPacks.length];
 
-      const hookA_hi = customHook || concept.hookHindi || pack.hiA;
-      const hookB_hi = customHook || concept.hookHindiAlt || pack.hiB;
-      const hookB_hg = customHook || concept.hookHinglish || pack.hg;
-      const hookC_en = customHook || concept.hookEnglish || pack.en;
+      const previewHooks = appState.thumbnailHooksPreview || [];
+      const customLocked = (appState.customLockedHookText || '').trim();
+      const lockedIdx = appState.lockedThumbnailHookIdx ?? 0;
+      let lockedHookObj = null;
+      if (!customLocked && lockedIdx !== 'all' && previewHooks[lockedIdx]) {
+        lockedHookObj = previewHooks[lockedIdx];
+      }
+      const lockedHi = customLocked || (lockedHookObj ? (lockedHookObj.hindi || '') : '');
+      const lockedHg = customLocked || (lockedHookObj ? (lockedHookObj.hinglish || '') : '');
+      const lockedEn = customLocked || (lockedHookObj ? (lockedHookObj.english || '') : '');
+
+      const hookA_hi = lockedHi || (previewHooks[0]?.hindi) || concept.hookHindi || pack.hiA;
+      const hookB_hi = lockedHi || (previewHooks[1]?.hindi) || concept.hookHindiAlt || pack.hiB;
+      const hookB_hg = lockedHg || (previewHooks[1]?.hinglish) || concept.hookHinglish || pack.hg;
+      const hookC_en = lockedEn || (previewHooks[2]?.english) || concept.hookEnglish || pack.en;
 
       const cameraSet = [
         [
@@ -3006,7 +3047,7 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
           name: `Variant C — Cinema Scale & Reveal`,
           badgeColor: 'primary',
           defaultLang: 'english',
-          hooks: { hindi: hookB_hi, hinglish: hookB_hg, english: hookC_en },
+          hooks: { hindi: (lockedHi || previewHooks[2]?.hindi || hookB_hi), hinglish: hookB_hg, english: hookC_en },
           camera: cameraSet[2],
           placement: placementSet[2],
           storytelling: `Netflix/NatGeo scale visual spectacle: immerses the viewer inside the world and scale of "${title}".`,
@@ -3481,6 +3522,9 @@ ${heritageBlock}`;
       appState.customNicheText = '';
       appState.researchInsights = null;
       appState.thumbnailHooksPreview = [];
+      appState.lockedThumbnailHookIdx = 0;
+      appState.customLockedHookText = '';
+      const chkIn = document.getElementById('customLockedHookInput'); if (chkIn) chkIn.value = '';
       appState.conceptsList = [];
       renderAiHooksPreview();
       appState.variantsList = [];
@@ -3652,9 +3696,42 @@ Return strict JSON: {"details": "..."}`;
       return localDetails;
     }
 
+    function selectLockedThumbnailHook(idxOrAll) {
+      appState.lockedThumbnailHookIdx = idxOrAll;
+      appState.customLockedHookText = '';
+      const inp = document.getElementById('customLockedHookInput');
+      if (inp) inp.value = '';
+      renderAiHooksPreview();
+      if (appState.conceptsList && appState.conceptsList.length) {
+        const c = appState.conceptsList[appState.selectedConceptIndex || 0] || appState.conceptsList[0];
+        appState.variantsList = buildThreeDistinctVariantsForConcept(c, appState.variantRegenCount || 0);
+        renderVariantsComparisonAndCards();
+      }
+      saveStudioState();
+      showToast(idxOrAll === 'all' ? '✨ All 3 Thumbnail Titles active across A, B & C!' : `🔒 Thumbnail Title #${Number(idxOrAll) + 1} locked across all 3 Design Concepts!`);
+    }
+
+    function applyCustomLockedHook() {
+      const val = (document.getElementById('customLockedHookInput')?.value || '').trim();
+      if (!val) {
+        showToast('⚠️ Pehle koi custom Thumbnail Title likhen.', true);
+        return;
+      }
+      appState.customLockedHookText = val;
+      renderAiHooksPreview();
+      if (appState.conceptsList && appState.conceptsList.length) {
+        const c = appState.conceptsList[appState.selectedConceptIndex || 0] || appState.conceptsList[0];
+        appState.variantsList = buildThreeDistinctVariantsForConcept(c, appState.variantRegenCount || 0);
+        renderVariantsComparisonAndCards();
+      }
+      saveStudioState();
+      showToast('🔒 Custom Thumbnail Title locked for Variants A, B & C!');
+    }
+
     function renderAiHooksPreview() {
       const panel = document.getElementById('aiHooksPreviewPanel');
       const grid = document.getElementById('aiHooksPreviewGrid');
+      const allBtn = document.getElementById('useAll3HooksBtn');
       if (!panel || !grid) return;
       const hooks = appState.thumbnailHooksPreview || [];
       if (!hooks.length) {
@@ -3662,20 +3739,26 @@ Return strict JSON: {"details": "..."}`;
         return;
       }
       panel.classList.remove('hidden');
+      const lockedIdx = appState.lockedThumbnailHookIdx ?? 0;
+      const hasCustom = Boolean((appState.customLockedHookText || '').trim());
+      if (allBtn) {
+        const isAll = !hasCustom && lockedIdx === 'all';
+        allBtn.className = `px-2.5 py-1 rounded-lg border text-[10px] font-mono font-bold transition ${isAll ? 'bg-secondary/20 border-secondary text-white' : 'bg-surface-container hover:bg-secondary/20 border-outline-variant/50 text-on-surface-variant hover:text-white'}`;
+      }
       grid.innerHTML = hooks.slice(0, 3).map((h, i) => {
         const { line1, line2 } = splitHookIntoTwoLines(h.hindi || h.hinglish || h.english || '');
-        const label = i === 0 ? 'Variation 1 (Curiosity)' : (i === 1 ? 'Variation 2 (Contrast)' : 'Variation 3 (Punch)');
-        return `<div class="dark-badge-keep p-3 rounded-xl bg-[#090b10] border border-tertiary/35 space-y-1">
+        const label = i === 0 ? '1. Curiosity Hook' : (i === 1 ? '2. Evidence Hook' : '3. Shock / Story');
+        const isSelected = !hasCustom && (lockedIdx === i);
+        return `<button type="button" onclick="selectLockedThumbnailHook(${i})" class="dark-badge-keep text-left w-full p-3 rounded-xl bg-[#090b10] border transition space-y-1 ${isSelected ? 'border-[#FFD700] ring-2 ring-[#FFD700]/40' : 'border-tertiary/30 hover:border-tertiary/70'}">
           <div class="flex items-center justify-between gap-1">
             <span class="font-mono text-[9px] uppercase text-slate-400 font-bold">${label}</span>
-            <span class="font-mono text-[9px] text-tertiary">Khand Bold</span>
+            <span class="font-mono text-[9px] font-bold ${isSelected ? 'text-[#FFD700]' : 'text-tertiary'}">${isSelected ? '🔒 LOCKED' : 'Click to Lock'}</span>
           </div>
           <p class="font-khand text-base font-bold text-[#FFD700] leading-tight khand-thumb-shadow">${line1}</p>
-          <p class="font-khand text-sm font-bold text-[#FFFFFF] leading-tight khand-thumb-shadow">${line2}</p>
-        </div>`;
+          <p class="font-khand text-sm font-bold text-[#FFFFFF] leading-tight khand-thumb-shadow">${line2 || ''}</p>
+        </button>`;
       }).join('');
     }
-
     function getSelectedThumbnailSize() {
       return THUMBNAIL_SIZES.find(s => s.id === appState.selectedSizeId) || THUMBNAIL_SIZES[0];
     }
@@ -4418,7 +4501,7 @@ OUTPUT: return ONLY valid JSON, no extra text:
         showToast('⚠️ Pehle Step 3 me koi topic/title likhen ya PPT/Word file upload karen.', true);
         return;
       }
-      if (!appState.geminiApiKey) {
+      if (!hasAnyTextAiKey()) {
         const cleanBase = fixBrokenDevanagariSpacing(rawTitle || rawDetails).replace(/सनातन समीक्षा\s*[·•|\-:]*/g, '').replace(/\d{1,2}\s*[·•]\s*/g, '').trim().slice(0, 62);
         const fb = normalizeTitleChoicesPayload(null, [
           `${cleanBase} — क्या सच है?`,
