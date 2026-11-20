@@ -1733,13 +1733,12 @@
     function syncAiHealthConfiguredFlags() {
       const pairs = [
         ['gemini1', appState.geminiApiKey],
-        ['gemini2', appState.geminiApiKey2],
-        ['gemini3', appState.geminiApiKey3],
         ['groq', appState.groqApiKey],
         ['mistral', appState.mistralApiKey],
         ['openrouter', appState.openrouterApiKey]
       ];
       pairs.forEach(([k, val]) => {
+        if (!aiHealthState[k]) return;
         if (!val) {
           aiHealthState[k].status = 'unconfigured';
           aiHealthState[k].message = 'Not added';
@@ -1749,6 +1748,12 @@
         }
       });
       refreshMainAiStatusPill();
+      const stEl = document.getElementById('apiModalStatusText');
+      if (stEl && /Checking API connection/i.test(stEl.textContent || '')) {
+        const active = [appState.geminiApiKey ? 'Gemini' : '', appState.groqApiKey ? 'Groq' : '', appState.mistralApiKey ? 'Mistral' : '', appState.openrouterApiKey ? 'OpenRouter' : ''].filter(Boolean).join(' + ');
+        stEl.textContent = active ? `✅ Keys Saved (${active}) — Click "Test Connection" to verify live.` : '⚠️ No API Key saved yet. Enter Gemini or Groq key below.';
+        stEl.className = `font-mono font-bold ${active ? 'text-emerald-300' : 'text-amber-300'}`;
+      }
     }
 
     function setProviderHealth(slot, status, model, message, elapsedMs = 0) {
@@ -2089,6 +2094,147 @@
         }
       } catch (e) {}
       return null;
+    }
+
+    let __preferredLiveProvider = 'gemini';
+    function hasAnyTextAiKey() {
+      return Boolean(appState.geminiApiKey || appState.geminiApiKey2 || appState.geminiApiKey3 || appState.groqApiKey || appState.mistralApiKey || appState.openrouterApiKey);
+    }
+
+    function saveInlineGeminiKey() {
+      const inp = document.getElementById('inlineGeminiKeyInput');
+      const val = (inp?.value || '').trim().replace(/\s+/g, '');
+      if (!val) {
+        showToast('⚠️ Pehle Gemini ya Groq API Key paste karen.', true);
+        return;
+      }
+      if (val.startsWith('gsk_')) {
+        appState.groqApiKey = val;
+        if (document.getElementById('groqApiKeyInput')) document.getElementById('groqApiKeyInput').value = val;
+      } else {
+        appState.geminiApiKey = val;
+        if (document.getElementById('geminiApiKeyInput')) document.getElementById('geminiApiKeyInput').value = val;
+      }
+      __discoveredModelsCache = null;
+      __discoveredModelList = null;
+      saveEncryptedApiVault();
+      syncAiHealthConfiguredFlags();
+      updateEngineBadgeUI(hasAnyTextAiKey());
+      showToast('✅ API Key saved! Testing live connection...');
+      testGeminiKeyLive();
+    }
+
+    async function saveGeminiApiKey() {
+      const val = (document.getElementById('geminiApiKeyInput')?.value || '').trim().replace(/\s+/g, '');
+      const ytVal = (document.getElementById('youtubeApiKeyInput')?.value || '').trim().replace(/\s+/g, '');
+      const mod = document.getElementById('geminiModelSelect')?.value || 'gemini-2.5-flash';
+      const groqVal = (document.getElementById('groqApiKeyInput')?.value || '').trim().replace(/\s+/g, '');
+      const mistralVal = (document.getElementById('mistralApiKeyInput')?.value || '').trim().replace(/\s+/g, '');
+      const orVal = (document.getElementById('openrouterApiKeyInput')?.value || '').trim().replace(/\s+/g, '');
+
+      appState.geminiApiKey = val;
+      appState.youtubeApiKey = ytVal;
+      appState.geminiModel = mod;
+      appState.groqApiKey = groqVal;
+      appState.mistralApiKey = mistralVal;
+      appState.openrouterApiKey = orVal;
+      __discoveredModelsCache = null;
+      __discoveredModelList = null;
+      __groqModelsCache = null;
+      __mistralModelsCache = null;
+
+      const inlineEl = document.getElementById('inlineGeminiKeyInput');
+      if (inlineEl) inlineEl.value = val || groqVal;
+      try {
+        if (val) localStorage.setItem('yt_seo_ssrio_gemini_key', val); else localStorage.removeItem('yt_seo_ssrio_gemini_key');
+        if (ytVal) localStorage.setItem('yt_seo_ssiro_yt_key', ytVal); else localStorage.removeItem('yt_seo_ssiro_yt_key');
+        if (mod) localStorage.setItem('yt_seo_ssrio_gemini_model', mod);
+        if (groqVal) localStorage.setItem('yt_seo_ssiro_groq_key', groqVal); else localStorage.removeItem('yt_seo_ssiro_groq_key');
+        if (mistralVal) localStorage.setItem('yt_seo_ssiro_mistral_key', mistralVal); else localStorage.removeItem('yt_seo_ssiro_mistral_key');
+        if (orVal) localStorage.setItem('yt_seo_ssiro_openrouter_key', orVal); else localStorage.removeItem('yt_seo_ssiro_openrouter_key');
+      } catch (e) {}
+
+      saveEncryptedApiVault();
+      syncAiHealthConfiguredFlags();
+      updateEngineBadgeUI(hasAnyTextAiKey());
+      const statusText = document.getElementById('apiModalStatusText');
+      if (statusText) {
+        statusText.textContent = hasAnyTextAiKey() ? '⏳ Saved! Testing live connection...' : '⚠️ No API Key entered.';
+        statusText.className = 'font-mono font-bold text-tertiary';
+      }
+      showToast(hasAnyTextAiKey() ? '✅ Keys Saved Permanently! Testing...' : '⚠️ Keys cleared.', !hasAnyTextAiKey());
+      if (hasAnyTextAiKey()) {
+        await testGeminiKeyLive();
+      }
+    }
+
+    function clearGeminiApiKey() {
+      appState.geminiApiKey = '';
+      appState.geminiApiKey2 = '';
+      appState.geminiApiKey3 = '';
+      appState.groqApiKey = '';
+      appState.mistralApiKey = '';
+      appState.openrouterApiKey = '';
+      appState.youtubeApiKey = '';
+      __discoveredModelsCache = null;
+      __discoveredModelList = null;
+      ['geminiApiKeyInput', 'inlineGeminiKeyInput', 'groqApiKeyInput', 'mistralApiKeyInput', 'openrouterApiKeyInput', 'youtubeApiKeyInput'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      try {
+        ['yt_seo_ssrio_gemini_key', 'yt_seo_ssiro_gemini_key_2', 'yt_seo_ssiro_gemini_key_3', 'yt_seo_ssiro_groq_key', 'yt_seo_ssiro_mistral_key', 'yt_seo_ssiro_openrouter_key', 'yt_seo_ssiro_yt_key', ENCRYPTED_VAULT_KEY].forEach(k => localStorage.removeItem(k));
+      } catch (e) {}
+      syncAiHealthConfiguredFlags();
+      updateEngineBadgeUI(false);
+      const statusText = document.getElementById('apiModalStatusText');
+      if (statusText) {
+        statusText.textContent = '⚠️ All API keys cleared.';
+        statusText.className = 'font-mono font-bold text-amber-300';
+      }
+      showToast('🗑️ All API Keys cleared.');
+    }
+
+    async function testGeminiKeyLive() {
+      const gemVal = (document.getElementById('geminiApiKeyInput')?.value || appState.geminiApiKey || '').trim().replace(/\s+/g, '');
+      const groqVal = (document.getElementById('groqApiKeyInput')?.value || appState.groqApiKey || '').trim().replace(/\s+/g, '');
+      const mistralVal = (document.getElementById('mistralApiKeyInput')?.value || appState.mistralApiKey || '').trim().replace(/\s+/g, '');
+      const orVal = (document.getElementById('openrouterApiKeyInput')?.value || appState.openrouterApiKey || '').trim().replace(/\s+/g, '');
+      if (gemVal) appState.geminiApiKey = gemVal;
+      if (groqVal) appState.groqApiKey = groqVal;
+      if (mistralVal) appState.mistralApiKey = mistralVal;
+      if (orVal) appState.openrouterApiKey = orVal;
+
+      const statusText = document.getElementById('apiModalStatusText');
+      if (statusText) {
+        statusText.textContent = '⏳ Testing all entered API keys live...';
+        statusText.className = 'font-mono font-bold text-tertiary';
+      }
+      await testAllAiKeysLive(null);
+
+      const parts = [];
+      if (gemVal) {
+        const g = aiHealthState.gemini1;
+        parts.push(g.status === 'ok' ? `✅ Gemini OK (${g.model})` : `❌ Gemini: ${(g.message || g.status).slice(0, 45)}`);
+      }
+      if (groqVal) {
+        const gr = aiHealthState.groq;
+        parts.push(gr.status === 'ok' ? `✅ Groq OK (${gr.model})` : `❌ Groq: ${(gr.message || gr.status).slice(0, 45)}`);
+      }
+      if (mistralVal) {
+        const mr = aiHealthState.mistral;
+        parts.push(mr.status === 'ok' ? `✅ Mistral OK (${mr.model})` : `❌ Mistral: ${(mr.message || mr.status).slice(0, 45)}`);
+      }
+      if (orVal) {
+        const orr = aiHealthState.openrouter;
+        parts.push(orr.status === 'ok' ? `✅ OpenRouter OK` : `❌ OpenRouter: ${(orr.message || orr.status).slice(0, 45)}`);
+      }
+      const summary = parts.length ? parts.join(' | ') : '⚠️ Please enter at least 1 API key first.';
+      if (statusText) {
+        statusText.textContent = summary;
+        statusText.className = `font-mono font-bold ${summary.includes('✅') ? 'text-emerald-300' : 'text-red-300'}`;
+      }
+      showToast(summary);
     }
 
     async function callGeminiJsonAPI(promptText, useSearchGrounding = true) {
@@ -6731,7 +6877,7 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
 
   <!-- ==================== MOBILE STICKY BOTTOM QUICK ACTION BAR ==================== -->
   <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest/95 backdrop-blur-xl border-t border-outline-variant/50 px-3 py-2 flex items-center justify-between gap-2 shadow-2xl">
-    <button type="button" onclick="startLiveYouTubeResearch()" class="flex-1 h-11 rounded-xl bg-gradient-to-r from-tertiary to-amber-500 text-on-tertiary font-display font-bold text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
+    <button type="button" onclick="runThumbnailResearchAndConcepts()" class="flex-1 h-11 rounded-xl bg-gradient-to-r from-tertiary to-amber-500 text-on-tertiary font-display font-bold text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
       <span class="material-symbols-outlined text-[18px]">travel_explore</span>
       <span>Generate</span>
     </button>
