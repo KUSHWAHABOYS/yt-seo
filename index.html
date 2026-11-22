@@ -12,7 +12,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
-  <title>YT SEO — Powered by SSIRO • v1.0 | AI YouTube Thumbnail Research &amp; Prompt Studio</title>
+  <title>YT SEO — Powered by SSIRO • v1.0 | Thumbnail Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
@@ -366,44 +366,28 @@
   </header>
 
   <!-- ==================== MAIN 11-STEP WORKFLOW CONTAINER ==================== -->
-  <main class="w-full max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-6">
+  <main class="w-full max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-5 space-y-4">
 
     <!-- ==================== COMPACT API STATUS BAR & INLINE KEY BAR ==================== -->
     <section class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
       <!-- Compact AI Status + Update + Daily Limit Bar (Shown when key is saved) -->
-      <div id="aiKeyCompactStatusBar" class="hidden px-3 py-2 rounded-xl bg-surface-container-lowest border border-secondary/35 flex flex-wrap items-center justify-between gap-2">
-        <div class="flex flex-wrap items-center gap-1.5 min-w-0 w-full sm:w-auto">
-          <button type="button" onclick="toggleAiEngineModal()" title="API Key Settings" class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-on-surface-variant hover:text-white flex items-center justify-center shrink-0 transition">
+      <div id="aiKeyCompactStatusBar" class="hidden px-2.5 py-2 rounded-xl bg-surface-container-lowest/90 border border-outline-variant/40 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 min-w-0">
+          <button type="button" onclick="toggleAiEngineModal()" title="API Key Settings" class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/40 text-on-surface-variant hover:text-white flex items-center justify-center shrink-0 transition">
             <span class="material-symbols-outlined text-[16px]">settings</span>
           </button>
-          <button type="button" onclick="forceAppUpdate()" title="Check &amp; Install Latest App Update" class="px-2 py-1 rounded-lg bg-tertiary/15 hover:bg-tertiary/25 border border-tertiary/40 text-tertiary font-mono text-[10px] font-bold flex items-center gap-1 shrink-0 transition">
+          <button type="button" onclick="forceAppUpdate()" title="Check &amp; Install Latest App Update" class="h-8 px-2.5 rounded-lg bg-tertiary/15 hover:bg-tertiary/25 border border-tertiary/35 text-tertiary font-mono text-[10px] font-bold flex items-center gap-1 shrink-0 transition">
             <span class="material-symbols-outlined text-[14px]">system_update</span>
             <span>Update</span>
           </button>
-          <button type="button" onclick="resetStudioFresh(true)" title="Data Eraser: Clear Old Search &amp; Start Fresh" class="px-2 py-1 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-500 font-mono text-[10px] font-bold flex items-center gap-1 shrink-0 transition">
-            <span class="material-symbols-outlined text-[14px]">delete_sweep</span>
-            <span>Clear Data</span>
-          </button>
-          <button type="button" id="aiCompactStatusBtn" onclick="openAiHealthModal()" title="Click to see real-time status of all AI API keys & run live test" class="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 flex items-center gap-1.5 min-w-0 transition">
+          <button type="button" id="aiCompactStatusBtn" onclick="openAiHealthModal()" title="Real-time AI API Status" class="h-8 px-2.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 flex items-center gap-1.5 min-w-0 transition">
             <span id="aiCompactStatusDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
             <span id="aiCompactStatusLabel" class="font-mono text-[11px] font-bold text-emerald-300 truncate">AI Ready</span>
-            <span class="material-symbols-outlined text-[13px] text-emerald-300 shrink-0">monitoring</span>
           </button>
-          <div class="flex items-center justify-between gap-2 w-full sm:w-auto">
-            <button type="button" id="globalCompactToggleBtn" onclick="toggleGlobalCompactView(this)" title="Collapse or Expand Step 1 & Step 2 grids so page stays short" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-on-surface-variant hover:text-white font-mono text-[10px] font-bold flex items-center gap-1 shrink-0 transition">
-              <span class="material-symbols-outlined text-[13px]">compress</span>
-              <span>Compact</span>
-            </button>
-            <span id="aiDailyUsageBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 whitespace-nowrap shrink-0">
-              Calls Today: 0 / 1,500
-            </span>
-          </div>
         </div>
-        <div class="hidden sm:flex items-center gap-2 shrink-0">
-          <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-tertiary/15 text-tertiary border border-tertiary/30 font-bold">
-            Khand Bold • #FFD700 + #FFFFFF Locked
-          </span>
-        </div>
+        <span id="aiDailyUsageBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/35 whitespace-nowrap shrink-0">
+          Calls Today: 0 / 1,500
+        </span>
       </div>
 
       <!-- Setup Bar (Mobile-First Stacked Layout — Full Text & Full-Width Input) -->
@@ -434,7 +418,7 @@
       </div>
 
       <!-- CLEAN 3-TAB WORKSPACE SWITCHER (1. TITLE SEO -> 2. THUMBNAIL STUDIO -> 3. LINK AUDITOR) -->
-      <div class="grid grid-cols-3 gap-2 pt-1">
+      <div class="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-surface-container-lowest border border-outline-variant/40">
         <button type="button" id="mainTabBtn_seo" onclick="switchWorkspaceTab('seo')" class="py-2.5 px-2 sm:px-4 rounded-xl bg-tertiary text-on-tertiary font-display text-[11px] sm:text-xs font-extrabold flex items-center justify-center gap-1.5 shadow transition">
           <span>📈</span><span>Title SEO</span>
         </button>
@@ -447,7 +431,10 @@
       </div>
 
       <!-- Workflow Progress Stepper Row (1-Col on Mobile so ZERO text is cut off, 2-Col on Tablet, 4-Col on PC) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 pt-1">
+      <div class="flex items-center justify-between pt-1">
+        <button type="button" onclick="toggleCompactSection('workflowRoadmapWrap', this, 'ℹ️ Show Workflow Guide (4 Steps)', 'ℹ️ Hide Workflow Guide')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/40 font-mono text-[10px] font-bold text-on-surface-variant hover:text-white transition">ℹ️ Show Workflow Guide (4 Steps)</button>
+      </div>
+      <div id="workflowRoadmapWrap" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 pt-1">
         <a href="#section-step-1-4" class="p-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-tertiary/40 flex items-center gap-3 transition">
           <span class="w-8 h-8 rounded-lg bg-tertiary text-on-tertiary font-mono text-xs font-black flex items-center justify-center shrink-0">01</span>
           <div class="min-w-0 flex-1">
@@ -480,11 +467,11 @@
     </section>
 
     <!-- ==================== STEPS 1 TO 5: NICHE, FORMAT, TOPIC INPUT & RESEARCH TRIGGER ==================== -->
-    <section id="section-step-1-4" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-6">
+    <section id="section-step-1-4" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/40 pb-3">
         <div>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">Steps 1 – 5 • Studio Input &amp; Configuration</span>
-          <h1 class="font-display text-base sm:text-xl font-extrabold text-white">AI YouTube Thumbnail Research &amp; Prompt Studio</h1>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">Step 1 • Input &amp; Generate</span>
+          <h1 class="font-display text-base sm:text-xl font-extrabold text-white">Thumbnail Generator</h1>
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <button type="button" id="voiceLangToggleBtn" onclick="toggleVoiceMicLanguage()" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-primary/15 text-primary border border-primary/40 font-bold flex items-center gap-1 transition">
@@ -497,6 +484,19 @@
         </div>
       </div>
 
+            <!-- SLEEK PRO-SAAS STYLE & SIZE STRIP (STEPS 1 & 2 COLLAPSED BY DEFAULT) -->
+      <div class="p-3 rounded-xl bg-surface-container-lowest/90 border border-outline-variant/45 space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-mono text-[10px] uppercase tracking-wider text-outline font-bold">Active Preset</span>
+          <button type="button" onclick="toggleCompactSection('styleSizeCollapseWrap', this, 'Change Style', 'Done')" class="px-2.5 py-1 rounded-lg bg-tertiary/15 hover:bg-tertiary/25 border border-tertiary/35 font-mono text-[10px] font-bold text-tertiary shrink-0 transition">Change Style</button>
+        </div>
+        <div id="compactStyleSummaryText" class="flex flex-wrap items-center gap-1.5 font-mono text-[11px]">
+          <span class="px-2 py-0.5 rounded-md bg-surface-container border border-outline-variant/40 text-white font-semibold">🏛️ History</span>
+          <span class="px-2 py-0.5 rounded-md bg-surface-container border border-outline-variant/40 text-on-surface-variant">🎬 Documentary</span>
+          <span class="px-2 py-0.5 rounded-md bg-tertiary/15 border border-tertiary/35 text-tertiary font-bold">📐 16:9</span>
+        </div>
+      </div>
+      <div id="styleSizeCollapseWrap" class="hidden space-y-5">
       <!-- STEP 1: 20 NICHES + CUSTOM NICHE SELECTION SYSTEM -->
       <div class="space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -598,6 +598,8 @@
         <div id="thumbnailSizeGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2"></div>
       </div>
 
+            </div>
+
       <!-- STEPS 3 & 4: ONLY 2 CLEAN INPUTS (VIDEO TITLE + OPTIONAL VIDEO DETAILS) -->
       <div class="space-y-4 pt-2 border-t border-outline-variant/30">
         <!-- RAW PPT (.pptx) AUTO-ANALYZER & SINGLE REFERENCE SHEET EXTRACTOR (24h AUTO-DELETE) -->
@@ -633,9 +635,12 @@
             </div>
           </div>
         </div>
-        <div class="space-y-1.5">
+        
+      </div>
+
+      <div class="space-y-1.5">
           <label for="videoTitleInput" class="font-display text-sm font-bold text-white flex items-center gap-1.5">
-            <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">STEP 3</span>
+            <span class="px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[11px] font-black whitespace-nowrap shrink-0">TITLE</span>
             <span>Video Title</span>
             <button type="button" onclick="openHindiHelp('inputs')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button>
           </label>
@@ -663,6 +668,10 @@
             <div id="step3EvidenceStrip" class="hidden text-[11px] text-on-surface-variant bg-surface-container/70 border border-outline-variant/30 rounded-lg px-2.5 py-1.5 leading-relaxed"></div>
             <div id="step3TitleChoicesList" class="flex flex-col gap-2"></div>
           </div>
+                    <div class="pt-1">
+            <button type="button" onclick="toggleCompactSection('optionalDetailsMoodWrap', this, '+ Optional Details & Mood (Auto-filled)', '− Hide Details & Mood')" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/40 font-mono text-[10px] font-bold text-on-surface-variant hover:text-white transition">+ Optional Details &amp; Mood (Auto-filled)</button>
+          </div>
+          <div id="optionalDetailsMoodWrap" class="hidden space-y-3">
           <div id="moodChipsBar" class="flex flex-wrap items-center gap-1.5 pt-1">
             <span class="font-mono text-[10px] text-outline uppercase font-bold mr-1">Body &amp; Mood:</span>
             <button type="button" data-mood="auto" onclick="selectExpressionMood('auto')" class="mood-chip px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-bold transition">Auto (Topic)</button>
@@ -696,7 +705,8 @@
             class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl p-3.5 text-xs sm:text-sm text-white leading-relaxed focus:outline-none focus:border-tertiary custom-scroll"
           ></textarea>
         </div>
-      </div>
+      
+          </div>
 
       <!-- STEP 5: START YOUTUBE RESEARCH & CONCEPT GENERATION BUTTONS -->
       <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
@@ -707,7 +717,16 @@
           class="flex-1 py-3.5 px-5 rounded-xl bg-tertiary text-on-tertiary hover:brightness-110 font-display text-sm sm:text-base font-extrabold flex items-center justify-center gap-2 shadow-lg transition"
         >
           <span class="material-symbols-outlined text-[20px]">travel_explore</span>
-          <span id="startResearchBtnText">Step 5: Research &amp; Generate</span>
+          <span id="startResearchBtnText">⚡ Generate Thumbnail</span>
+        </button>
+        <button
+          type="button"
+          onclick="runAutoPilotWorkflow(this)"
+          title="1-Click Auto-Pilot: Generate Best Hook, Designs & Open ChatGPT Studio"
+          class="py-3.5 px-4 rounded-xl bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/45 font-display text-xs sm:text-sm font-extrabold flex items-center justify-center gap-1.5 shrink-0 transition"
+        >
+          <span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+          <span>Auto-Pilot</span>
         </button>
 
         <button
@@ -739,17 +758,18 @@
     </section>
 
     <!-- ==================== STEP 6: LIVE YOUTUBE VIRAL THUMBNAIL RESEARCH & 3-LAYER INTELLIGENCE INSIGHTS ==================== -->
-    <section id="section-step-6" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+    <section id="section-step-6" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/40 pb-3">
         <div>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold block">Step 6 • Live YouTube Research</span>
-          <h2 class="font-display text-base sm:text-lg font-extrabold text-white flex flex-wrap items-center gap-2"><span>Research &amp; Intelligence</span> <button type="button" onclick="openHindiHelp('research')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button></h2>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold block">Background • Research</span>
+          <h2 class="font-display text-base sm:text-lg font-extrabold text-white flex flex-wrap items-center gap-2"><span>Viral Insights</span> <button type="button" onclick="openHindiHelp('research')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button></h2>
         </div>
-        <span id="researchAuthenticityBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-outline border border-outline-variant/40 font-bold">
+        <div class="flex flex-wrap items-center gap-2"><span id="researchAuthenticityBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-outline border border-outline-variant/40 font-bold">
           Waiting for Topic Input
-        </span>
+        </span><button type="button" onclick="toggleCompactSection('step6CollapseWrap', this, '📊 Show Research', '📊 Hide Research')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 font-mono text-[10px] font-bold text-secondary transition">📊 Show Research</button></div>
       </div>
 
+      <div id="step6CollapseWrap" class="hidden space-y-4">
       <!-- 3-Layer AI Thumbnail Intelligence Cards -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <!-- Layer 1: Topic Understanding -->
@@ -801,14 +821,17 @@
           </div>
         </div>
       </div>
+    
+    
+      </div>
     </section>
 
     <!-- ==================== STEPS 7 & 8: THUMBNAIL CONCEPT SELECTION DASHBOARD (6 DISTINCT CONCEPTS) ==================== -->
-    <section id="section-step-7-8" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+    <section id="section-step-7-8" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/40 pb-3">
         <div>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-primary font-bold block">Steps 7 &amp; 8 • 6 Design Concepts</span>
-          <h2 class="font-display text-base sm:text-lg font-extrabold text-white flex flex-wrap items-center gap-2"><span>Select a Concept</span> <button type="button" onclick="openHindiHelp('concepts')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button></h2>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-primary font-bold block">Step 2 • Thumbnail Title</span>
+          <h2 class="font-display text-base sm:text-lg font-extrabold text-white flex flex-wrap items-center gap-2"><span>Pick Thumbnail Hook</span> <button type="button" onclick="openHindiHelp('concepts')" title="हिंदी में निर्देश देखें" class="inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-primary/15 hover:bg-primary/25 text-primary border border-primary/40 shadow-sm transition shrink-0"><span class="material-symbols-outlined text-[18px] sm:text-[20px]">info</span></button></h2>
         </div>
         <span id="selectedConceptPill" class="font-mono text-xs px-3 py-1 rounded-full bg-tertiary/20 text-tertiary border border-tertiary/40 font-bold">
           No Concept Selected Yet
@@ -835,18 +858,23 @@
         </div>
       </div>
 
+      <div class="flex items-center justify-between gap-2 pt-1">
+        <button type="button" onclick="toggleCompactSection('concepts6GridWrap', this, '🎨 Switch Concept (6 Options)', '🎨 Hide 6 Concepts')" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 font-mono text-[10px] font-bold text-secondary transition">🎨 Switch Concept (6 Options)</button>
+      </div>
+      <div id="concepts6GridWrap" class="hidden">
       <div id="conceptsDashboardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div class="col-span-full p-6 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-center text-xs text-outline font-mono">
           Run Step 5 above to generate 6 thumbnail concepts.
         </div>
       </div>
+    </div>
     </section>
 
     <!-- ==================== STEPS 9, 10 & 11: THREE DISTINCT VARIANTS (A, B, C), COMPARISON MATRIX & FINAL PROMPTS ==================== -->
-    <section id="section-step-9-11" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-6">
+    <section id="section-step-9-11" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">Steps 9–11 • Variants A, B &amp; C</span>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">Step 3 • Export &amp; ChatGPT</span>
           <h2 id="variantsSectionTitle" class="font-display text-base sm:text-lg font-extrabold text-white">
             Prompt Hub (A, B &amp; C)
           </h2>
@@ -883,7 +911,10 @@
           </h3>
           <span class="font-mono text-[10px] text-secondary">Swipe table ↔</span>
         </div>
-        <div class="overflow-x-auto custom-scroll -mx-1 px-1">
+        <div class="flex items-center justify-between gap-2 pb-1">
+          <button type="button" onclick="toggleCompactSection('step10MatrixWrap', this, '📋 Compare A / B / C Matrix', '📋 Hide Comparison Matrix')" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 font-mono text-[10px] font-bold text-tertiary transition">📋 Compare A / B / C Matrix</button>
+        </div>
+        <div id="step10MatrixWrap" class="hidden overflow-x-auto custom-scroll -mx-1 px-1">
           <table class="w-full min-w-[560px] text-left border-collapse text-xs">
             <thead>
               <tr class="border-b border-outline-variant/40 font-mono text-[10px] uppercase text-outline">
@@ -911,11 +942,15 @@
     </section>
 
 
+        <div id="seoSubTabsBar" class="hidden flex items-center gap-2 p-1.5 rounded-xl bg-surface-container-low border border-outline-variant/50">
+      <button type="button" id="seoSubBtn12" onclick="switchSeoSubTab(12)" class="flex-1 py-2 px-3 rounded-lg bg-tertiary text-on-tertiary font-mono text-xs font-bold transition">📝 Title &amp; Description SEO</button>
+      <button type="button" id="seoSubBtn13" onclick="switchSeoSubTab(13)" class="flex-1 py-2 px-3 rounded-lg bg-surface-container text-on-surface-variant hover:text-white font-mono text-xs font-bold transition">🖼️ Thumbnail CTR &amp; 4-View Test</button>
+    </div>
     <!-- ==================== STEP 12: YOUTUBE SUGGESTED-VIDEO SEO & RANK BLUEPRINT ==================== -->
-    <section id="section-step-12" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+    <section id="section-step-12" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold block">Step 12 • Suggested-Video Algorithm SEO</span>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold block">Title SEO</span>
           <h2 class="font-display text-base sm:text-lg font-extrabold text-white">YouTube Rank &amp; Suggested SEO Pack</h2>
         </div>
         <button type="button" onclick="runSuggestedVideoSeoPack()" class="px-4 py-2.5 rounded-xl bg-secondary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 shadow hover:brightness-110 transition shrink-0">
@@ -994,10 +1029,10 @@
     </section>
 
     <!-- ==================== STEP 13: TRUE MULTI-THUMBNAIL CTR & VISUAL ANALYZER (1-3 THUMBNAILS) ==================== -->
-    <section id="section-step-13" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+    <section id="section-step-13" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">Step 13 • Honest Multimodal Vision + Pixel Audit</span>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">CTR Test</span>
           <h2 class="font-display text-base sm:text-lg font-extrabold text-white">True Thumbnail CTR &amp; Winner Analyzer (1–3 Images)</h2>
         </div>
         <div class="flex flex-wrap items-center gap-2 shrink-0">
@@ -1038,10 +1073,10 @@
 
 
     <!-- ==================== TAB 3: YOUTUBE VIDEO LINK & CHANNEL AUDITOR (NO OAUTH NEEDED) ==================== -->
-    <section id="section-tab-audit" class="hidden bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+    <section id="section-tab-audit" class="hidden bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-primary font-bold block">Tab 3 • Zero-OAuth Video &amp; Channel Audit</span>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-primary font-bold block">Link SEO</span>
           <h2 class="font-display text-base sm:text-lg font-extrabold text-white">YouTube Video Link Auditor &amp; 1-Click Fix</h2>
         </div>
         <span class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-secondary/15 text-secondary border border-secondary/30 font-bold">No OAuth • Free Public Audit</span>
@@ -1928,9 +1963,8 @@
           if (res.ok) {
             const data = await res.json();
             const rawText = data?.choices?.[0]?.message?.content || '';
-            const noFence = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
-            const jm = noFence.match(/\{[\s\S]*\}/);
-            const parsed = JSON.parse(jm ? jm[0] : noFence);
+            const parsed = safeParseAiJson(rawText);
+            if (!parsed) throw new Error('Invalid JSON from model');
             parsed.__usedGroundedSearch = false;
             parsed.__modelUsed = mName;
             parsed.__providerUsed = providerSlot;
@@ -2097,7 +2131,44 @@
     }
 
     let __preferredLiveProvider = 'gemini';
-    function hasAnyTextAiKey() {
+        const __aiTopicCache = new Map();
+
+    function hashPromptKey(str) {
+      let h = 2166136261;
+      const s = String(str || '');
+      for (let i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return 'c_' + (h >>> 0).toString(36) + '_' + s.length;
+    }
+
+    function safeParseAiJson(rawText) {
+      if (!rawText || typeof rawText !== 'string') return null;
+      const cleaned = rawText
+        .replace(/^```(?:json)?\s*/i, '')
+        .replace(/```\s*$/i, '')
+        .trim();
+      const candidates = [cleaned];
+      const firstBrace = cleaned.indexOf('{');
+      const lastBrace = cleaned.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace > firstBrace) {
+        candidates.push(cleaned.slice(firstBrace, lastBrace + 1));
+      }
+      for (const c of candidates) {
+        try { return JSON.parse(c); } catch (e) {}
+        try {
+          // Self-heal trailing commas & stray control chars
+          const repaired = c
+            .replace(/,\s*([}\]])/g, '$1')
+            .replace(/[\u0000-\u0019]+/g, ' ');
+          return JSON.parse(repaired);
+        } catch (e) {}
+      }
+      return null;
+    }
+
+function hasAnyTextAiKey() {
       return Boolean(appState.geminiApiKey || appState.geminiApiKey2 || appState.geminiApiKey3 || appState.groqApiKey || appState.mistralApiKey || appState.openrouterApiKey);
     }
 
@@ -2239,6 +2310,11 @@
 
     async function callGeminiJsonAPI(promptText, useSearchGrounding = true) {
       if (!hasAnyTextAiKey()) return null;
+      const cacheKey = hashPromptKey(promptText);
+      const cached = __aiTopicCache.get(cacheKey);
+      if (cached && (Date.now() - cached.ts) < 24 * 60 * 60 * 1000) {
+        return JSON.parse(JSON.stringify(cached.data));
+      }
       const hasAnyGem = Boolean(appState.geminiApiKey || appState.geminiApiKey2 || appState.geminiApiKey3);
       if (hasAnyGem && __preferredLiveProvider === 'gemini' && !__discoveredModelsCache) {
         await autoDiscoverWorkingGeminiModel();
@@ -2298,16 +2374,15 @@
             const parts = data?.candidates?.[0]?.content?.parts || [];
             const rawText = parts.map(pt => pt.text || '').join('\n').trim();
             if (rawText) {
-              const noFence = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
-              const jsonMatch = noFence.match(/\{[\s\S]*\}/);
-              const toParse = jsonMatch ? jsonMatch[0] : noFence;
-              const parsed = JSON.parse(toParse);
+              const parsed = safeParseAiJson(rawText);
+              if (!parsed) throw new Error('Malformed JSON from Gemini');
               parsed.__usedGroundedSearch = step.grounded;
               parsed.__modelUsed = step.model;
               parsed.__providerUsed = keySlot;
               __preferredLiveProvider = 'gemini';
               setProviderHealth(keySlot, 'ok', step.model, 'Live call succeeded', Date.now() - t0);
               getTodayUsageCount(true);
+              __aiTopicCache.set(cacheKey, { ts: Date.now(), data: parsed });
               return parsed;
             }
           } else {
@@ -2329,16 +2404,16 @@
             if (appState.groqApiKey) {
         const gModels = await discoverGroqModels(appState.groqApiKey);
         const gRes = await callOpenAICompatibleJson('groq', 'https://api.groq.com/openai/v1/chat/completions', appState.groqApiKey, gModels, promptText);
-        if (gRes) { __preferredLiveProvider = 'groq'; return gRes; }
+        if (gRes) { __preferredLiveProvider = 'groq'; __aiTopicCache.set(cacheKey, { ts: Date.now(), data: gRes }); return gRes; }
       }
       if (appState.mistralApiKey) {
         const mModels = await discoverMistralModels(appState.mistralApiKey);
         const mRes = await callOpenAICompatibleJson('mistral', 'https://api.mistral.ai/v1/chat/completions', appState.mistralApiKey, mModels, promptText);
-        if (mRes) return mRes;
+        if (mRes) { __aiTopicCache.set(cacheKey, { ts: Date.now(), data: mRes }); return mRes; }
       }
       if (appState.openrouterApiKey) {
         const oRes = await callOpenAICompatibleJson('openrouter', 'https://openrouter.ai/api/v1/chat/completions', appState.openrouterApiKey, ['openrouter/free'], promptText, { 'HTTP-Referer': location.origin });
-        if (oRes) return oRes;
+        if (oRes) { __aiTopicCache.set(cacheKey, { ts: Date.now(), data: oRes }); return oRes; }
       }
       window.__lastGeminiError = firstErrMsg || 'Request failed';
       if (firstErrMsg) {
@@ -2956,6 +3031,7 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
         setStageStatus(3, 'done', '3. 6 Concepts & Variant A/B/C Engine Ready');
         renderResearchInsightsSection();
         renderAiHooksPreview();
+      syncThumbnailResultsVisibility();
         if (studioExtraPhotosB64.length < 2) smartAutoFetchBestWebPhotos(true).catch(() => {});
         renderConceptsDashboard();
         selectConceptAndGenerateVariants(0, true);
@@ -3020,6 +3096,7 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
     }
 
     function renderConceptsDashboard() {
+      syncThumbnailResultsVisibility();
       const grid = document.getElementById('conceptsDashboardGrid');
       if (!grid || !appState.conceptsList.length) return;
 
@@ -3471,11 +3548,13 @@ ${heritageBlock}`;
 
               <!-- Full Copyable English Prompt Box -->
               <div class="space-y-1">
-                <div class="flex items-center justify-between font-mono text-[10px]">
-                  <span class="text-secondary font-bold">✓ Reference-Image-First Prompt</span>
-                  <span class="text-outline">${getSelectedThumbnailSize().resolution} • ${getSelectedThumbnailSize().ratio}</span>
-                </div>
-                <pre id="variantPromptPre_${idx}" class="w-full h-52 overflow-y-auto custom-scroll p-3 rounded-xl bg-surface-container border border-outline-variant/50 font-mono text-[11px] text-slate-200 whitespace-pre-wrap break-words leading-relaxed select-all">${v.promptText}</pre>
+                <details class="rounded-xl bg-surface-container border border-outline-variant/50 p-2.5">
+                  <summary class="cursor-pointer flex items-center justify-between font-mono text-[10px] font-bold text-secondary select-none">
+                    <span>👁️ View Full Prompt (${getSelectedThumbnailSize().ratio})</span>
+                    <span class="text-outline">${getSelectedThumbnailSize().resolution}</span>
+                  </summary>
+                  <pre id="variantPromptPre_${idx}" class="w-full h-48 overflow-y-auto custom-scroll mt-2 p-2.5 rounded-lg bg-surface-container-lowest border border-outline-variant/40 font-mono text-[11px] text-slate-200 whitespace-pre-wrap break-words leading-relaxed select-all">${v.promptText}</pre>
+                </details>
               </div>
 
               <!-- HINDI VISUAL BREAKDOWN BOX RIGHT BELOW THE ENGLISH PROMPT! -->
@@ -3638,6 +3717,7 @@ ${heritageBlock}`;
       if (cBox) { cBox.classList.add('hidden'); cBox.innerHTML = ''; }
       // Clear Step 3 Title Choices & Extracted Source Text
       __lastExtractedSourceText = '';
+      __aiTopicCache.clear();
       const tcBox = document.getElementById('step3TitleChoicesBox');
       const tcList = document.getElementById('step3TitleChoicesList');
       const tcBadge = document.getElementById('step3AnalysisBadge');
@@ -3680,6 +3760,7 @@ ${heritageBlock}`;
       const chkIn = document.getElementById('customLockedHookInput'); if (chkIn) chkIn.value = '';
       appState.conceptsList = [];
       renderAiHooksPreview();
+      syncThumbnailResultsVisibility();
       appState.variantsList = [];
       appState.selectedConceptIndex = 0;
       appState.researchSource = 'none';
@@ -4871,6 +4952,7 @@ Return strict JSON: {"queries": ["...", "..."]}`;
     }
 
     function renderExtraStudioPreview() {
+      setTimeout(updatePreFlightQualityGuard, 40);
       const prev = document.getElementById('studioExtraPreview');
       if (!prev) return;
       const pptItems = [...pptxSelectedImageIndices].map(i => ({ kind: 'ppt', idx: i, url: pptxExtractedImages[i]?.dataUrl })).filter(x => x.url);
@@ -5339,6 +5421,55 @@ Return strict JSON: {"queries": ["...", "..."]}`;
       showToast(`💾 Preset "${name}" saved!`);
     }
 
+    
+    function updatePreFlightQualityGuard() {
+      const hEl = document.getElementById('pfHookBadge');
+      const fEl = document.getElementById('pfFaceBadge');
+      const rEl = document.getElementById('pfRefBadge');
+      if (!hEl || !fEl || !rEl) return;
+      const v = appState.variantsList && appState.variantsList[activeStudioVariantIdx || 0];
+      const rawHook = (v?.hooks?.[v.defaultLang || 'hindi'] || '').replace(/\|/g, ' ').trim();
+      const hookLen = [...rawHook].length;
+      const hookOk = hookLen > 0 && hookLen <= 32;
+      hEl.className = `px-2 py-0.5 rounded font-bold ${hookOk ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}`;
+      hEl.textContent = hookOk ? `✓ Hook (${hookLen}ch)` : `⚠ Hook (${hookLen}ch — shorten)`;
+
+      const hasFace = Boolean(studioCreatorPhotoB64);
+      fEl.className = `px-2 py-0.5 rounded font-bold ${hasFace ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}`;
+      fEl.textContent = hasFace ? '✓ Creator Face Ready' : '⚠ No Creator Face';
+
+      const refCount = (pptxSelectedImageIndices ? pptxSelectedImageIndices.size : 0) + (studioExtraPhotosB64 ? studioExtraPhotosB64.length : 0);
+      rEl.className = `px-2 py-0.5 rounded font-bold ${refCount > 0 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}`;
+      rEl.textContent = refCount > 0 ? `✓ ${refCount} Ref Photo${refCount > 1 ? 's' : ''}` : '⚠ 0 Ref Photos';
+    }
+
+    async function runAutoPilotWorkflow(btnEl) {
+      const title = (document.getElementById('videoTitleInput')?.value || '').trim();
+      if (!title) {
+        showToast('⚠️ Pehle PPT upload karen ya Video Title likhen!', true);
+        document.getElementById('videoTitleInput')?.focus();
+        return;
+      }
+      const orig = btnEl ? btnEl.innerHTML : '';
+      if (btnEl) {
+        btnEl.disabled = true;
+        btnEl.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Running...</span>';
+      }
+      try {
+        await runThumbnailResearchAndConcepts();
+        if (appState.variantsList && appState.variantsList.length) {
+          openImageStudioModal(0);
+          updatePreFlightQualityGuard();
+          showToast('🚀 Auto-Pilot Ready! Check Pre-Flight badges & click Send to ChatGPT.');
+        }
+      } finally {
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.innerHTML = orig;
+        }
+      }
+    }
+
     function openImageStudioModal(idx) {
       activeStudioVariantIndex = idx;
       const v = appState.variantsList[idx];
@@ -5346,6 +5477,7 @@ Return strict JSON: {"queries": ["...", "..."]}`;
       if (titleEl && v) titleEl.innerHTML = `<span class="material-symbols-outlined text-tertiary">auto_fix_high</span><span>Image Studio — Variant ${v.code}</span>`;
       loadSavedCreatorFace();
       renderExtraStudioPreview();
+      setTimeout(updatePreFlightQualityGuard, 80);
       const resBox = document.getElementById('studioImageResultBox');
       if (resBox) resBox.classList.add('hidden');
       const m = document.getElementById('imageStudioModalOverlay');
@@ -6293,7 +6425,17 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
       showToast('🎨 Title loaded into Thumbnail Studio!');
     }
 
-    function switchWorkspaceTab(tab) {
+        function syncThumbnailResultsVisibility() {
+      const hasResults = Array.isArray(appState.conceptsList) && appState.conceptsList.length > 0;
+      ['section-step-6', 'section-step-7-8', 'section-step-9-11'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const shouldShow = (activeWorkspaceTab === 'thumb') && hasResults;
+        el.classList.toggle('hidden', !shouldShow);
+      });
+    }
+
+function switchWorkspaceTab(tab) {
       activeWorkspaceTab = tab;
       const thumbIds = ['section-step-1-4', 'section-step-6', 'section-step-7-8', 'section-step-9-11'];
       const seoIds = ['section-step-12', 'section-step-13'];
@@ -6304,8 +6446,15 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
         if (el) { if (show) el.classList.remove('hidden'); else el.classList.add('hidden'); }
       });
 
-      setVis(thumbIds, tab === 'thumb');
-      setVis(seoIds, tab === 'seo');
+      setVis(['section-step-1-4'], tab === 'thumb');
+      syncThumbnailResultsVisibility();
+      const subBar = document.getElementById('seoSubTabsBar');
+      if (subBar) subBar.classList.toggle('hidden', tab !== 'seo');
+      if (tab === 'seo') {
+        switchSeoSubTab(activeSeoSubTab);
+      } else {
+        setVis(seoIds, false);
+      }
       setVis(auditIds, tab === 'audit');
 
       ['thumb', 'seo', 'audit'].forEach(k => {
@@ -6461,11 +6610,24 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
     }
 
 
-    function toggleCompactSection(wrapId, btn) {
+    let activeSeoSubTab = 12;
+    function switchSeoSubTab(num) {
+      activeSeoSubTab = num;
+      const s12 = document.getElementById('section-step-12');
+      const s13 = document.getElementById('section-step-13');
+      const b12 = document.getElementById('seoSubBtn12');
+      const b13 = document.getElementById('seoSubBtn13');
+      if (s12) s12.classList.toggle('hidden', num !== 12);
+      if (s13) s13.classList.toggle('hidden', num !== 13);
+      if (b12) b12.className = `flex-1 py-2 px-3 rounded-lg font-mono text-xs font-bold transition ${num === 12 ? 'bg-tertiary text-on-tertiary' : 'bg-surface-container text-on-surface-variant hover:text-white'}`;
+      if (b13) b13.className = `flex-1 py-2 px-3 rounded-lg font-mono text-xs font-bold transition ${num === 13 ? 'bg-tertiary text-on-tertiary' : 'bg-surface-container text-on-surface-variant hover:text-white'}`;
+    }
+
+    function toggleCompactSection(wrapId, btn, showLabel = 'Expand', hideLabel = 'Minimize') {
       const el = document.getElementById(wrapId);
       if (!el) return;
       const hidden = el.classList.toggle('hidden');
-      if (btn) btn.textContent = hidden ? 'Expand' : 'Minimize';
+      if (btn) btn.textContent = hidden ? showLabel : hideLabel;
     }
 
     let ytSimDarkMode = true;
@@ -6750,6 +6912,13 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
         </div>
       </div>
 
+      <div id="preFlightGuardBar" class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 flex flex-wrap items-center gap-2 font-mono text-[10px]">
+        <span class="text-outline font-bold uppercase">Pre-Flight Check:</span>
+        <span id="pfHookBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Hook</span>
+        <span id="pfFaceBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Face</span>
+        <span id="pfRefBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Ref Photo</span>
+      </div>
+
       <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/50 space-y-2">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="font-mono text-[11px] font-bold text-white">Generate Options:</span>
@@ -6779,9 +6948,13 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
         <img id="studioGeneratedImg" src="" alt="Generated Thumbnail" class="hidden w-full rounded-xl border border-outline-variant/50 object-contain max-h-80" />
       </div>
 
-      <!-- 1-TAP FOLLOW-UP FIX CHIPS FOR CHATGPT -->
-      <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-2">
-        <span class="font-mono text-[10px] uppercase text-secondary font-bold block">1-Tap Follow-Up Fix Prompts (Copy &amp; Paste in ChatGPT):</span>
+      <!-- 1-TAP FOLLOW-UP FIX CHIPS FOR CHATGPT (COLLAPSED BY DEFAULT FOR CLEAN MODAL) -->
+      <details class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/45 space-y-2">
+        <summary class="cursor-pointer font-mono text-[11px] font-bold text-secondary select-none flex items-center justify-between">
+          <span>🔧 1-Tap Follow-Up Fixes (Send to ChatGPT)</span>
+          <span class="text-[10px] text-outline">Expand</span>
+        </summary>
+        <div class="pt-1 space-y-2">
         <div class="flex flex-wrap gap-1.5">
           <button type="button" onclick="copyFollowUpFix('face_bigger')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Face Bigger</button>
           <button type="button" onclick="copyFollowUpFix('text_brighter')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Text Brighter</button>
@@ -6792,6 +6965,7 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
           <button type="button" onclick="copyFollowUpFix('remove_text_clean')" class="px-2.5 py-1 rounded-lg bg-primary/20 hover:bg-primary hover:text-slate-950 text-primary border border-primary/40 font-mono text-[10px] font-bold transition">🧹 Remove Text (Clean Shade)</button>
         </div>
       </div>
+      </details>
 
       <!-- OPTIONAL: PHOTOSHOP-STYLE DRAG & RESIZE KHAND BOLD TEXT EDITOR (0% TYPO) -->
       <div class="p-3 rounded-xl bg-surface-container-lowest border border-tertiary/40 space-y-2.5">
