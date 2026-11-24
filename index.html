@@ -2834,7 +2834,7 @@ Full PPT / Story Material:
 STRICT RULES:
 1. Thumbnail text MUST NOT repeat words from the Video Title. It must add a NEW curiosity punch, contrast, or shocking fact directly from the PPT material.
 2. Total length: 2 to 5 crisp Hindi words total, formatted as EXACTLY 2 short lines separated by "|" (Example: "ग्रीक नहीं | भारत में था!" or "17वीं सदी में | अकेले भिड़े!" or "क्यों छिपाया | यह ग्रंथ?").
-3. STRICTLY FORBIDDEN generic clichés: "असली सच", "असली प्रमाण", "सबसे बड़ा रहस्य", "क्या है असली सच", "यही असली इतिहास", "99% लोग नहीं जानते".
+3. STRICTLY FORBIDDEN generic clichés (especially in Line 2!): "असली सच", "के पीछे का सच", "धर्म के पीछे का सच", "असली प्रमाण", "सबसे बड़ा रहस्य", "क्या है असली सच", "यही असली इतिहास", "99% लोग नहीं जानते". Line 2 MUST be a concrete, specific hook (e.g., century, author/grantha name, or shocking consequence).
 4. Give each of the 3 hooks a realistic YouTube CTR "score" out of 10 (e.g. 9.2, 8.7, 8.4) and distinct angle: (1) Curiosity/Question, (2) Evidence/Discovery, (3) Story/Emotion.
 
 Return ONLY valid JSON:
@@ -3409,7 +3409,10 @@ STEP 0 — SMART THUMBNAIL TITLE RANKING GATE (DO THIS FIRST!):
 PHOTOSHOP & DSLR HUMANIZED REALISM LOCK (ZERO AI-PLASTIC LOOK):
 ===================================================================
 • ${getCategoryColorGradingSpec(niche)}
-• PHOTOSHOP COMPOSITING FINISH: Natural Camera Raw color grading, authentic human skin pores & fine beard/hair detail (ZERO waxy/airbrushed AI skin, ZERO over-saturated HDR glow, ZERO CGI sheen), soft feathered edge masking, smooth matte charcoal/studio backdrop gradient, subtle optical film grain, and razor-clean typography.${pptPlacementSection}
+• PHOTOSHOP COMPOSITING & LIGHT-WRAP BLENDING (ZERO CUTOUT LOOK): Natural Adobe Camera Raw color grading, authentic human skin pores & fine beard/hair strands (ZERO waxy/plastic AI skin, ZERO CGI sheen). Apply realistic Atmospheric Edge Light-Wrap & shadow matching across the host's jacket/shoulders/hair edges so the host blends 100% seamlessly into the scene's lighting—NEVER look like a bright studio cutout pasted onto a dark background!
+• STRICT 3-ELEMENT MAXIMUM & ZERO TINY BACKGROUND FACES: Keep the entire thumbnail clean and uncluttered with AT MOST 3 main visual elements: (1) Expressive Host Portrait, (2) ONE large, sharp, mobile-readable Primary Proof/Book Cover/Artifact, and (3) ONE clean atmospheric background scene. STRICTLY FORBIDDEN: NO crowds, NO tiny background people with distorted faces, NO busy background clutter. Keep the bottom-right corner dark/clear for the YouTube timestamp badge.
+• FULL-FRAME MICRO-DETAILING: Render crisp photographic texture on every foreground & midground element (carved stone, brass/metal grain, weathered book cover paper, fabric weave) with natural f/2.2 optical depth falloff only in the far distance.
+• ZERO DECORATIVE CLUTTER ON TEXT: Render ONLY ultra-clean 2-line Khand Bold typography (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White, subtle soft drop shadow). STRICTLY FORBIDDEN: NO red brush strokes, NO underlines, NO neon outlines, NO boxes behind text.${pptPlacementSection}
 
 ===================================================================
 STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
@@ -3420,7 +3423,7 @@ STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
 • WAIT until the user uploads their portrait photo (or explicitly replies 'skip').
 • ONCE UPLOADED:
   1. STRICT ZERO-FACE-CHANGE IDENTITY LOCK (FOR ALL UPLOADED PEOPLE — YOUTUBER & ANY 2ND/3RD PERSON): Keep EVERY uploaded person's exact real face, eyes, nose, jawline, skin tone, hairline, glasses/beard, and natural skin pores 100% identical to their uploaded photo—NEVER morph or replace any face with a lookalike!
-  1B. TOPIC-ADAPTIVE EXPRESSION & BODY LANGUAGE: While keeping the face 100% unchanged, naturally adapt ONLY their facial emotion, eye gaze, hand gesture, and upper-body posture to fit the video topic & selected mood (${getSelectedMoodDirective(v)}).
+  1B. IDENTITY LOCK ≠ FROZEN POSE (MANDATORY DYNAMIC EXPRESSION & BODY LANGUAGE): Keep the host's exact facial identity (eyes, nose, jawline, glasses, beard, hairline, skin tone) 100% recognizable as the exact same real person—BUT DO NOT copy the passive/calm pose from their uploaded reference photo! Actively re-pose their facial expression (eyebrows, eyes, mouth tension), head tilt, shoulder angle, and hand gesture to match the thumbnail's exact emotional punch: ${getSelectedMoodDirective(v)}.
   2. For EVERY extra uploaded image (monuments, inscriptions, manuscripts, slides, PDF pages, or additional people): if the image contains a slide/page border or surrounding text, ISOLATE & CROP ONLY the central subject/statue/monument/artifact (NEVER paste white page margins or slide text). Redesign, relight, cleanly match DSLR photographic texture & Camera Raw lighting, match camera perspective, and seamlessly blend it with studio rim lighting and contact shadows.
   3. REAL-WORLD WEB REFERENCE RULE (NO FAKE BUILDINGS OR INVENTED ARTIFACTS): For any real-world monument, temple, book cover, inscription, or historical site NOT uploaded by the user, USE YOUR WEB SEARCH TOOL FIRST to look up real, authentic photographs/Wikimedia references of that exact site/book so every architectural detail and proportion is 100% historically real—never invent generic fake temples or fictional objects.
 ${refDetailsLine}
@@ -4257,7 +4260,16 @@ Return strict JSON: {"details": "..."}`;
     function getSelectedMoodDirective(v) {
       const m = appState.selectedMood || 'auto';
       if (m !== 'auto' && MOOD_DIRECTIVES[m]) return MOOD_DIRECTIVES[m];
-      return v ? `${v.expression}; body posture & hand gesture naturally aligned to this scene while keeping the exact real face 100% unchanged` : 'Topic-matched expression & body language while keeping the exact real face 100% unchanged';
+      const hookStr = (v?.activeHook || v?.hooks?.hindi || document.getElementById('videoTitleInput')?.value || '').trim();
+      if (/[!]|मदिरा|मांस|धोखा|चौंका|खतरनाक|झूठ|खुलासा|shock|secret|banned/i.test(hookStr)) {
+        return 'Shocked, stunned-by-evidence expression: raised eyebrows, wide alert eyes, slight open-mouth disbelief, shoulders angled forward, one hand gesturing toward the proof (DO NOT copy a calm/neutral chin-resting pose from the reference photo!)';
+      }
+      if (/[?]|क्यों|कैसे|कौन|क्या|रहस्य|why|how|mystery/i.test(hookStr)) {
+        return 'Intense investigative curiosity: furrowed brow, sharp direct eye contact with camera, leaning slightly forward with one hand pointing or holding focus toward the central artifact/book';
+      }
+      return v
+        ? `${v.expression}; active, expressive upper-body posture & natural hand gesture matching the headline mood (NEVER freeze into a passive neutral pose)`
+        : 'Expressive topic-matched facial emotion, raised eyebrows/engaged eyes & dynamic upper-body posture';
     }
 
     function selectExpressionMood(moodId) {
@@ -6504,7 +6516,7 @@ Return strict JSON with ONLY these keys:
       }
       const resBox = document.getElementById('ctrAuditResultsBox');
       const btnTxt = document.getElementById('ctrAnalyzeBtnText');
-      const title = (document.getElementById('videoTitleInput')?.value || 'YouTube Video').trim();
+      const title = (document.getElementById('seoStandaloneTopicInput')?.value || document.getElementById('videoTitleInput')?.value || 'YouTube Video').trim();
       if (resBox) {
         resBox.classList.remove('hidden');
         resBox.innerHTML = '<div class="p-4 rounded-xl bg-surface-container-lowest border border-tertiary/40 text-xs font-mono text-tertiary">⏳ Auditing pixel contrast &amp; AI Vision CTR impact...</div>';
@@ -6527,16 +6539,35 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
             if (b64) parts.push({ inlineData: { mimeType: mime, data: b64 } });
           });
 
-          const ep = `https://generativelanguage.googleapis.com/v1beta/models/${appState.geminiModel || 'gemini-2.5-flash'}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
-          const resp = await fetch(ep, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseMimeType: 'application/json' } })
-          });
-          const data = await resp.json();
-          const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-          const aiAudit = JSON.parse(txt);
-          getTodayUsageCount(true);
+          const liveModels = (__discoveredModelList && __discoveredModelList.length)
+            ? __discoveredModelList.slice(0, 4)
+            : [appState.geminiModel || 'gemini-2.5-flash', 'gemini-2.0-flash'];
+          let aiAudit = null;
+          for (const mName of [...new Set(liveModels)]) {
+            try {
+              const t0 = Date.now();
+              const ep = `https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
+              const resp = await fetch(ep, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseMimeType: 'application/json' } })
+              });
+              if (!resp.ok) {
+                const ej = await resp.json().catch(() => ({}));
+                setProviderHealth('gemini1', resp.status === 429 ? 'quota' : 'error', mName, ej?.error?.message || `HTTP ${resp.status}`);
+                continue;
+              }
+              const data = await resp.json();
+              const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+              const cand = safeParseAiJson(txt);
+              if (cand && Array.isArray(cand.audits)) {
+                aiAudit = cand;
+                setProviderHealth('gemini1', 'ok', mName, 'CTR Vision Audit succeeded', Date.now() - t0);
+                getTodayUsageCount(true);
+                break;
+              }
+            } catch (e) {}
+          }
           if (aiAudit && Array.isArray(aiAudit.audits)) {
             resBox.innerHTML = `
               <div class="p-3.5 rounded-xl bg-secondary/15 border border-secondary/40 text-xs text-white">
