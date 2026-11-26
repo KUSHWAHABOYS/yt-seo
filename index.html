@@ -1140,29 +1140,42 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
           <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">CTR Test</span>
-          <h2 class="font-display text-base sm:text-lg font-extrabold text-white">True Thumbnail CTR &amp; Winner Analyzer (1–3 Images)</h2>
+          <h2 class="font-display text-base sm:text-lg font-extrabold text-white">Thumbnail CTR &amp; 4-View Analyzer (1–3 Images)</h2>
         </div>
         <div class="flex flex-wrap items-center gap-2 shrink-0">
-          <label class="cursor-pointer px-3.5 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-container text-white border border-outline-variant/60 font-display text-xs font-bold">
-            <span>🖼️ Upload 1–3 Thumbnails</span>
+          <label class="cursor-pointer px-3.5 py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-white border border-outline-variant/60 font-display text-xs font-bold transition">
+            <span>🖼️ Upload 1–3</span>
             <input id="ctrCompareFilesInput" type="file" accept="image/*" multiple onchange="handleCtrCompareFilesSelect(this)" class="hidden" />
           </label>
-          <button type="button" onclick="analyzeUploadedThumbnailsCTR()" class="px-4 py-2.5 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold flex items-center gap-1.5 shadow hover:brightness-110 transition">
-            <span class="material-symbols-outlined text-[17px]">analytics</span>
-            <span id="ctrAnalyzeBtnText">Audit &amp; Rank Winner</span>
+          <button type="button" onclick="analyzeUploadedThumbnailsCTR()" class="px-4 py-2 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-display text-xs font-extrabold flex items-center gap-1.5 shadow transition">
+            <span class="material-symbols-outlined text-[16px]">analytics</span>
+            <span id="ctrAnalyzeBtnText">Audit &amp; Rank</span>
+          </button>
+          <button type="button" id="ctrClearBtn" onclick="clearCtrTestData(true)" title="1-Click Clear CTR Test" class="hidden px-3 py-2 rounded-xl bg-error-container/60 hover:bg-error-container text-on-error-container border border-error/30 font-mono text-xs font-bold flex items-center gap-1 transition">
+            <span class="material-symbols-outlined text-[15px]">delete_sweep</span>
+            <span>Clear</span>
           </button>
         </div>
       </div>
 
+      <!-- Empty State Guide (Shown before images are uploaded) -->
+      <label id="ctrEmptyDropzone" for="ctrCompareFilesInput" class="dropzone-modern cursor-pointer block p-6 rounded-2xl text-center space-y-2">
+        <div class="w-11 h-11 mx-auto rounded-xl bg-tertiary/15 border border-tertiary/30 text-tertiary flex items-center justify-center">
+          <span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
+        </div>
+        <p class="font-display text-sm font-bold text-white">Upload 1 Thumbnail (Solo Audit) or 2–3 Thumbnails (A/B/C Winner)</p>
+        <p class="font-mono text-[11px] text-outline">Checks Mobile 160px readability, B&amp;W contrast, AI Vision CTR score &amp; 4-View YouTube Preview</p>
+      </label>
+
       <div id="ctrThumbsPreviewGrid" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
       <div id="ctrTinyBwToggleBar" class="hidden flex flex-wrap items-center gap-2">
-        <button type="button" onclick="toggleCtrPreviewMode('normal')" class="px-2.5 py-1 rounded-lg bg-surface-container text-white border border-outline-variant/50 font-mono text-[10px] font-bold">Normal View</button>
-        <button type="button" onclick="toggleCtrPreviewMode('tiny')" class="px-2.5 py-1 rounded-lg bg-surface-container text-tertiary border border-tertiary/40 font-mono text-[10px] font-bold">📱 Tiny Mobile (160px)</button>
-        <button type="button" onclick="toggleCtrPreviewMode('bw')" class="px-2.5 py-1 rounded-lg bg-surface-container text-secondary border border-secondary/40 font-mono text-[10px] font-bold">⬛ B&amp;W Contrast Test</button>
+        <button type="button" id="ctrModeBtn_normal" onclick="toggleCtrPreviewMode('normal')" class="px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-bold transition">Normal View</button>
+        <button type="button" id="ctrModeBtn_tiny" onclick="toggleCtrPreviewMode('tiny')" class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-mono text-[10px] font-bold transition">📱 Tiny Mobile (160px)</button>
+        <button type="button" id="ctrModeBtn_bw" onclick="toggleCtrPreviewMode('bw')" class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-mono text-[10px] font-bold transition">⬛ B&amp;W Contrast Test</button>
       </div>
       <div id="ctrAuditResultsBox" class="hidden space-y-3"></div>
 
-      <!-- REAL 4-VIEW YOUTUBE MULTI-DEVICE LIVE PREVIEW STUDIO (VIDIQ STYLE) -->
+      <!-- REAL 4-VIEW YOUTUBE MULTI-DEVICE LIVE PREVIEW STUDIO -->
       <div id="realYtPreviewStudio" class="hidden p-4 rounded-2xl bg-surface-container-lowest border border-secondary/40 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/30 pb-2.5">
           <div>
@@ -1177,7 +1190,6 @@
         <div id="realYtViewsGrid" class="space-y-4"></div>
       </div>
     </section>
-
 
     <!-- ==================== TAB 3: YOUTUBE VIDEO LINK & CHANNEL AUDITOR (NO OAUTH NEEDED) ==================== -->
     <section id="section-tab-audit" class="hidden bg-surface-container-low rounded-xl p-4 sm:p-5 space-y-4 shadow-md border border-outline-variant/25 fade-slide-up">
@@ -4307,7 +4319,7 @@ ${heritageBlock}`;
       if (ytSimCard) ytSimCard.classList.add('hidden');
 
       // Clear Title SEO & Multi-Thumbnail CTR Analyzer + 4-View YouTube Preview
-      ctrCompareImages = [];
+      clearCtrTestData(false);
       const ctrGrid = document.getElementById('ctrThumbsPreviewGrid');
       if (ctrGrid) { ctrGrid.classList.add('hidden'); ctrGrid.innerHTML = ''; }
       const ctrTb = document.getElementById('ctrTinyBwToggleBar');
@@ -7199,31 +7211,69 @@ Return strict JSON with ONLY these keys:
     // ==================== 17. STEP 13: TRUE MULTI-THUMBNAIL CTR & WINNER ANALYZER ====================
     let ctrCompareImages = [];
 
+        function clearCtrTestData(notify = true) {
+      ctrCompareImages = [];
+      ytSimActiveThumbIdx = 0;
+      const inp = document.getElementById('ctrCompareFilesInput');
+      if (inp) inp.value = '';
+      const grid = document.getElementById('ctrThumbsPreviewGrid');
+      if (grid) { grid.classList.add('hidden'); grid.innerHTML = ''; }
+      const tb = document.getElementById('ctrTinyBwToggleBar');
+      if (tb) tb.classList.add('hidden');
+      const resBox = document.getElementById('ctrAuditResultsBox');
+      if (resBox) { resBox.classList.add('hidden'); resBox.innerHTML = ''; }
+      const yt4 = document.getElementById('realYtPreviewStudio');
+      const yt4Grid = document.getElementById('realYtViewsGrid');
+      const yt4Pick = document.getElementById('ytPreviewThumbPicker');
+      if (yt4) yt4.classList.add('hidden');
+      if (yt4Grid) yt4Grid.innerHTML = '';
+      if (yt4Pick) yt4Pick.innerHTML = '';
+      const emptyDz = document.getElementById('ctrEmptyDropzone');
+      if (emptyDz) emptyDz.classList.remove('hidden');
+      const clrBtn = document.getElementById('ctrClearBtn');
+      if (clrBtn) clrBtn.classList.add('hidden');
+      if (notify) showToast('🗑️ CTR Test cleared! Ready for new thumbnails.');
+    }
+
     function handleCtrCompareFilesSelect(input) {
       const files = Array.from(input.files || []).slice(0, 3);
       if (!files.length) return;
       ctrCompareImages = [];
       const grid = document.getElementById('ctrThumbsPreviewGrid');
-      const tb = document.getElementById('ctrTinyBwToggleBar'); if (tb) tb.classList.remove('hidden');
+      const tb = document.getElementById('ctrTinyBwToggleBar');
+      const resBox = document.getElementById('ctrAuditResultsBox');
+      const emptyDz = document.getElementById('ctrEmptyDropzone');
+      const clrBtn = document.getElementById('ctrClearBtn');
+      if (emptyDz) emptyDz.classList.add('hidden');
+      if (clrBtn) clrBtn.classList.remove('hidden');
+      if (resBox) { resBox.classList.add('hidden'); resBox.innerHTML = ''; }
       if (grid) { grid.classList.remove('hidden'); grid.innerHTML = ''; }
+      if (tb) tb.classList.remove('hidden');
+      let done = 0;
       files.forEach((f, idx) => {
         const r = new FileReader();
         r.onload = () => {
-          const dataUrl = String(r.result || '');
-          ctrCompareImages.push({ name: f.name, dataUrl });
-          renderRealYouTube4Views();
-          if (grid) {
-            grid.innerHTML += `<div class="p-2 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-1">
-              <span class="font-mono text-[10px] font-bold text-tertiary block">Thumbnail #${idx + 1}</span>
-              <img src="${dataUrl}" class="ctr-thumb-img w-full aspect-video object-cover rounded-lg border border-outline-variant/40 transition" />
-            </div>`;
+          ctrCompareImages[idx] = { name: f.name, dataUrl: String(r.result || '') };
+          done += 1;
+          if (done === files.length && grid) {
+            ctrCompareImages = ctrCompareImages.filter(Boolean);
+            grid.innerHTML = ctrCompareImages.map((im, i) => `
+              <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-1.5">
+                <div class="flex items-center justify-between font-mono text-[10px]">
+                  <span class="text-tertiary font-bold">Thumbnail #${i + 1}</span>
+                  <span class="text-outline truncate max-w-[140px]">${escHtml(im.name)}</span>
+                </div>
+                <img src="${im.dataUrl}" class="ctr-thumb-img w-full aspect-video object-cover rounded-lg border border-outline-variant/40 transition-all" />
+              </div>`).join('');
+            toggleCtrPreviewMode('normal');
+            renderRealYouTube4Views();
           }
         };
         r.readAsDataURL(f);
       });
     }
 
-    async function computeRealPixelMetrics(dataUrl) {
+function computeRealPixelMetrics(dataUrl) {
       if (typeof document === 'undefined' || !document.createElement) return { contrast: 75, saturation: 70 };
       return new Promise((res) => {
         const im = new Image();
@@ -7334,11 +7384,11 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
                     <p class="text-[11px] text-on-surface-variant"><strong class="text-white">Strengths:</strong> ${escHtml(a.strengths || '')}</p>
                     <p class="text-[11px] text-on-surface-variant"><strong class="text-red-400">Fix:</strong> ${escHtml(a.fixNeeded || '')}</p>
                     <p class="font-mono text-[10px] text-outline">Pixel Contrast: ${pixelStats[i]?.contrast || 0}% • Color Pop: ${pixelStats[i]?.saturation || 0}%</p>
-                    <button type="button" onclick="autoFixWeakThumbnailInChatGPT('${escHtml(a.fixNeeded || 'Boost contrast & readability').replace(/'/g, "")}')" class="w-full mt-1.5 py-1.5 px-2 rounded-lg bg-primary/20 hover:bg-primary hover:text-slate-950 text-primary border border-primary/40 font-mono text-[10px] font-extrabold transition">🛠️ Auto-Fix in ChatGPT</button>
+                    <button type="button" onclick="autoFixWeakThumbnailInChatGPT('${escHtml(a.fixNeeded || 'Boost contrast & readability').replace(/'/g, "")}', ${i})" class="w-full mt-1.5 py-1.5 px-2 rounded-lg bg-primary/20 hover:bg-primary hover:text-slate-950 text-primary border border-primary/40 font-mono text-[10px] font-extrabold transition">🛠️ Auto-Fix in ChatGPT</button>
                   </div>
                 `).join('')}
               </div>`;
-            if (btnTxt) btnTxt.textContent = 'Audit & Rank Winner';
+            if (btnTxt) btnTxt.textContent = 'Audit & Rank';
             return;
           }
         } catch (e) {}
@@ -7359,7 +7409,7 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
             </div>
           `).join('')}
         </div>`;
-      if (btnTxt) btnTxt.textContent = 'Audit & Rank Winner';
+      if (btnTxt) btnTxt.textContent = 'Audit & Rank';
     }
 
 
@@ -7629,7 +7679,7 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
         picker.innerHTML = ctrCompareImages.map((_, i) => `<button type="button" onclick="selectYtSimThumb(${i})" class="px-2 py-1 rounded font-mono text-[10px] font-bold ${i === ytSimActiveThumbIdx ? 'bg-tertiary text-on-tertiary' : 'bg-surface-container text-outline'}">#${i + 1}</button>`).join('');
       }
 
-      const bgCls = ytSimDarkMode ? 'bg-[#0f0f0f] text-white border-white/10' : 'bg-white text-[#0f0f0f] border-slate-300';
+      const bgCls = ytSimDarkMode ? 'dark-badge-keep bg-[#0f0f0f] text-white border-white/10' : 'bg-white text-[#0f0f0f] border-slate-300';
       const subCls = ytSimDarkMode ? 'text-[#aaaaaa]' : 'text-[#606060]';
 
       grid.innerHTML = `
@@ -7678,7 +7728,7 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
           <div class="lg:col-span-5 p-3 rounded-xl border ${bgCls} space-y-2">
             <span class="font-mono text-[10px] uppercase text-primary font-bold block">3. 📺 Suggested Sidebar (168×94px Tiny Test)</span>
             <div class="flex items-start gap-2.5 max-w-sm">
-              <div class="relative w-[168px] h-[94px] rounded-lg overflow-hidden bg-black shrink-0">
+              <div class="relative w-[136px] h-[76px] sm:w-[168px] sm:h-[94px] rounded-lg overflow-hidden bg-black shrink-0">
                 <img src="${activeImg}" class="w-full h-full object-cover" />
                 <span class="absolute bottom-1 right-1 px-1 py-0.5 rounded bg-black/85 text-white font-mono text-[9px] font-bold">12:45</span>
               </div>
@@ -7713,6 +7763,13 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
         if (mode === 'tiny') img.classList.add('max-w-[160px]', 'mx-auto');
         if (mode === 'bw') img.classList.add('grayscale', 'contrast-125');
       });
+      ['normal', 'tiny', 'bw'].forEach(m => {
+        const b = document.getElementById('ctrModeBtn_' + m);
+        if (!b) return;
+        b.className = (m === mode)
+          ? 'px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-bold transition'
+          : 'px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-mono text-[10px] font-bold transition';
+      });
     }
 
     function copyFullYouTubeUploadPack() {
@@ -7725,13 +7782,20 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
       copyTextSafe(full, '📋 Full YouTube Upload Pack copied!');
     }
 
-    function autoFixWeakThumbnailInChatGPT(fixHint) {
+    async function autoFixWeakThumbnailInChatGPT(fixHint, thumbIdx = 0) {
       const seoInpVal = (document.getElementById('seoStandaloneTopicInput')?.value || '').trim();
       const titleEl = document.getElementById('videoTitleInput');
       if (seoInpVal && titleEl && !titleEl.value.trim()) titleEl.value = seoInpVal;
       const title = (titleEl?.value || seoInpVal || '').trim();
-      const prompt = `Keep the exact same YouTuber face 100% unchanged, and redesign this thumbnail for "${title}" fixing these exact CTR issues: ${fixHint}. Use high-clarity 8K Dodge & Burn sharpness, bold dark contrasting background, and true condensed Khand Bold text (#FFD700 Yellow Line 1 + #FFFFFF White Line 2).`;
-      dispatchToChatGPTBridge(prompt, '🛠️ Fix prompt copied & sent to ChatGPT!');
+      const targetThumb = (ctrCompareImages[thumbIdx] && ctrCompareImages[thumbIdx].dataUrl) || '';
+      const prompt = `Keep the exact same real face(s) 99% unchanged from the attached thumbnail, and upgrade this thumbnail for "${title}" fixing these exact CTR issues: ${fixHint}. Use Adobe Photoshop DSLR true-color grading, -2.5 EV cool dark backdrop contrast, and crisp condensed Khand Bold text (#FFD700 Yellow Line 1 + #FFFFFF White Line 2).`;
+      copyTextSafe(prompt, '🛠️ Thumbnail + Fix prompt sent to ChatGPT!');
+      try {
+        const rawImgs = [targetThumb, studioCreatorPhotoB64].filter(Boolean);
+        const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
+        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt, images: bridgeImgs, ts: Date.now() }, '*');
+      } catch (e) {}
+      setTimeout(() => { window.open('https://chatgpt.com/', '_blank', 'noopener'); }, 200);
     }
 
     // ==================== 13. INITIALIZATION ====================
