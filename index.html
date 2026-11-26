@@ -3832,6 +3832,18 @@ function buildThreeDistinctVariantsForConcept(concept, regenSeed = 0) {
         .map((im, idx) => `  - PPT Visual ${idx + 1}: "${im.name}" -> Recommended Placement: ${im.placement || 'Focal visual proof'}`)
         .join('\n');
       const pptPlacementSection = pptPlacementNotes ? `\n• AI-VERIFIED PPT VISUALS & PLACEMENT:\n${pptPlacementNotes}` : '';
+      const pCtx = appState.personSceneContext;
+      let personRelationSection = '';
+      if (pCtx && pCtx.mode && pCtx.mode !== 'single_host_evidence') {
+        const sp = pCtx.secondPersonName || 'the 2nd person';
+        if (pCtx.mode === 'reply_two_person') {
+          personRelationSection = `\n• TWO-PERSON REPLY / REBUTTAL POSE LOCK: This is a REPLY / FACT-CHECK thumbnail featuring BOTH the Host (Uploaded Photo 1) AND ${sp} (Reference Photo 2). Frame the Host in a sharp, assertive rebuttal pose (pointing or questioning gaze, intense focused expression) contrasted against ${sp} on the opposite side with split-tone debate rim lighting (warm hero key on Host, cool skeptical rim on ${sp}). Keep BOTH real faces 100% unchanged! ${pCtx.poseGuidance || ''}`;
+        } else if (pCtx.mode === 'support_two_person') {
+          personRelationSection = `\n• TWO-PERSON SUPPORTING POSE LOCK: This is a SUPPORTING / COLLABORATION thumbnail featuring BOTH the Host (Uploaded Photo 1) AND ${sp} (Reference Photo 2). Frame both together in unified, warm, aligned collaborative lighting with confident supportive expressions (NO adversarial clash framing). Keep BOTH real faces 100% unchanged! ${pCtx.poseGuidance || ''}`;
+        } else if (pCtx.mode === 'mahapurush_tribute') {
+          personRelationSection = `\n• HOST + MAHAPURUSH TRIBUTE POSE LOCK: Frame the revered Historical Figure / Mahapurush (${sp}, ${pCtx.secondPersonRole || 'sage/leader'}) with dignified, noble authority in warm golden heritage spotlighting, while the Host (Uploaded Photo 1) appears respectfully in the foreground gesturing toward ${sp} or the primary grantha/artifact with awe and investigative respect (NEVER a disrespectful clash pose). ${pCtx.poseGuidance || ''}`;
+        }
+      }
 
       const rawPrompt = `You are a Senior YouTube Thumbnail Designer & Adobe Photoshop CC Compositor (real DSLR studio photography + Camera Raw color grading — NEVER glossy/plastic AI CGI art).
 Create an authentic, Photoshop-composited, EXACT ${sz.ratio} (${sz.resolution}px, ${sz.orientation}) ${sz.platform} Thumbnail for:
@@ -3859,7 +3871,7 @@ PHOTOSHOP & DSLR HUMANIZED REALISM LOCK (ZERO AI-PLASTIC LOOK):
 • PHOTOSHOP COMPOSITING & LIGHT-WRAP BLENDING (ZERO CUTOUT LOOK): Natural Adobe Camera Raw color grading, authentic human skin pores & fine beard/hair strands (ZERO waxy/plastic AI skin, ZERO CGI sheen). Apply realistic Atmospheric Edge Light-Wrap & shadow matching across the host's jacket/shoulders/hair edges so the host blends 100% seamlessly into the scene's lighting—NEVER look like a bright studio cutout pasted onto a dark background!
 • STRICT 3-ELEMENT MAXIMUM & ZERO TINY BACKGROUND FACES: Keep the entire thumbnail clean and uncluttered with AT MOST 3 main visual elements: (1) Expressive Host Portrait, (2) ONE large, sharp, mobile-readable Primary Proof/Book Cover/Artifact, and (3) ONE clean atmospheric background scene. STRICTLY FORBIDDEN: NO crowds, NO tiny background people with distorted faces, NO busy background clutter. Keep the bottom-right corner dark/clear for the YouTube timestamp badge.
 • FULL-FRAME MICRO-DETAILING: Render crisp photographic texture on every foreground & midground element (carved stone, brass/metal grain, weathered book cover paper, fabric weave) with natural f/2.2 optical depth falloff only in the far distance.
-• ZERO DECORATIVE CLUTTER ON TEXT: Render ONLY ultra-clean 2-line Khand Bold typography (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White, subtle soft drop shadow). STRICTLY FORBIDDEN: NO red brush strokes, NO underlines, NO neon outlines, NO boxes behind text.${pptPlacementSection}
+• ZERO DECORATIVE CLUTTER ON TEXT: Render ONLY ultra-clean 2-line Khand Bold typography (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White, subtle soft drop shadow). STRICTLY FORBIDDEN: NO red brush strokes, NO underlines, NO neon outlines, NO boxes behind text.${pptPlacementSection}${personRelationSection}
 
 ===================================================================
 STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
@@ -5455,21 +5467,50 @@ OUTPUT: return ONLY valid JSON, no extra text:
         grid.innerHTML = '<span class="font-mono text-[10px] text-tertiary animate-pulse">🌐 Finding non-copyright statues, portraits, book covers &amp; sites...</span>';
       }
 
-      // Step 1: Extract 3 specific English search queries (Subject/Figure, Book/Manuscript, Monument/Scene)
+      // Step 1: Detect Scene Mode (Reply 2-Person vs Supporting 2-Person vs Mahapurush vs Artifact) + Extract 3 Search Queries
       let queries = [];
       let bookQuery = '';
-      const fullMat = (__lastExtractedSourceText || rawDetails || '').slice(0, 1200);
+      appState.personSceneContext = null;
+      const fullMat = (__lastExtractedSourceText || rawDetails || '').slice(0, 1400);
       if (hasAnyTextAiKey()) {
-        const kwPrompt = `Extract up to 3 crisp English search queries (2-4 words each) to find REAL Public-Domain/Wikimedia photos & Book Front Covers for this YouTube thumbnail:
-1. Main historical figure, deity, statue, or person (e.g., "Aryabhata statue", "Chanakya", "Gautama Buddha sculpture", "Nilakantha Dikshita").
-2. Any specific ancient book, grantha, or manuscript mentioned (e.g., "Aryabhatiya manuscript", "Arthashastra book").
-3. Place, temple, or artifact (e.g., "Meenakshi temple Madurai", "Nalanda ruins").
+        const kwPrompt = `Analyze this Hindi/English YouTube video topic and decide:
+1. Is this a TWO-PERSON REPLY / REBUTTAL video (replying to or fact-checking a specific person/author/creator like Devdutt Pattanaik, Dhruv Rathee, a critic, etc.) -> "reply_two_person"
+2. Is this a TWO-PERSON SUPPORTING / COLLABORATION video (supporting a person, speaker, or ally) -> "support_two_person"
+3. Is this about a REVERED HISTORICAL FIGURE / MAHAPURUSH / RISHI / KING / DEITY (e.g., Aryabhata, Adi Shankaracharya, Chanakya, Vivekananda, Shivaji, Buddha, etc.) -> "mahapurush_tribute"
+4. Otherwise (topic/temple/artifact/concept with Host only) -> "single_host_evidence"
+
+Also extract up to 3 crisp English search queries (2-4 words each) to find REAL Public-Domain/Wikimedia/Wikipedia photos:
+- If "second_person_name" exists, Query 1 MUST be their exact English name (e.g., "Devdutt Pattanaik" or "Adi Shankaracharya statue") so we fetch their real portrait!
+- Query 2: Any specific ancient book, grantha, or manuscript ("book_query").
+- Query 3: Temple, monument, map, or archaeological artifact.
+
 Video Title: "${rawTitle}"
 Material: "${fullMat}"
-Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
+Return strict JSON:
+{
+  "scene_mode": "reply_two_person | support_two_person | mahapurush_tribute | single_host_evidence",
+  "second_person_name": "",
+  "second_person_role": "modern_critic | supporting_creator | mahapurush_sage | historical_king | deity_sculpture | none",
+  "pose_guidance": "1 crisp sentence describing exact pose & framing between Host and 2nd person",
+  "queries": ["...", "..."],
+  "book_query": "..."
+}`;
         const kwRes = await callGeminiJsonAPI(kwPrompt, false).catch(() => null);
-        if (kwRes && Array.isArray(kwRes.queries)) queries = kwRes.queries.filter(Boolean).slice(0, 3);
-        if (kwRes && kwRes.book_query) bookQuery = String(kwRes.book_query).trim();
+        if (kwRes) {
+          if (Array.isArray(kwRes.queries)) queries = kwRes.queries.filter(Boolean).slice(0, 3);
+          if (kwRes.book_query) bookQuery = String(kwRes.book_query).trim();
+          const mode = kwRes.scene_mode || 'single_host_evidence';
+          const spName = String(kwRes.second_person_name || '').trim();
+          appState.personSceneContext = {
+            mode,
+            secondPersonName: spName,
+            secondPersonRole: String(kwRes.second_person_role || 'none').trim(),
+            poseGuidance: String(kwRes.pose_guidance || '').trim()
+          };
+          if (spName && !queries.some(q => q.toLowerCase().includes(spName.toLowerCase()))) {
+            queries = [spName, ...queries].slice(0, 3);
+          }
+        }
       }
       if (!queries.length) {
         const { core } = extractCleanCoreTopic(rawTitle, rawDetails);
@@ -5614,9 +5655,10 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
         return;
       }
 
-      // Step 4: Single Batched Vision Check (uses active discovered Gemini model) to pick ONLY the best 3-4 photos
+      // Step 4: Single Batched Vision Check (Multi-Key + Active Model) to pick ONLY relevant photos
       let pickedIndices = loaded.slice(0, 4).map((_, idx) => idx);
-      if (appState.geminiApiKey && loaded.length > 1) {
+      const visKeys = getActiveGeminiKeyEntries();
+      if (visKeys.length && loaded.length > 1) {
         try {
           const cols = Math.min(4, loaded.length);
           const rows = Math.ceil(loaded.length / cols);
@@ -5637,25 +5679,41 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
             sctx.fillText(String(idx + 1), x + 16, y + 26);
           });
           const sheetB64 = sheet.toDataURL('image/jpeg', 0.82).split(',')[1];
-          const visModel = (__discoveredModelList && __discoveredModelList[0]) || appState.geminiModel || 'gemini-2.5-flash';
-          const vr = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${visModel}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [
-                { inlineData: { mimeType: 'image/jpeg', data: sheetB64 } },
-                { text: `You are selecting authentic non-copyright reference photos for a YouTube thumbnail on: "${rawTitle}". Inspect numbered images 1 to ${loaded.length}. Pick the 2 to 4 BEST, sharpest, authentic statues, historical portraits, temples, artifacts, or book covers (reject blurry, modern unrelated photos, or plain text pages). Return strict JSON: {"pick": [1, 2]}` }
-              ] }],
-              generationConfig: { responseMimeType: 'application/json' }
-            })
-          });
-          if (vr.ok) {
-            const vd = await vr.json();
-            const txt = vd?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-            const pj = safeParseAiJson(txt);
-            if (pj && Array.isArray(pj.pick) && pj.pick.length) {
-              const valid = pj.pick.map(n => Number(n) - 1).filter(n => n >= 0 && n < loaded.length);
-              if (valid.length) pickedIndices = valid.slice(0, 4);
+          const visModels = (__discoveredModelList && __discoveredModelList.length)
+            ? __discoveredModelList.slice(0, 4)
+            : ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-2.5-flash'];
+          const spHint = appState.personSceneContext?.secondPersonName
+            ? `CRITICAL: Prioritize the clear real portrait/statue of "${appState.personSceneContext.secondPersonName}" (${appState.personSceneContext.mode}) first, plus authentic book cover or monument!`
+            : 'Pick ONLY sharp, authentic statues, historical portraits, temples, artifacts, or book covers.';
+          let visDone = false;
+          for (const [, vKey] of visKeys) {
+            if (visDone) break;
+            for (const visModel of visModels) {
+              try {
+                const vr = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${visModel}:generateContent?key=${encodeURIComponent(vKey)}`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    contents: [{ parts: [
+                      { inlineData: { mimeType: 'image/jpeg', data: sheetB64 } },
+                      { text: `You are selecting authentic non-copyright reference photos for a YouTube thumbnail on: "${rawTitle}". ${spHint} Inspect numbered images 1 to ${loaded.length}. Reject blurry, unrelated, or plain text pages. Return strict JSON: {"pick": [1, 2]}` }
+                    ] }],
+                    generationConfig: { responseMimeType: 'application/json' }
+                  })
+                });
+                if (!vr.ok) continue;
+                const vd = await vr.json();
+                const txt = vd?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                const pj = safeParseAiJson(txt);
+                if (pj && Array.isArray(pj.pick) && pj.pick.length) {
+                  const valid = pj.pick.map(n => Number(n) - 1).filter(n => n >= 0 && n < loaded.length);
+                  if (valid.length) {
+                    pickedIndices = valid.slice(0, 4);
+                    visDone = true;
+                    break;
+                  }
+                }
+              } catch (e) {}
             }
           }
         } catch (e) {}
@@ -5680,6 +5738,13 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
             <span class="absolute top-0.5 left-0.5 text-[8px] font-mono px-1 rounded ${isPicked ? 'bg-emerald-500 text-black font-bold' : 'bg-black/70 text-white'}">${isPicked ? '✓ AI Pick' : c.source}</span>
           </div>`;
         }).join('');
+      }
+      const ctxBadge = appState.personSceneContext?.secondPersonName
+        ? `<div class="w-full text-[10px] font-mono text-tertiary font-bold mb-1">🎯 AI Scene Mode: ${escHtml(appState.personSceneContext.mode.replace(/_/g, ' '))} — ${escHtml(appState.personSceneContext.secondPersonName)}</div>`
+        : '';
+      if (grid && ctxBadge) grid.innerHTML = ctxBadge + grid.innerHTML;
+      if (appState.conceptsList && appState.conceptsList.length && typeof selectConceptAndGenerateVariants === 'function') {
+        selectConceptAndGenerateVariants(appState.selectedConceptIndex || 0, true);
       }
       if (!silentAuto) showToast(`🌐 Added ${pickedItems.length} best non-copyright photos to Extra Reference Photos!`);
     }
