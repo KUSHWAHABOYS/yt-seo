@@ -426,7 +426,7 @@
 
   <!-- ==================== FIXED MATERIAL 3 TOP HEADER ==================== -->
   <header class="fixed top-0 left-0 right-0 z-40 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.45)] border-b border-outline-variant/25">
-    <div class="max-w-4xl mx-auto h-16 px-3 sm:px-4 flex items-center justify-between gap-2">
+    <div class="max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto h-16 px-3 sm:px-4 lg:px-6 flex items-center justify-between gap-2">
       <div class="flex items-center gap-2.5 min-w-0">
         <img alt="YT SEO" src="./icon-192.png" class="h-8 w-8 rounded-lg object-cover shrink-0 border border-outline-variant/40" />
         <div class="flex flex-col min-w-0">
@@ -473,7 +473,7 @@
   </header>
 
   <!-- ==================== MAIN SINGLE-COLUMN RESPONSIVE STUDIO ==================== -->
-  <main class="flex flex-col w-full max-w-4xl mx-auto pt-20 pb-24 px-3 sm:px-4 space-y-4 min-h-screen">
+  <main class="flex flex-col w-full max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto pt-20 pb-24 px-3 sm:px-4 lg:px-6 space-y-4 min-h-screen">
 
     <!-- ==================== COMPACT API STATUS & QUICK CONNECT ==================== -->
     <section class="bg-surface-container-low rounded-xl p-3 space-y-2.5 shadow-sm border border-outline-variant/25">
@@ -1422,7 +1422,7 @@
 
   <!-- ==================== FIXED BOTTOM 3-TAB NAVIGATION BAR ==================== -->
   <nav class="fixed bottom-0 left-0 right-0 z-40 bg-surface-container-low/92 backdrop-blur-xl border-t border-outline-variant/25 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
-    <div class="max-w-4xl mx-auto flex justify-around items-center h-16 px-2 gap-1">
+    <div class="max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto flex justify-around items-center h-16 px-2 lg:px-6 gap-1">
       <button type="button" id="mainTabBtn_seo" onclick="switchWorkspaceTab('seo')" class="flex flex-col items-center justify-center gap-0.5 flex-1 h-13 py-1.5 rounded-xl transition-all text-on-surface-variant hover:text-on-surface">
         <span class="material-symbols-outlined text-[21px]">manage_search</span>
         <span class="font-sans text-[10px] font-semibold tracking-tight leading-none">Title SEO</span>
@@ -3622,18 +3622,25 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
     // ==================== 12. STEPS 9, 10 & 11: THREE DISTINCT VARIANTS (A, B, C) + FULL 9-VARIANT HUB ====================
     appState.fullHubMode = false;
 
-        function getCategoryColorGradingSpec(niche) {
+    function getCategoryColorGradingSpec(niche) {
       const nId = (niche?.id || 'history').toLowerCase();
-      const baseDslr = 'DSLR 85mm f/2.8 NATURAL HUMAN REALISM & STUDIO GRADING: Real human skin micro-texture (visible pores, natural beard/hair strands, authentic skin tones, ZERO waxy/plastic AI airbrushing), crystal-clear eye catchlights, clean edge sharpness without over-sharpened halos, smooth Dodge-and-Burn facial depth, and crisp #FFD700/#FFFFFF typography over deep negative space.';
+      const baseDslr = 'PRO EDITORIAL DSLR 85mm f/2.2 COLOR GRADING: (1) ISOLATED 5400K NEUTRAL SKIN KEY-LIGHT — keep human skin tones 100% clean, natural, and true-to-life with visible micro-pores and iris catchlights (NEVER let background tint turn skin orange, muddy brown, or sickly green); (2) -2.5 EV BACKDROP SEPARATION — keep background 2.5 stops darker than the foreground subject for instant 160px mobile pop; (3) ATMOSPHERIC EDGE LIGHT-WRAP — wrap a crisp 2px rim light around hair and shoulders so the cutout integrates into the environment naturally (ZERO waxy CGI sheen).';
       const moodMap = {
-        history: 'Warm Amber-Gold Rim Light (#FF9F33 / #FFD700) wrapping shoulders & hair against a smooth charcoal-obsidian museum backdrop (#14110E to #08080A) with subtle cool neutral shadow fill.',
-        technology: 'Crisp Electric Cyan (#00E5FF) secondary edge light + Warm Amber (#FF7A1A) hero rim light over a sleek matte slate-charcoal studio backdrop (#0D1117 to #07090D).',
-        mystery: 'Moody Teal-Charcoal shadows (#0B1316) contrasted with warm amber spotlight (#FF8A1F) and subtle crimson tension accent.',
-        finance: 'High-trust Emerald & Warm Gold rim light (#10B981 + #FFD700) against deep obsidian studio charcoal (#0B0E14).',
-        science: 'Clean Studio Cobalt-Blue (#38BDF8) + Warm Tungsten (#FF9F33) key/rim contrast on deep space-charcoal (#090D16).'
+        history: 'Cool Deep Cobalt-Obsidian backdrop (#080D1A to #0B1528) contrasted with Warm Temple Amber-Gold Rim Light (#FFB347 / #FFD700) on hair/shoulders and aged sandstone/bronze artifact highlights.',
+        religion: 'Deep Midnight Indigo-Charcoal backdrop (#090D18) with Sacred Saffron-Gold Rim Glow (#FF9F1C / #FFD700) and clean ivory/silk highlights (zero muddy sepia wash).',
+        mythology: 'Deep Cosmic Slate-Navy (#080E1C) contrasted with Radiant Divine Gold (#FFD700) & subtle copper-amber volumetric rays.',
+        documentary: 'Netflix/NatGeo Editorial Slate-Obsidian (#0A0E16) with Crisp Cool Daylight Face Key + Warm Tungsten Rim Accent (#FF9F33) for maximum authority.',
+        technology: 'Matte Graphite-Charcoal (#0B0F17) with Electric Cyan (#00E5FF) edge rim + Subtle Warm Amber (#FF7A1A) focal accent.',
+        mystery: 'Deep Teal-Obsidian shadows (#071116) contrasted with High-Tension Warm Amber Spotlight (#FF8A1F) and crisp dark vignette.',
+        true_crime: 'Noir Charcoal-Slate (#080A0F) with Cold Forensic Steel-Blue fill (#38BDF8) and sharp Amber-Red evidence accent.',
+        finance: 'High-Trust Obsidian Charcoal (#090D14) with Emerald-Mint (#10B981) & Pure Gold (#FFD700) rim highlights.',
+        business: 'Executive Midnight Navy (#0A101D) with Crisp White-Gold Rim Light (#FFD700) and clean editorial contrast.',
+        science: 'Deep Space Obsidian (#070B14) with Crisp Cobalt-Cyan (#38BDF8) + Warm Tungsten (#FF9F33) dual-tone rim separation.',
+        geopolitics: 'Broadcast News Slate-Navy (#0A1220) with High-Contrast Crimson-Amber (#FF5451 / #FFB95F) & Cool Steel Key Light.',
+        motivation: 'Deep Charcoal-Black (#080A0E) with Dramatic Golden-Hour Rim Light (#FFD700) and crisp high-clarity facial contrast.'
       };
-      const catTone = moodMap[nId] || (niche?.lighting ? `${niche.lighting} paired with smooth charcoal-obsidian (#14110E) studio gradient and warm amber (#FF7A1A) rim glow.` : moodMap.history);
-      return `${baseDslr} CATEGORY COLOR PALETTE: ${catTone}`;
+      const catTone = moodMap[nId] || (niche?.lighting ? `${niche.lighting} paired with -2.5 EV Deep Obsidian-Navy backdrop (#090E1A) and crisp Gold/Amber (#FFD700) rim separation.` : moodMap.history);
+      return `${baseDslr} CATEGORY PALETTE: ${catTone}`;
     }
 
 function buildThreeDistinctVariantsForConcept(concept, regenSeed = 0) {
@@ -3861,7 +3868,7 @@ STEP 3 — LOCKED TYPOGRAPHY & BRAND RULES (KHAND BOLD • YELLOW & WHITE):
   - LINE 1 (Top Line): "${line1}" -> Render in Bold 'Khand' (Khand Bold) geometric display font, SOLID GOLDEN YELLOW (#FFD700) fill.
   - LINE 2 (Bottom Line): "${line2}" -> Render in Bold 'Khand' (Khand Bold) geometric display font, SOLID PURE CRISP WHITE (#FFFFFF) fill.
 • STRICT TYPOGRAPHY & ZERO-TYPO SPELLING LOCK:
-  - Font Style MUST be TRUE 'Khand Bold' (tall, narrow, condensed, sharp-edged geometric display font—NEVER rounded or bubbly).
+  - ATTACHED KHAND BOLD FONT SPECIMEN IMAGE: Use the attached "KHAND BOLD FONT REFERENCE" image as your EXACT visual font blueprint—replicate its tall, narrow, condensed, sharp-edged geometric Devanagari/Latin letterforms, stroke weight, #FFD700 Yellow Line 1 + #FFFFFF White Line 2, and clean matra geometry (NEVER substitute rounded, bubbly, or generic sans-serif fonts!).
   - Colors MUST be exact: Line 1 = SOLID GOLDEN YELLOW (#FFD700), Line 2 = SOLID PURE WHITE (#FFFFFF), with heavy black 3D drop-shadow and dark vignette scrim behind the text.
   - DEVANAGARI / HINDI SPELLING & SMART HINGLISH FALLBACK: Render "${line1}" and "${line2}" cleanly with ZERO typos. If any complex Hindi/Sanskrit conjunct word risks a spelling error or broken matra in image generation, automatically transliterate THAT tricky word into clean uppercase Hinglish/English (or use mixed Hindi + English in the EXACT SAME 'Khand Bold' font style, #FFD700 Yellow Line 1 + #FFFFFF White Line 2)—NEVER output broken or garbled Hindi letters!
 • Do NOT add any other random words, gibberish text, or extra labels anywhere on the image.
@@ -4652,11 +4659,67 @@ Return strict JSON: {"details": "..."}`;
 
 
 
+    function renderKhandFontReferenceSheet(line1, line2) {
+      try {
+        if (typeof document === 'undefined' || !document.createElement) return null;
+        const c = document.createElement('canvas');
+        c.width = 960;
+        c.height = 420;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#090b10';
+        ctx.fillRect(0, 0, c.width, c.height);
+
+        // Header bar
+        ctx.fillStyle = '#181c22';
+        ctx.fillRect(0, 0, c.width, 56);
+        ctx.fillStyle = '#4edea3';
+        ctx.font = 'bold 20px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('EXACT FONT BLUEPRINT: KHAND BOLD (CONDENSED GEOMETRIC DISPLAY)', c.width / 2, 36);
+
+        // Line 1 (#FFD700 Yellow)
+        const l1 = (line1 || 'हड़प्पा में गाय').trim();
+        const l2 = (line2 || 'क्यों नकारी गई?').trim();
+        ctx.shadowColor = 'rgba(0,0,0,0.95)';
+        ctx.shadowBlur = 14;
+        ctx.shadowOffsetY = 5;
+
+        ctx.fillStyle = '#FFD700';
+        ctx.font = '700 84px "Khand", "Noto Sans Devanagari", sans-serif';
+        ctx.fillText(l1, c.width / 2, 165, 880);
+
+        // Line 2 (#FFFFFF White)
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '700 76px "Khand", "Noto Sans Devanagari", sans-serif';
+        ctx.fillText(l2, c.width / 2, 265, 880);
+
+        // Specimen footer
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.fillStyle = '#181c22';
+        ctx.fillRect(0, 330, c.width, 90);
+        ctx.fillStyle = '#ffb95f';
+        ctx.font = '700 28px "Khand", "Noto Sans Devanagari", sans-serif';
+        ctx.fillText('अ आ इ क ख ग घ च ज ट त द न प ब म य र ल व श स ह  |  A B C D E F G 0 1 2 3 4 5 6 7 8 9', c.width / 2, 385, 910);
+
+        return c.toDataURL('image/png');
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function getActiveKhandFontRefImage() {
+      const v = (appState.variantsList && appState.variantsList[activeStudioVariantIndex || 0]) || null;
+      const hookRaw = v?.activeHook || '';
+      const { line1, line2 } = splitHookIntoTwoLines(hookRaw);
+      return renderKhandFontReferenceSheet(line1, line2);
+    }
+
     function dispatchToChatGPTBridge(promptText, toastMsg) {
       copyTextSafe(promptText, toastMsg || 'Prompt copied! Sending to ChatGPT...');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-        const bridgeImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        const fontRefImg = getActiveKhandFontRefImage(); const bridgeImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
         window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
       const qParam = (!studioCreatorPhotoB64 && !studioExtraPhotosB64.length && promptText.length <= 2800) ? '?q=' + encodeURIComponent(promptText) : '';
@@ -6199,7 +6262,7 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
       copyTextSafe(promptText, toastMsg || 'Prompt copied & sent to Gemini!');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-        const rawImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        const fontRefImg = getActiveKhandFontRefImage(); const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
         const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
         window.postMessage({ type: 'SSIRO_GEMINI_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
@@ -6234,7 +6297,7 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
       if (!v) return;
       await copyTextSafe(v.promptText, '');
       const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-      const allDataUrls = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+      const fontRefImg = getActiveKhandFontRefImage(); const allDataUrls = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
 
       const files = [];
       allDataUrls.forEach((dUrl, idx) => {
@@ -6292,7 +6355,7 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
         const cleanedPrompt = v.promptText
           .replace(/STOP AND CHECK BEFORE GENERATING ANY IMAGE[\s\S]*?WAIT until the user uploads their portrait photo \(or explicitly replies 'skip'\)\./i, 'GENERATE IMAGE NOW USING ATTACHED PHOTOS.');
         const parts = [{ text: cleanedPrompt }];
-        const allImgs = [studioCreatorPhotoB64, pptxCombinedRefSheetB64, ...studioExtraPhotosB64].filter(Boolean);
+        const fontRefImg = getActiveKhandFontRefImage(); const allImgs = [studioCreatorPhotoB64, fontRefImg, pptxCombinedRefSheetB64, ...studioExtraPhotosB64].filter(Boolean);
         allImgs.forEach(dataUrl => {
           const [meta, b64] = dataUrl.split(',');
           const mime = (meta.match(/data:(.*?);/) || [])[1] || 'image/jpeg';
