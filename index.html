@@ -272,9 +272,11 @@
         <div>
           <label for="geminiModelSelect" class="block font-mono text-[11px] uppercase text-on-surface-variant font-bold mb-1">Preferred Gemini Model (Auto-Discovers Working Model):</label>
           <select id="geminiModelSelect" class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2 font-mono text-xs text-white focus:outline-none focus:border-tertiary">
-            <option value="gemini-2.5-flash">⚡ gemini-2.5-flash (Recommended • Search + Deep Reasoning)</option>
-            <option value="gemini-2.0-flash">💎 gemini-2.0-flash (Fast Stable Fallback)</option>
-            <option value="gemini-2.5-pro">🧠 gemini-2.5-pro (Deepest Reasoning)</option>
+            <option value="auto">✨ Auto-Select Best Active Model (Recommended)</option>
+            <option value="gemini-3.8-flash">⚡ gemini-3.8-flash (Fast + Search Grounding)</option>
+            <option value="gemini-3.5-flash-lite">🚀 gemini-3.5-flash-lite (High-Volume Free Tier)</option>
+            <option value="gemini-4-hydrogen">🧠 gemini-4-hydrogen (High-Efficiency Reasoning)</option>
+            <option value="gemini-2.5-flash">💎 gemini-2.5-flash (Legacy Projects Only)</option>
           </select>
         </div>
 
@@ -2373,13 +2375,19 @@
           .map(m => (m.name || '').replace('models/', ''))
           .filter(n => n && !/embedding|aqa|imagen|veo|tts|audio|robotics|computer-use|deep-research/i.test(n));
         const rank = (n) => {
-          if (n === 'gemini-2.5-flash') return 1;
-          if (n === 'gemini-2.0-flash') return 2;
-          if (n === 'gemini-2.5-pro') return 3;
-          if (n.includes('flash') && !n.includes('lite')) return 4;
-          if (n.includes('flash')) return 5;
-          if (n.includes('pro')) return 6;
-          return 10;
+          if (n === 'gemini-3.8-flash') return 1;
+          if (n === 'gemini-4-hydrogen') return 2;
+          if (n === 'gemini-4-neon') return 3;
+          if (n === 'gemini-3.6-flash') return 4;
+          if (n === 'gemini-3.5-flash-lite' || n === 'gemini-3.1-flash-lite') return 5;
+          if (/^gemini-4[.-]/.test(n)) return 6;
+          if (/^gemini-3\./.test(n) && n.includes('flash')) return 7;
+          if (/^gemini-3\./.test(n)) return 8;
+          if (n === 'gemini-2.5-flash') return 20;
+          if (n === 'gemini-2.0-flash') return 21;
+          if (n === 'gemini-2.5-pro') return 25;
+          if (n.includes('flash')) return 12;
+          return 30;
         };
         const sorted = [...new Set(valid)].sort((a, b) => rank(a) - rank(b));
         if (sorted.length) {
@@ -2588,8 +2596,11 @@ function hasAnyTextAiKey() {
       if (activeKeyEntries.length > 0 && __preferredLiveProvider === 'gemini' && !__discoveredModelsCache) {
         await autoDiscoverWorkingGeminiModel();
       }
-      const preferred = (appState.geminiModel && appState.geminiModel !== 'gemini-1.5-flash' && appState.geminiModel !== 'gemini-2.5-flash-lite') ? appState.geminiModel : 'gemini-2.5-flash';
-      const livePool = (__discoveredModelList && __discoveredModelList.length) ? __discoveredModelList.slice(0, 6) : ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-pro'];
+      const livePool = (__discoveredModelList && __discoveredModelList.length)
+        ? __discoveredModelList.slice(0, 10)
+        : ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-4-hydrogen', 'gemini-2.5-flash', 'gemini-2.0-flash'];
+      const isLegacyChoice = !appState.geminiModel || appState.geminiModel === 'auto' || /^(gemini-1\.|gemini-2\.|gemini-2\.5-flash-lite)/.test(appState.geminiModel);
+      const preferred = (!isLegacyChoice) ? appState.geminiModel : (livePool[0] || 'gemini-3.8-flash');
       const candidateModels = [...new Set([preferred, ...livePool])];
 
       const steps = [];
@@ -2653,10 +2664,12 @@ function hasAnyTextAiKey() {
               const errJson = await res.json().catch(() => ({}));
               const rawMsg = errJson?.error?.message || `HTTP ${res.status}`;
               const isQuotaErr = res.status === 429 || /quota|exceeded|limit/i.test(rawMsg);
-              if (isQuotaErr) __exhaustedKeyModels.add(kmKey);
+              const isModelGone = res.status === 404 || /no longer available|not found|deprecated/i.test(rawMsg);
+              if (isQuotaErr || isModelGone) __exhaustedKeyModels.add(kmKey);
+              if (isModelGone && appState.geminiModel === step.model) appState.geminiModel = 'auto';
               setProviderHealth(keySlot, isQuotaErr ? 'quota' : 'error', step.model, rawMsg);
               const msg = isQuotaErr ? 'Free-tier daily quota reached (auto-switching model/key)' : rawMsg.slice(0, 90);
-              if (!firstErrMsg) firstErrMsg = `${step.model}: ${msg}`;
+              if (!firstErrMsg || (!isModelGone && /no longer available/i.test(firstErrMsg))) firstErrMsg = `${step.model}: ${msg}`;
             }
           } catch (err) {
             clearTimeout(timer);
