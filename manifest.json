@@ -1,13 +1,13 @@
 {
   "name": "YT SEO - Powered by SSIRO",
   "short_name": "YT SEO",
-  "description": "YouTube SEO, Thumbnail Prompts, Scene-by-Scene Video Prompts & AI Voiceover Studio",
+  "description": "YouTube SEO, CTR Thumbnail Analyzer, Link Auditor & AI Thumbnail Prompt Studio",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#121318",
-  "theme_color": "#121318",
+  "background_color": "#090b10",
+  "theme_color": "#090b10",
   "icons": [
     {
       "src": "./icon-192.png",

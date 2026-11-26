@@ -107,7 +107,12 @@
     html.light-mode .text-primary { color: #4338ca !important; }
     html.light-mode .text-secondary { color: #047857 !important; }
     html.light-mode .text-tertiary { color: #b45309 !important; }
-    html.light-mode .text-error { color: #b91c1c !important; }
+    html.light-mode .text-error,
+    html.light-mode .text-red-300,
+    html.light-mode .text-red-400 { color: #b91c1c !important; }
+    html.light-mode .text-emerald-300,
+    html.light-mode .text-emerald-400 { color: #047857 !important; }
+    html.light-mode .text-amber-300 { color: #b45309 !important; }
     html.light-mode .bg-primary\/15,
     html.light-mode .bg-primary\/20 { background-color: #e0e7ff !important; }
     html.light-mode .bg-secondary\/15,
@@ -268,8 +273,8 @@
           <label for="geminiModelSelect" class="block font-mono text-[11px] uppercase text-on-surface-variant font-bold mb-1">Preferred Gemini Model (Auto-Discovers Working Model):</label>
           <select id="geminiModelSelect" class="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2 font-mono text-xs text-white focus:outline-none focus:border-tertiary">
             <option value="gemini-2.5-flash">⚡ gemini-2.5-flash (Recommended • Search + Deep Reasoning)</option>
-            <option value="gemini-2.5-flash-lite">🚀 gemini-2.5-flash-lite (Fastest Free Tier)</option>
-            <option value="gemini-2.0-flash">💎 gemini-2.0-flash (Stable Fallback)</option>
+            <option value="gemini-2.0-flash">💎 gemini-2.0-flash (Fast Stable Fallback)</option>
+            <option value="gemini-2.5-pro">🧠 gemini-2.5-pro (Deepest Reasoning)</option>
           </select>
         </div>
 
@@ -307,8 +312,9 @@
     </div>
 
   <!-- ==================== HINDI FEATURE EXPLAINER POP-UP MODAL ==================== -->
-  <div id="hindiHelpModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden" onclick="if(event.target===this) closeHindiHelp()">
-    <div class="w-full max-w-md bg-surface-container-low border border-tertiary/50 rounded-2xl p-5 shadow-2xl space-y-3.5">
+  <div id="hindiHelpModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md overflow-y-auto overscroll-contain p-3 sm:p-4 hidden" style="-webkit-overflow-scrolling: touch;" onclick="if(event.target===this) closeHindiHelp()">
+    <div class="min-h-full flex items-start sm:items-center justify-center py-2">
+    <div class="w-full max-w-md bg-surface-container-low border border-tertiary/50 rounded-2xl p-5 shadow-2xl space-y-3.5 my-auto">
       <div class="flex items-center justify-between border-b border-outline-variant/40 pb-2.5">
         <div class="flex items-center gap-2">
           <span class="px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-mono text-[10px] font-black">हिंदी गाइड</span>
@@ -322,6 +328,7 @@
       <button type="button" onclick="closeHindiHelp()" class="w-full py-2.5 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold">
         समझ गया (Got It)
       </button>
+    </div>
     </div>
   </div>
 
@@ -1113,6 +1120,252 @@
     <span class="material-symbols-outlined text-tertiary text-[18px]">check_circle</span>
     <span id="toastMessageText" class="text-xs font-mono font-semibold">Action completed!</span>
   </div>
+
+<!-- ==================== PROJECT HISTORY MODAL ==================== -->
+  <div id="historyModalOverlay" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain p-3 sm:p-4" style="-webkit-overflow-scrolling: touch;">
+    <div class="min-h-full flex items-start sm:items-center justify-center py-2">
+    <div class="w-full max-w-2xl bg-surface-container-low border border-outline-variant/60 rounded-2xl p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col my-auto">
+      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
+        <div>
+          <h3 class="font-display text-base font-extrabold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-tertiary">history</span>
+            <span>Saved Project History</span>
+          </h3>
+          <p class="text-[11px] text-on-surface-variant">1-click to reload any past video title, research, concepts &amp; prompts.</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="clearAllProjectHistory()" class="px-2.5 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-500 border border-red-500/40 font-mono text-[10px] font-extrabold flex items-center gap-1 transition">
+            <span class="material-symbols-outlined text-[14px]">delete_forever</span>
+            <span>Delete All</span>
+          </button>
+          <button type="button" onclick="toggleHistoryModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+      </div>
+      <div id="historyListContainer" class="flex-1 overflow-y-auto custom-scroll space-y-2.5 pr-1"></div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ==================== CHANNEL PRESETS MODAL ==================== -->
+  <div id="presetsModalOverlay" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-contain p-3 sm:p-4" style="-webkit-overflow-scrolling: touch;">
+    <div class="min-h-full flex items-start sm:items-center justify-center py-2">
+    <div class="w-full max-w-xl bg-surface-container-low border border-outline-variant/60 rounded-2xl p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col my-auto">
+      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
+        <div>
+          <h3 class="font-display text-base font-extrabold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">bookmarks</span>
+            <span>Channel Brand Presets</span>
+          </h3>
+          <p class="text-[11px] text-on-surface-variant">Save your Niche + Format + Size combo for 1-tap switching.</p>
+        </div>
+        <button type="button" onclick="togglePresetsModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <div class="flex items-center gap-2">
+        <input id="newPresetNameInput" type="text" placeholder="Channel / Preset Name (e.g. TheHistoFy Documentary)..." class="flex-1 bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-secondary" />
+        <button type="button" onclick="saveCurrentAsPreset()" class="px-3.5 py-2 rounded-xl bg-secondary text-slate-950 font-mono text-xs font-extrabold whitespace-nowrap">Save Current</button>
+      </div>
+      <div id="presetsListContainer" class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1"></div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ==================== IN-APP THUMBNAIL IMAGE STUDIO & CHATGPT BRIDGE MODAL ==================== -->
+  <div id="imageStudioModalOverlay" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm overflow-y-auto overscroll-contain p-3 sm:p-4" style="-webkit-overflow-scrolling: touch;">
+    <div class="min-h-full flex items-start sm:items-center justify-center py-2">
+    <div class="w-full max-w-2xl bg-surface-container-low border border-tertiary/50 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4 my-auto">
+      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
+        <div>
+          <h3 id="imageStudioModalTitle" class="font-display text-base font-extrabold text-white flex items-center gap-2">
+            <span class="material-symbols-outlined text-tertiary">auto_fix_high</span>
+            <span>Thumbnail Image Studio</span>
+          </h3>
+          <p class="text-[11px] text-on-surface-variant">Upload your mandatory portrait + optional extra photos, then generate via API or 1-click ChatGPT.</p>
+        </div>
+        <button type="button" onclick="closeImageStudioModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3 rounded-xl bg-surface-container-lowest border border-tertiary/40 space-y-2">
+          <div class="flex items-center justify-between gap-1">
+            <label class="font-mono text-[11px] font-bold text-tertiary">1. YouTuber Portrait (Mandatory)</label>
+            <button type="button" onclick="clearSavedCreatorPhoto()" class="font-mono text-[10px] text-outline hover:text-red-400">Clear Saved</button>
+          </div>
+          <input id="studioCreatorPhotoInput" type="file" accept="image/*" onchange="handleStudioPhotoSelect(this, 'creator')" class="w-full text-[11px] text-on-surface-variant file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-tertiary file:text-on-tertiary file:font-bold" />
+          <div id="studioCreatorPreview" class="hidden pt-1 flex items-center gap-2"></div>
+        </div>
+        <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-2">
+          <div class="flex items-center justify-between gap-1">
+            <label class="font-mono text-[11px] font-bold text-secondary">2. Extra Reference Photos (Up to 4)</label>
+            <button type="button" onclick="clearExtraStudioPhotos()" class="font-mono text-[10px] text-outline hover:text-red-400">Clear</button>
+          </div>
+          <input id="studioExtraPhotosInput" type="file" accept="image/*" multiple onchange="handleStudioPhotoSelect(this, 'extra')" class="w-full text-[11px] text-on-surface-variant file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-secondary file:text-slate-950 file:font-bold" />
+          <button type="button" onclick="smartAutoFetchBestWebPhotos(false)" class="w-full py-1.5 px-2.5 rounded-lg bg-secondary/15 hover:bg-secondary/25 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">🌐 Smart Auto-Fetch Best Non-Copyright Photos</button>
+          <div id="wikimediaResultsGrid" class="hidden flex flex-wrap gap-1.5 pt-1"></div>
+          <div id="studioExtraPreview" class="hidden pt-1 flex flex-wrap gap-1.5"></div>
+        </div>
+      </div>
+
+      <div id="preFlightGuardBar" class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 flex flex-wrap items-center gap-2 font-mono text-[10px]">
+        <span class="text-outline font-bold uppercase">Pre-Flight Check:</span>
+        <span id="pfHookBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Hook</span>
+        <span id="pfFaceBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Face</span>
+        <span id="pfRefBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Ref Photo</span>
+      </div>
+
+      <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/50 space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-mono text-[11px] font-bold text-white">Generate Options:</span>
+          <span class="font-mono text-[10px] text-outline">Reuses your saved ChatGPT chat + copies prompt!</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <button type="button" onclick="generateThumbnailViaGeminiInApp()" class="py-2.5 px-3 rounded-xl bg-primary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
+            <span class="material-symbols-outlined text-[17px]">bolt</span>
+            <span>Try Gemini Image API</span>
+          </button>
+          <button type="button" onclick="smartSendToChatGPT()" class="py-2.5 px-3 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
+            <span>🚀</span>
+            <span>Send to ChatGPT</span>
+          </button>
+          <button type="button" onclick="smartSendToGemini()" class="sm:col-span-2 py-2.5 px-3 rounded-xl bg-secondary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
+            <span>✨</span>
+            <span>Send to Gemini</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="studioImageResultBox" class="hidden p-3 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span id="studioImageStatusText" class="font-mono text-xs font-bold text-secondary">Generating...</span>
+          <a id="studioDownloadImageLink" href="#" download="thumbnail_8k.png" class="hidden px-3 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">Download PNG</a>
+        </div>
+        <img id="studioGeneratedImg" src="" alt="Generated Thumbnail" class="hidden w-full rounded-xl border border-outline-variant/50 object-contain max-h-80" />
+      </div>
+
+      <!-- 1-TAP FOLLOW-UP FIX CHIPS FOR CHATGPT (COLLAPSED BY DEFAULT FOR CLEAN MODAL) -->
+      <details class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/45 space-y-2">
+        <summary class="cursor-pointer font-mono text-[11px] font-bold text-secondary select-none flex items-center justify-between">
+          <span>🔧 1-Tap Follow-Up Fixes (Send to ChatGPT)</span>
+          <span class="text-[10px] text-outline">Expand</span>
+        </summary>
+        <div class="pt-1 space-y-2">
+        <div class="flex flex-wrap gap-1.5">
+          <button type="button" onclick="copyFollowUpFix('face_bigger')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Face Bigger</button>
+          <button type="button" onclick="copyFollowUpFix('text_brighter')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Text Brighter</button>
+          <button type="button" onclick="copyFollowUpFix('more_contrast')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">8K More Contrast</button>
+          <button type="button" onclick="copyFollowUpFix('cleaner_bg')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Cleaner BG</button>
+          <button type="button" onclick="copyFollowUpFix('fix_policy_block')" class="px-2.5 py-1 rounded-lg bg-secondary/20 hover:bg-secondary hover:text-slate-950 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">🛡️ Fix Policy Block</button>
+          <button type="button" onclick="copyFollowUpFix('fix_spelling')" class="px-2.5 py-1 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 font-mono text-[10px] font-bold transition">🔤 Fix Hindi Spelling</button>
+          <button type="button" onclick="copyFollowUpFix('remove_text_clean')" class="px-2.5 py-1 rounded-lg bg-primary/20 hover:bg-primary hover:text-slate-950 text-primary border border-primary/40 font-mono text-[10px] font-bold transition">🧹 Remove Text (Clean Shade)</button>
+        </div>
+      </div>
+      </details>
+
+      <!-- OPTIONAL: PHOTOSHOP-STYLE DRAG & RESIZE KHAND BOLD TEXT EDITOR (0% TYPO) -->
+      <div class="p-3 rounded-xl bg-surface-container-lowest border border-tertiary/40 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-mono text-[11px] font-bold text-tertiary">✍️ Optional: Drag &amp; Resize Khand Bold Text (0% Typo)</span>
+          <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-extrabold">
+            Upload Clean Image
+            <input type="file" accept="image/*" onchange="loadInteractiveStamperImage(this)" class="hidden" />
+          </label>
+        </div>
+        <div id="stampedResultBox" class="hidden space-y-2.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <input id="stamperLine1Input" type="text" oninput="renderInteractiveStamperCanvas()" placeholder="Line 1 (Yellow)" class="bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-xs font-bold text-[#FFD700]" />
+            <input id="stamperLine2Input" type="text" oninput="renderInteractiveStamperCanvas()" placeholder="Line 2 (White)" class="bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-xs font-bold text-white" />
+          </div>
+          <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-on-surface-variant">
+            <label class="flex items-center gap-1.5">
+              <span>Size:</span>
+              <input id="stamperSizeSlider" type="range" min="5" max="20" value="11" oninput="renderInteractiveStamperCanvas()" class="w-24 accent-[#FFD700]" />
+            </label>
+            <button type="button" onclick="toggleStamperAlign()" id="stamperAlignBtn" class="px-2 py-1 rounded bg-surface-container border border-outline-variant/50 text-white font-bold">Align: Left</button>
+            <label class="flex items-center gap-1 cursor-pointer">
+              <input id="stamperSoftShadeCheck" type="checkbox" checked onchange="renderInteractiveStamperCanvas()" class="accent-[#FFD700]" />
+              <span>Soft Dark Shade</span>
+            </label>
+            <span class="text-tertiary font-bold">👆 Drag text anywhere!</span>
+          </div>
+          <canvas id="interactiveStamperCanvas" class="w-full rounded-xl border border-tertiary/50 bg-black cursor-move touch-none"></canvas>
+          <button type="button" onclick="downloadInteractiveStamperPng()" class="px-3.5 py-2 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">⬇️ Download Final PNG</button>
+        </div>
+      </div>
+
+      <!-- YOUTUBE HOME FEED SIMULATOR (TEST YOUR FINAL PNG!) -->
+      <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-mono text-[11px] font-bold text-white flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-red-500">smart_display</span>
+            <span>YouTube Mobile Feed Simulator</span>
+          </span>
+          <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-mono text-[10px] font-bold">
+            Test Final PNG
+            <input type="file" accept="image/*" onchange="previewInYouTubeFeed(this)" class="hidden" />
+          </label>
+        </div>
+        <div id="ytFeedSimulatorCard" class="hidden max-w-sm mx-auto rounded-xl bg-[#0f0f0f] border border-white/10 overflow-hidden shadow-lg">
+          <div class="relative aspect-video bg-black">
+            <img id="ytFeedSimImg" src="" alt="Feed Preview" class="w-full h-full object-cover" />
+            <span class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/85 text-white font-mono text-[10px] font-bold">12:45</span>
+          </div>
+          <div class="p-2.5 flex items-start gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-tertiary text-on-tertiary font-bold text-xs flex items-center justify-center shrink-0">YT</div>
+            <div class="min-w-0 flex-1">
+              <p id="ytFeedSimTitle" class="text-xs font-semibold text-white leading-snug line-clamp-2"></p>
+              <p class="text-[10px] text-slate-400 mt-0.5">Your Channel • 125K views • 2 hours ago</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== 1-TAP FIGURE CROPPER MODAL (PPT / PDF / EXTRA IMAGES) ==================== -->
+  <div id="figureCropModalOverlay" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm overflow-y-auto overscroll-contain p-3 sm:p-4" style="-webkit-overflow-scrolling: touch;">
+    <div class="min-h-full flex items-start sm:items-center justify-center py-2">
+    <div class="w-full max-w-xl bg-surface-container-low border border-tertiary/50 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3 my-auto">
+      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-2.5">
+        <div>
+          <h3 class="font-display text-sm sm:text-base font-extrabold text-white">✂️ Crop Exact Figure / Subject</h3>
+          <p class="text-[11px] text-on-surface-variant">Drag the yellow corners, edges, or inside the box to crop any side cleanly.</p>
+        </div>
+        <button type="button" onclick="closeFigureCropModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <canvas id="figureCropCanvas" class="w-full max-h-[60vh] object-contain rounded-xl border border-outline-variant/50 bg-black cursor-move touch-none"></canvas>
+      <div class="flex items-center justify-between gap-2 pt-1">
+        <button type="button" onclick="resetCropSelection()" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface-variant border border-outline-variant/50 font-mono text-xs font-bold">Reset Box</button>
+        <button type="button" onclick="applyFigureCrop()" class="px-4 py-2 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold shadow">✅ Apply Crop</button>
+      </div>
+    </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== MOBILE STICKY BOTTOM QUICK ACTION BAR ==================== -->
+  <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest/95 backdrop-blur-xl border-t border-outline-variant/50 px-3 py-2 flex items-center justify-between gap-2 shadow-2xl">
+    <button type="button" onclick="runThumbnailResearchAndConcepts()" class="flex-1 h-11 rounded-xl bg-gradient-to-r from-tertiary to-amber-500 text-on-tertiary font-display font-bold text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
+      <span class="material-symbols-outlined text-[18px]">travel_explore</span>
+      <span>Generate</span>
+    </button>
+    <button type="button" onclick="resetStudioFresh(true)" class="h-11 px-3.5 rounded-xl bg-red-500/15 border border-red-500/40 text-red-400 font-mono text-xs font-bold flex items-center justify-center gap-1 active:scale-95 transition">
+      <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
+      <span>Clear</span>
+    </button>
+    <button type="button" onclick="openAiHealthModal()" class="h-11 px-3.5 rounded-xl bg-surface-container border border-outline-variant/50 text-secondary font-mono text-xs font-bold flex items-center justify-center gap-1 active:scale-95 transition">
+      <span class="material-symbols-outlined text-[18px]">monitoring</span>
+      <span>AI</span>
+    </button>
+  </nav>
 
   <!-- ==================== COMPLETE APPLICATION JAVASCRIPT ==================== -->
   <script>
@@ -2316,6 +2569,14 @@ function hasAnyTextAiKey() {
       showToast(summary);
     }
 
+    function getActiveGeminiKeyEntries() {
+      return [
+        ['gemini1', appState.geminiApiKey],
+        ['gemini2', appState.geminiApiKey2],
+        ['gemini3', appState.geminiApiKey3]
+      ].filter(([, k]) => Boolean(k));
+    }
+
     async function callGeminiJsonAPI(promptText, useSearchGrounding = true) {
       if (!hasAnyTextAiKey()) return null;
       const cacheKey = hashPromptKey(promptText);
@@ -2323,12 +2584,12 @@ function hasAnyTextAiKey() {
       if (cached && (Date.now() - cached.ts) < 24 * 60 * 60 * 1000) {
         return JSON.parse(JSON.stringify(cached.data));
       }
-      const hasAnyGem = Boolean(appState.geminiApiKey || appState.geminiApiKey2 || appState.geminiApiKey3);
-      if (hasAnyGem && __preferredLiveProvider === 'gemini' && !__discoveredModelsCache) {
+      const activeKeyEntries = getActiveGeminiKeyEntries();
+      if (activeKeyEntries.length > 0 && __preferredLiveProvider === 'gemini' && !__discoveredModelsCache) {
         await autoDiscoverWorkingGeminiModel();
       }
-      const preferred = (appState.geminiModel && appState.geminiModel !== 'gemini-1.5-flash') ? appState.geminiModel : 'gemini-2.5-flash';
-      const livePool = (__discoveredModelList && __discoveredModelList.length) ? __discoveredModelList.slice(0, 6) : ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-pro', 'gemini-1.5-flash'];
+      const preferred = (appState.geminiModel && appState.geminiModel !== 'gemini-1.5-flash' && appState.geminiModel !== 'gemini-2.5-flash-lite') ? appState.geminiModel : 'gemini-2.5-flash';
+      const livePool = (__discoveredModelList && __discoveredModelList.length) ? __discoveredModelList.slice(0, 6) : ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-pro'];
       const candidateModels = [...new Set([preferred, ...livePool])];
 
       const steps = [];
@@ -2356,60 +2617,56 @@ function hasAnyTextAiKey() {
       });
 
       let firstErrMsg = '';
-      const activeKeyEntries = [
-        ['gemini1', appState.geminiApiKey],
-        ['gemini2', appState.geminiApiKey2],
-        ['gemini3', appState.geminiApiKey3]
-      ].filter(([, k]) => Boolean(k));
       for (const [keySlot, apiKeyToUse] of activeKeyEntries) {
-      for (const step of steps) {
-        const kmKey = `${apiKeyToUse.slice(-6)}_${step.model}`;
-        if (__exhaustedKeyModels.has(kmKey)) continue;
-        const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), step.timeout);
-        try {
-          const t0 = Date.now();
-          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${step.model}:generateContent?key=${encodeURIComponent(apiKeyToUse)}`;
-          const res = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(step.body),
-            signal: ctrl.signal
-          });
-          clearTimeout(timer);
-          if (res.ok) {
-            const data = await res.json();
-            const parts = data?.candidates?.[0]?.content?.parts || [];
-            const rawText = parts.map(pt => pt.text || '').join('\n').trim();
-            if (rawText) {
-              const parsed = safeParseAiJson(rawText);
-              if (!parsed) throw new Error('Malformed JSON from Gemini');
-              parsed.__usedGroundedSearch = step.grounded;
-              parsed.__modelUsed = step.model;
-              parsed.__providerUsed = keySlot;
-              __preferredLiveProvider = 'gemini';
-              setProviderHealth(keySlot, 'ok', step.model, 'Live call succeeded', Date.now() - t0);
-              getTodayUsageCount(true);
-              __aiTopicCache.set(cacheKey, { ts: Date.now(), data: parsed });
-              return parsed;
+        for (const step of steps) {
+          const kmKey = `${apiKeyToUse.slice(-6)}_${step.model}`;
+          if (__exhaustedKeyModels.has(kmKey)) continue;
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), step.timeout);
+          try {
+            const t0 = Date.now();
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${step.model}:generateContent?key=${encodeURIComponent(apiKeyToUse)}`;
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(step.body),
+              signal: ctrl.signal
+            });
+            clearTimeout(timer);
+            if (res.ok) {
+              const data = await res.json();
+              const parts = data?.candidates?.[0]?.content?.parts || [];
+              const rawText = parts.map(pt => pt.text || '').join('\n').trim();
+              if (rawText) {
+                const parsed = safeParseAiJson(rawText);
+                if (!parsed) throw new Error('Malformed JSON from Gemini');
+                parsed.__usedGroundedSearch = step.grounded;
+                parsed.__modelUsed = step.model;
+                parsed.__providerUsed = keySlot;
+                __preferredLiveProvider = 'gemini';
+                setProviderHealth(keySlot, 'ok', step.model, 'Live call succeeded', Date.now() - t0);
+                getTodayUsageCount(true);
+                __aiTopicCache.set(cacheKey, { ts: Date.now(), data: parsed });
+                return parsed;
+              }
+            } else {
+              const errJson = await res.json().catch(() => ({}));
+              const rawMsg = errJson?.error?.message || `HTTP ${res.status}`;
+              const isQuotaErr = res.status === 429 || /quota|exceeded|limit/i.test(rawMsg);
+              if (isQuotaErr) __exhaustedKeyModels.add(kmKey);
+              setProviderHealth(keySlot, isQuotaErr ? 'quota' : 'error', step.model, rawMsg);
+              const msg = isQuotaErr ? 'Free-tier daily quota reached (auto-switching model/key)' : rawMsg.slice(0, 90);
+              if (!firstErrMsg) firstErrMsg = `${step.model}: ${msg}`;
             }
-          } else {
-            const errJson = await res.json().catch(() => ({}));
-            const rawMsg = errJson?.error?.message || `HTTP ${res.status}`;
-            const isQuotaErr = res.status === 429 || /quota|exceeded|limit/i.test(rawMsg);
-            if (isQuotaErr) __exhaustedKeyModels.add(kmKey);
-            setProviderHealth(keySlot, isQuotaErr ? 'quota' : 'error', step.model, rawMsg);
-            const msg = isQuotaErr ? 'Free-tier daily quota reached (auto-switching model/key)' : rawMsg.slice(0, 90);
+          } catch (err) {
+            clearTimeout(timer);
+            const msg = err?.name === 'AbortError' ? `Timeout (${step.timeout / 1000}s)` : (err?.message || 'Network error');
             if (!firstErrMsg) firstErrMsg = `${step.model}: ${msg}`;
           }
-        } catch (err) {
-          clearTimeout(timer);
-          const msg = err?.name === 'AbortError' ? `Timeout (${step.timeout / 1000}s)` : (err?.message || 'Network error');
-          if (!firstErrMsg) firstErrMsg = `${step.model}: ${msg}`;
         }
       }
 
-            if (appState.groqApiKey) {
+      if (appState.groqApiKey) {
         const gModels = await discoverGroqModels(appState.groqApiKey);
         const gRes = await callOpenAICompatibleJson('groq', 'https://api.groq.com/openai/v1/chat/completions', appState.groqApiKey, gModels, promptText);
         if (gRes) { __preferredLiveProvider = 'groq'; __aiTopicCache.set(cacheKey, { ts: Date.now(), data: gRes }); return gRes; }
@@ -2429,46 +2686,48 @@ function hasAnyTextAiKey() {
         if (cLbl) cLbl.textContent = `⚠️ ${firstErrMsg.slice(0, 38)}`;
         showToast(`Gemini Error: ${firstErrMsg.slice(0, 80)}`);
       }
-      }
       return null;
     }
 
     // Optional Direct YouTube Data API v3 Search (if user provided YouTube API Key or same GCP key has YouTube Data API v3 enabled)
 
     async function callGeminiYouTubeVideoAPI(videoUrl, promptText) {
-      if (!appState.geminiApiKey || !videoUrl) return null;
+      const keys = getActiveGeminiKeyEntries();
+      if (!keys.length || !videoUrl) return null;
       const models = [...new Set([appState.geminiModel || 'gemini-2.5-flash', 'gemini-2.5-flash', 'gemini-2.0-flash'])];
-      for (const mName of models) {
-        try {
-          const ep = `https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
-          const ctrl = new AbortController();
-          const tid = setTimeout(() => ctrl.abort(), 35000);
-          const resp = await fetch(ep, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: ctrl.signal,
-            body: JSON.stringify({
-              contents: [{
-                parts: [
-                  { fileData: { fileUri: videoUrl } },
-                  { text: promptText }
-                ]
-              }],
-              generationConfig: { responseMimeType: 'application/json' }
-            })
-          });
-          clearTimeout(tid);
-          if (!resp.ok) continue;
-          const data = await resp.json();
-          const rawTxt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-          const cleaned = rawTxt.replace(/```json|```/gi, "").trim(); const fB = cleaned.indexOf("{"); const lB = cleaned.lastIndexOf("}"); const parsed = (fB !== -1 && lB > fB) ? JSON.parse(cleaned.slice(fB, lB + 1)) : JSON.parse(cleaned);
-          if (parsed) {
-            getTodayUsageCount(true);
-            parsed.__watchedVideoDirectly = true;
-            parsed.__modelUsed = mName;
-            return parsed;
-          }
-        } catch (e) {}
+      for (const [, apiKey] of keys) {
+        for (const mName of models) {
+          try {
+            const ep = `https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${encodeURIComponent(apiKey)}`;
+            const ctrl = new AbortController();
+            const tid = setTimeout(() => ctrl.abort(), 35000);
+            const resp = await fetch(ep, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              signal: ctrl.signal,
+              body: JSON.stringify({
+                contents: [{
+                  parts: [
+                    { fileData: { fileUri: videoUrl } },
+                    { text: promptText }
+                  ]
+                }],
+                generationConfig: { responseMimeType: 'application/json' }
+              })
+            });
+            clearTimeout(tid);
+            if (!resp.ok) continue;
+            const data = await resp.json();
+            const rawTxt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            const parsed = safeParseAiJson(rawTxt);
+            if (parsed) {
+              getTodayUsageCount(true);
+              parsed.__watchedVideoDirectly = true;
+              parsed.__modelUsed = mName;
+              return parsed;
+            }
+          } catch (e) {}
+        }
       }
       return null;
     }
@@ -2903,17 +3162,15 @@ Return ONLY valid JSON:
       setStageStatus(3, 'pending', '3. Building 6 Concepts & A/B/C Engine');
 
       try {
-        // Stage 1: Attempt Direct YouTube Data API v3 lookup first (if available)
+        // Stage 1 + 2: Run YouTube Data API v3 lookup in parallel with AI Hooks + Research for max speed
         const searchQuery = `${title || desc.slice(0, 50)} ${niche.name}`;
-        let directYtVideos = await fetchDirectYouTubeVideos(searchQuery);
+        setStageStatus(1, 'active', '1. Searching YouTube & Running 3-Layer AI Intelligence...');
 
-        setStageStatus(1, 'done', directYtVideos ? '1. YouTube Data API v3 Videos Retrieved' : '1. Checking Gemini Live Google Search Grounding');
-        setStageStatus(2, 'active', '2. Running 3-Layer AI Thumbnail Intelligence...');
-
+        let directYtVideos = null;
         let aiResult = null;
-        if (appState.geminiApiKey) {
-          if (progHeadline) progHeadline.textContent = `⏳ Live Gemini AI (${appState.geminiModel || '2.5-flash'}): Researching YouTube thumbnails & designing 6 concepts...`;
-          if (progBadge) progBadge.textContent = 'Live Gemini API Active';
+        if (hasAnyTextAiKey()) {
+          if (progHeadline) progHeadline.textContent = `⏳ Live AI (${appState.geminiModel || '2.5-flash'}): Researching YouTube thumbnails & designing 6 concepts...`;
+          if (progBadge) progBadge.textContent = 'Live AI Active';
 
           const prompt = `You are the world's #1 YouTube Thumbnail Art Director, Visual Psychologist, and Prompt Engineer.
 Use Google Search to research popular and currently trending YouTube videos and viral thumbnail designs for this exact topic, niche, and format:
@@ -2978,15 +3235,21 @@ CRITICAL INSTRUCTIONS:
 }
 Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos" contains 3 items.`;
 
-          const [dedicatedHooks, mainRes] = await Promise.all([
+          const [ytVids, dedicatedHooks, mainRes] = await Promise.all([
+            fetchDirectYouTubeVideos(searchQuery).catch(() => null),
             generateDedicatedThumbnailHooks(title, desc, niche.name),
             callGeminiJsonAPI(prompt, true)
           ]);
+          directYtVideos = ytVids;
           aiResult = mainRes;
           if (dedicatedHooks && dedicatedHooks.length >= 3) {
             window.__latestDedicatedHooks = dedicatedHooks;
             if (aiResult) aiResult.thumbnailTextVariations = dedicatedHooks;
           }
+          setStageStatus(1, 'done', directYtVideos ? '1. YouTube Data API v3 Videos Retrieved' : '1. Live AI Search Grounding Checked');
+        } else {
+          directYtVideos = await fetchDirectYouTubeVideos(searchQuery).catch(() => null);
+          setStageStatus(1, 'done', directYtVideos ? '1. YouTube Data API v3 Videos Retrieved' : '1. Built-in Niche Engine Ready');
         }
 
         setStageStatus(2, 'done', '2. 3-Layer Topic & Viral Format Analysis Ready');
@@ -3459,13 +3722,12 @@ STEP 3 — LOCKED TYPOGRAPHY & BRAND RULES (KHAND BOLD • YELLOW & WHITE):
 STEP 4 — VIRAL EDITORIAL 8K SHARPNESS, COLOR SEPARATION & 3-LAYER DEPTH LOCK:
 ===================================================================
 • Format & Resolution Lock: Exact ${sz.ratio} aspect ratio (${sz.resolution}px, ${sz.orientation}) for ${sz.platform}.
-• Hyper-Crisp "Dodge & Burn" Subject Sharpness: Sculpted high-clarity Photoshop editorial cutout look—razor-sharp iris catchlights, crisp eyebrows, natural micro-skin pores, individual hair strands, and clean studio-grade rim separation around shoulders/head. Keep human skin tones 100% clean and natural (NEVER muddy brown or washed-out yellow).
-• Studio Color Separation (MagnatesMedia / Pro Editorial Standard):
-  1. Subject Skin Key Light: Clean, neutral-natural daylight studio key light on the face (ZERO yellow/brown color cast on skin!).
-  2. Contrasting Cool/Dark Backdrop: Background MUST sit 2–3 stops darker in a cool/contrasting palette (Deep Royal Cobalt Navy #0B1A33, Charcoal Obsidian #0A0D14, or Deep Slate-Teal with a subtle radial spotlight burst & dark vignette)—NEVER wash the whole scene in muddy beige/sepia.
-  3. Razor-Sharp Edge Rim Light: Crisp 2px electric gold (#FFD700) or cool cyan/white rim light tracing ONLY the outer hair & shoulders to pop the cutout off the background in 3D.
-• 3-Layer Editorial Depth: Layer 1 (Back) = deep atmospheric graded backdrop/radial burst + optional subtle large depth-layered shadow/motif behind the head; Layer 2 (Mid) = crisp cutout hero subject + authentic historical/topical artifact with realistic lens flare/rim glow; Layer 3 (Front) = tack-sharp foreground evidence + high-contrast 2-line Khand Bold headline.
-• Negative Constraints: ZERO muddy/brownish color cast, ZERO soft/blurry AI faces, ZERO plastic skin, ZERO clutter, ZERO random extra words, ZERO watermarks, ZERO channel logos.
+• Studio Color Separation (Pro Editorial Standard):
+  1. Subject Skin Key Light: Clean, neutral-natural daylight studio key light on the face (ZERO yellow/brown color cast on skin).
+  2. Contrasting Cool/Dark Backdrop: Background MUST sit 2–3 stops darker in a cool/contrasting palette (Deep Royal Cobalt Navy #0B1A33, Charcoal Obsidian #0A0D14, or Deep Slate-Teal with subtle radial spotlight burst & dark vignette)—never wash the scene in muddy beige/sepia.
+  3. Razor-Sharp Edge Rim Light: Crisp 2px electric gold (#FFD700) or cool cyan/white rim light tracing ONLY outer hair & shoulders.
+• 3-Layer Editorial Depth: Layer 1 (Back) = deep graded backdrop/radial burst; Layer 2 (Mid) = crisp cutout hero subject + authentic artifact with subtle rim glow; Layer 3 (Front) = tack-sharp foreground evidence + 2-line Khand Bold headline.
+• Negative Constraints: ZERO muddy color cast, ZERO blurry AI faces, ZERO random extra words, ZERO watermarks, ZERO channel logos.
 ${heritageBlock}`;
       return heritageSafe ? sanitizePromptForHeritageSafety(rawPrompt) : rawPrompt;
     }
@@ -3830,10 +4092,20 @@ ${heritageBlock}`;
       if (yt4Studio) yt4Studio.classList.add('hidden');
       if (yt4Grid) yt4Grid.innerHTML = '';
       if (yt4Picker) yt4Picker.innerHTML = '';
-      ['seoOutTitle1', 'seoOutTitle2', 'seoOutTitle3', 'seoOutDesc', 'seoOutTags', 'seoOutHook', 'seoOutPinnedComment'].forEach(id => {
+      ['seoTitlesList', 'seoBlueprintBox'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) { if ('value' in el) el.value = ''; else el.textContent = ''; }
+        if (el) el.innerHTML = '';
       });
+      ['seoDescriptionPre', 'seoTagsPre', 'seoOpeningHookPre', 'seoPinnedCommentPre'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '';
+      });
+      const tagMeter = document.getElementById('seoTagCharMeter');
+      if (tagMeter) tagMeter.textContent = '(0 / 500 chars)';
+      const scoreBadge = document.getElementById('seoOverallScoreBadge');
+      if (scoreBadge) scoreBadge.textContent = 'SEO Score: --/100';
+      lastAuditedVideoData = null;
+      activeStudioVariantIndex = 0;
       if (typeof clearPptxTempData === 'function') clearPptxTempData(false);
       ['videoTitleInput', 'videoTopicDetailsInput', 'referenceInfoInput', 'optionalHookOverrideInput', 'customNicheInput'].forEach(id => {
         const el = document.getElementById(id);
@@ -4237,16 +4509,6 @@ Return strict JSON: {"details": "..."}`;
       window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener');
     }
 
-    function dispatchToGeminiBridge(promptText, toastMsg) {
-      copyTextSafe(promptText, toastMsg || 'Prompt copied! Sending to Gemini...');
-      try {
-        const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-        const bridgeImgs = [studioCreatorPhotoB64, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
-        window.postMessage({ type: 'SSIRO_GEMINI_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
-      } catch (e) {}
-      window.open('https://gemini.google.com/app', '_blank', 'noopener');
-    }
-
     const CREATOR_FACE_STORAGE_KEY = 'yt_seo_ssiro_creator_face_v31';
 
     const MOOD_DIRECTIVES = {
@@ -4419,8 +4681,8 @@ Return strict JSON: {"details": "..."}`;
       if (!images || !images.length) return [];
       const preFiltered = await filterOutWhiteTextPages(images);
       if (!preFiltered.length) return [];
-      const activeKey = appState.geminiApiKey || '';
-      if (!activeKey) return preFiltered.slice(0, 4);
+      const keys = getActiveGeminiKeyEntries();
+      if (!keys.length) return preFiltered.slice(0, 4);
 
       const candidateSlice = preFiltered.slice(0, 6);
       const parts = [{
@@ -4443,7 +4705,10 @@ Return strict JSON: {"decisions": [{"index": 0, "keep": true, "box": [120, 150, 
         : [appState.geminiModel || 'gemini-2.5-flash', 'gemini-2.0-flash'];
       const models = [...new Set(livePool)];
 
+      for (const [keySlot, activeKey] of keys) {
       for (const mName of models) {
+        const kmKey = `${activeKey.slice(-6)}_${mName}`;
+        if (__exhaustedKeyModels.has(kmKey)) continue;
         try {
           const ep = `https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${encodeURIComponent(activeKey)}`;
           const resp = await fetch(ep, {
@@ -4451,7 +4716,13 @@ Return strict JSON: {"decisions": [{"index": 0, "keep": true, "box": [120, 150, 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseMimeType: 'application/json' } })
           });
-          if (!resp.ok) continue;
+          if (!resp.ok) {
+            if (resp.status === 429) {
+              __exhaustedKeyModels.add(kmKey);
+              setProviderHealth(keySlot, 'quota', mName, 'Vision quota reached');
+            }
+            continue;
+          }
           const data = await resp.json();
           const rawTxt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
           const parsed = safeParseAiJson(rawTxt);
@@ -4477,6 +4748,7 @@ Return strict JSON: {"decisions": [{"index": 0, "keep": true, "box": [120, 150, 
           }
           return kept.slice(0, 4);
         } catch (e) {}
+      }
       }
       return preFiltered.slice(0, 4);
     }
@@ -4998,17 +5270,42 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
       }
 
       // Step 3: Load up to 8 candidates into browser canvas (via CORS Image or fetch->Blob fallback), filter white text scans (0 tokens!)
+      const loadCorsSafeImage = async (imgUrl) => {
+        try {
+          return await new Promise((res, rej) => {
+            const im = new Image();
+            im.crossOrigin = 'anonymous';
+            const tm = setTimeout(() => rej(new Error('timeout')), 5500);
+            im.onload = () => { clearTimeout(tm); res(im); };
+            im.onerror = () => { clearTimeout(tm); rej(new Error('img err')); };
+            im.src = imgUrl;
+          });
+        } catch (err) {
+          const ctrl = new AbortController();
+          const tm = setTimeout(() => ctrl.abort(), 5500);
+          const resp = await fetch(imgUrl, { mode: 'cors', signal: ctrl.signal });
+          clearTimeout(tm);
+          if (!resp.ok) throw new Error('fetch err');
+          const blob = await resp.blob();
+          const objUrl = URL.createObjectURL(blob);
+          try {
+            return await new Promise((res, rej) => {
+              const im = new Image();
+              im.onload = () => { URL.revokeObjectURL(objUrl); res(im); };
+              im.onerror = () => { URL.revokeObjectURL(objUrl); rej(new Error('blob img err')); };
+              im.src = objUrl;
+            });
+          } catch (e2) {
+            URL.revokeObjectURL(objUrl);
+            throw e2;
+          }
+        }
+      };
+
       const loaded = [];
       for (const c of candidates.slice(0, 8)) {
         try {
-          const img = await new Promise((res, rej) => {
-            const im = new Image();
-            im.crossOrigin = 'anonymous';
-            const tm = setTimeout(() => rej(new Error('timeout')), 6500);
-            im.onload = () => { clearTimeout(tm); res(im); };
-            im.onerror = () => { clearTimeout(tm); rej(new Error('img err')); };
-            im.src = c.url;
-          });
+          const img = await loadCorsSafeImage(c.url);
           if (img.width < 220 || img.height < 180) continue;
           const tc = document.createElement('canvas');
           tc.width = 160; tc.height = 120;
@@ -5700,7 +5997,7 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
               c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
               const compact = c.toDataURL('image/jpeg', 0.8);
               studioCreatorPhotoB64 = compact;
-              localStorage.setItem(CREATOR_FACE_STORAGE_KEY, compact);
+              try { localStorage.setItem(CREATOR_FACE_STORAGE_KEY, compact); } catch (e) {}
             };
             img.src = rawUrl;
           } catch (e) {}
@@ -5838,7 +6135,9 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
       }
       if (statusEl) statusEl.textContent = '⏳ Calling Gemini Image API (if supported on your key)...';
       try {
-        const parts = [{ text: v.promptText.replace('STOP AND CHECK BEFORE GENERATING ANY IMAGE', 'GENERATE IMAGE NOW USING ATTACHED PHOTOS') }];
+        const cleanedPrompt = v.promptText
+          .replace(/STOP AND CHECK BEFORE GENERATING ANY IMAGE[\s\S]*?WAIT until the user uploads their portrait photo \(or explicitly replies 'skip'\)\./i, 'GENERATE IMAGE NOW USING ATTACHED PHOTOS.');
+        const parts = [{ text: cleanedPrompt }];
         const allImgs = [studioCreatorPhotoB64, pptxCombinedRefSheetB64, ...studioExtraPhotosB64].filter(Boolean);
         allImgs.forEach(dataUrl => {
           const [meta, b64] = dataUrl.split(',');
@@ -6129,8 +6428,8 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
               });
               const d = await resp.json();
               const txt = d?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-              const parsed = JSON.parse(txt);
-              if (parsed.title) { firstHeading = parsed.title; combinedSlideText = parsed.details || parsed.title; }
+              const parsed = safeParseAiJson(txt);
+              if (parsed && parsed.title) { firstHeading = parsed.title; combinedSlideText = parsed.details || parsed.title; }
             } catch (e) {}
           }
         } else if (/\.pdf$/i.test(file.name) || file.type === 'application/pdf') {
@@ -6525,7 +6824,8 @@ Return strict JSON with ONLY these keys:
 
       const pixelStats = await Promise.all(ctrCompareImages.map(im => computeRealPixelMetrics(im.dataUrl)));
 
-      if (appState.geminiApiKey) {
+      const activeKeys = getActiveGeminiKeyEntries();
+      if (activeKeys.length) {
         try {
           const parts = [{
             text: `You are a Brutally Honest YouTube CTR Expert. The user uploaded ${ctrCompareImages.length} candidate thumbnail(s) for the video title: "${title}".
@@ -6543,30 +6843,37 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
             ? __discoveredModelList.slice(0, 4)
             : [appState.geminiModel || 'gemini-2.5-flash', 'gemini-2.0-flash'];
           let aiAudit = null;
-          for (const mName of [...new Set(liveModels)]) {
-            try {
-              const t0 = Date.now();
-              const ep = `https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
-              const resp = await fetch(ep, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseMimeType: 'application/json' } })
-              });
-              if (!resp.ok) {
-                const ej = await resp.json().catch(() => ({}));
-                setProviderHealth('gemini1', resp.status === 429 ? 'quota' : 'error', mName, ej?.error?.message || `HTTP ${resp.status}`);
-                continue;
-              }
-              const data = await resp.json();
-              const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-              const cand = safeParseAiJson(txt);
-              if (cand && Array.isArray(cand.audits)) {
-                aiAudit = cand;
-                setProviderHealth('gemini1', 'ok', mName, 'CTR Vision Audit succeeded', Date.now() - t0);
-                getTodayUsageCount(true);
-                break;
-              }
-            } catch (e) {}
+          for (const [keySlot, activeKey] of activeKeys) {
+            if (aiAudit) break;
+            for (const mName of [...new Set(liveModels)]) {
+              const kmKey = `${activeKey.slice(-6)}_${mName}`;
+              if (__exhaustedKeyModels.has(kmKey)) continue;
+              try {
+                const t0 = Date.now();
+                const ep = `https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${encodeURIComponent(activeKey)}`;
+                const resp = await fetch(ep, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseMimeType: 'application/json' } })
+                });
+                if (!resp.ok) {
+                  const ej = await resp.json().catch(() => ({}));
+                  const isQ = resp.status === 429;
+                  if (isQ) __exhaustedKeyModels.add(kmKey);
+                  setProviderHealth(keySlot, isQ ? 'quota' : 'error', mName, ej?.error?.message || `HTTP ${resp.status}`);
+                  continue;
+                }
+                const data = await resp.json();
+                const txt = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                const cand = safeParseAiJson(txt);
+                if (cand && Array.isArray(cand.audits)) {
+                  aiAudit = cand;
+                  setProviderHealth(keySlot, 'ok', mName, 'CTR Vision Audit succeeded', Date.now() - t0);
+                  getTodayUsageCount(true);
+                  break;
+                }
+              } catch (e) {}
+            }
           }
           if (aiAudit && Array.isArray(aiAudit.audits)) {
             resBox.innerHTML = `
@@ -7031,243 +7338,5 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
       });
     });
   </script>
-
-  <!-- ==================== PROJECT HISTORY MODAL ==================== -->
-  <div id="historyModalOverlay" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-2xl bg-surface-container-low border border-outline-variant/60 rounded-2xl p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
-      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
-        <div>
-          <h3 class="font-display text-base font-extrabold text-white flex items-center gap-2">
-            <span class="material-symbols-outlined text-tertiary">history</span>
-            <span>Saved Project History</span>
-          </h3>
-          <p class="text-[11px] text-on-surface-variant">1-click to reload any past video title, research, concepts &amp; prompts.</p>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <button type="button" onclick="clearAllProjectHistory()" class="px-2.5 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-500 border border-red-500/40 font-mono text-[10px] font-extrabold flex items-center gap-1 transition">
-            <span class="material-symbols-outlined text-[14px]">delete_forever</span>
-            <span>Delete All</span>
-          </button>
-          <button type="button" onclick="toggleHistoryModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
-            <span class="material-symbols-outlined text-[18px]">close</span>
-          </button>
-        </div>
-      </div>
-      <div id="historyListContainer" class="flex-1 overflow-y-auto custom-scroll space-y-2.5 pr-1"></div>
-    </div>
-  </div>
-
-  <!-- ==================== CHANNEL PRESETS MODAL ==================== -->
-  <div id="presetsModalOverlay" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-xl bg-surface-container-low border border-outline-variant/60 rounded-2xl p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
-      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
-        <div>
-          <h3 class="font-display text-base font-extrabold text-white flex items-center gap-2">
-            <span class="material-symbols-outlined text-secondary">bookmarks</span>
-            <span>Channel Brand Presets</span>
-          </h3>
-          <p class="text-[11px] text-on-surface-variant">Save your Niche + Format + Size combo for 1-tap switching.</p>
-        </div>
-        <button type="button" onclick="togglePresetsModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
-          <span class="material-symbols-outlined text-[18px]">close</span>
-        </button>
-      </div>
-      <div class="flex items-center gap-2">
-        <input id="newPresetNameInput" type="text" placeholder="Channel / Preset Name (e.g. TheHistoFy Documentary)..." class="flex-1 bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-secondary" />
-        <button type="button" onclick="saveCurrentAsPreset()" class="px-3.5 py-2 rounded-xl bg-secondary text-slate-950 font-mono text-xs font-extrabold whitespace-nowrap">Save Current</button>
-      </div>
-      <div id="presetsListContainer" class="flex-1 overflow-y-auto custom-scroll space-y-2 pr-1"></div>
-    </div>
-  </div>
-
-  <!-- ==================== IN-APP THUMBNAIL IMAGE STUDIO & CHATGPT BRIDGE MODAL ==================== -->
-  <div id="imageStudioModalOverlay" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-2xl bg-surface-container-low border border-tertiary/50 rounded-2xl p-5 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scroll">
-      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-3">
-        <div>
-          <h3 id="imageStudioModalTitle" class="font-display text-base font-extrabold text-white flex items-center gap-2">
-            <span class="material-symbols-outlined text-tertiary">auto_fix_high</span>
-            <span>Thumbnail Image Studio</span>
-          </h3>
-          <p class="text-[11px] text-on-surface-variant">Upload your mandatory portrait + optional extra photos, then generate via API or 1-click ChatGPT.</p>
-        </div>
-        <button type="button" onclick="closeImageStudioModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
-          <span class="material-symbols-outlined text-[18px]">close</span>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="p-3 rounded-xl bg-surface-container-lowest border border-tertiary/40 space-y-2">
-          <div class="flex items-center justify-between gap-1">
-            <label class="font-mono text-[11px] font-bold text-tertiary">1. YouTuber Portrait (Mandatory)</label>
-            <button type="button" onclick="clearSavedCreatorPhoto()" class="font-mono text-[10px] text-outline hover:text-red-400">Clear Saved</button>
-          </div>
-          <input id="studioCreatorPhotoInput" type="file" accept="image/*" onchange="handleStudioPhotoSelect(this, 'creator')" class="w-full text-[11px] text-on-surface-variant file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-tertiary file:text-on-tertiary file:font-bold" />
-          <div id="studioCreatorPreview" class="hidden pt-1 flex items-center gap-2"></div>
-        </div>
-        <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-2">
-          <div class="flex items-center justify-between gap-1">
-            <label class="font-mono text-[11px] font-bold text-secondary">2. Extra Reference Photos (Up to 4)</label>
-            <button type="button" onclick="clearExtraStudioPhotos()" class="font-mono text-[10px] text-outline hover:text-red-400">Clear</button>
-          </div>
-          <input id="studioExtraPhotosInput" type="file" accept="image/*" multiple onchange="handleStudioPhotoSelect(this, 'extra')" class="w-full text-[11px] text-on-surface-variant file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-secondary file:text-slate-950 file:font-bold" />
-          <button type="button" onclick="smartAutoFetchBestWebPhotos(false)" class="w-full py-1.5 px-2.5 rounded-lg bg-secondary/15 hover:bg-secondary/25 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">🌐 Smart Auto-Fetch Best Non-Copyright Photos</button>
-          <div id="wikimediaResultsGrid" class="hidden flex flex-wrap gap-1.5 pt-1"></div>
-          <div id="studioExtraPreview" class="hidden pt-1 flex flex-wrap gap-1.5"></div>
-        </div>
-      </div>
-
-      <div id="preFlightGuardBar" class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 flex flex-wrap items-center gap-2 font-mono text-[10px]">
-        <span class="text-outline font-bold uppercase">Pre-Flight Check:</span>
-        <span id="pfHookBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Hook</span>
-        <span id="pfFaceBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Face</span>
-        <span id="pfRefBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Ref Photo</span>
-      </div>
-
-      <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/50 space-y-2">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="font-mono text-[11px] font-bold text-white">Generate Options:</span>
-          <span class="font-mono text-[10px] text-outline">Reuses your saved ChatGPT chat + copies prompt!</span>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <button type="button" onclick="generateThumbnailViaGeminiInApp()" class="py-2.5 px-3 rounded-xl bg-primary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
-            <span class="material-symbols-outlined text-[17px]">bolt</span>
-            <span>Try Gemini Image API</span>
-          </button>
-          <button type="button" onclick="smartSendToChatGPT()" class="py-2.5 px-3 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
-            <span>🚀</span>
-            <span>Send to ChatGPT</span>
-          </button>
-          <button type="button" onclick="smartSendToGemini()" class="sm:col-span-2 py-2.5 px-3 rounded-xl bg-secondary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
-            <span>✨</span>
-            <span>Send to Gemini</span>
-          </button>
-        </div>
-      </div>
-
-      <div id="studioImageResultBox" class="hidden p-3 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2.5">
-        <div class="flex items-center justify-between">
-          <span id="studioImageStatusText" class="font-mono text-xs font-bold text-secondary">Generating...</span>
-          <a id="studioDownloadImageLink" href="#" download="thumbnail_8k.png" class="hidden px-3 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">Download PNG</a>
-        </div>
-        <img id="studioGeneratedImg" src="" alt="Generated Thumbnail" class="hidden w-full rounded-xl border border-outline-variant/50 object-contain max-h-80" />
-      </div>
-
-      <!-- 1-TAP FOLLOW-UP FIX CHIPS FOR CHATGPT (COLLAPSED BY DEFAULT FOR CLEAN MODAL) -->
-      <details class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/45 space-y-2">
-        <summary class="cursor-pointer font-mono text-[11px] font-bold text-secondary select-none flex items-center justify-between">
-          <span>🔧 1-Tap Follow-Up Fixes (Send to ChatGPT)</span>
-          <span class="text-[10px] text-outline">Expand</span>
-        </summary>
-        <div class="pt-1 space-y-2">
-        <div class="flex flex-wrap gap-1.5">
-          <button type="button" onclick="copyFollowUpFix('face_bigger')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Face Bigger</button>
-          <button type="button" onclick="copyFollowUpFix('text_brighter')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Text Brighter</button>
-          <button type="button" onclick="copyFollowUpFix('more_contrast')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">8K More Contrast</button>
-          <button type="button" onclick="copyFollowUpFix('cleaner_bg')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-tertiary hover:text-on-tertiary text-white border border-outline-variant/50 font-mono text-[10px] font-bold transition">Cleaner BG</button>
-          <button type="button" onclick="copyFollowUpFix('fix_policy_block')" class="px-2.5 py-1 rounded-lg bg-secondary/20 hover:bg-secondary hover:text-slate-950 text-secondary border border-secondary/40 font-mono text-[10px] font-bold transition">🛡️ Fix Policy Block</button>
-          <button type="button" onclick="copyFollowUpFix('fix_spelling')" class="px-2.5 py-1 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-on-tertiary text-tertiary border border-tertiary/40 font-mono text-[10px] font-bold transition">🔤 Fix Hindi Spelling</button>
-          <button type="button" onclick="copyFollowUpFix('remove_text_clean')" class="px-2.5 py-1 rounded-lg bg-primary/20 hover:bg-primary hover:text-slate-950 text-primary border border-primary/40 font-mono text-[10px] font-bold transition">🧹 Remove Text (Clean Shade)</button>
-        </div>
-      </div>
-      </details>
-
-      <!-- OPTIONAL: PHOTOSHOP-STYLE DRAG & RESIZE KHAND BOLD TEXT EDITOR (0% TYPO) -->
-      <div class="p-3 rounded-xl bg-surface-container-lowest border border-tertiary/40 space-y-2.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="font-mono text-[11px] font-bold text-tertiary">✍️ Optional: Drag &amp; Resize Khand Bold Text (0% Typo)</span>
-          <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-extrabold">
-            Upload Clean Image
-            <input type="file" accept="image/*" onchange="loadInteractiveStamperImage(this)" class="hidden" />
-          </label>
-        </div>
-        <div id="stampedResultBox" class="hidden space-y-2.5">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <input id="stamperLine1Input" type="text" oninput="renderInteractiveStamperCanvas()" placeholder="Line 1 (Yellow)" class="bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-xs font-bold text-[#FFD700]" />
-            <input id="stamperLine2Input" type="text" oninput="renderInteractiveStamperCanvas()" placeholder="Line 2 (White)" class="bg-surface-container border border-outline-variant/50 rounded-lg px-2.5 py-1.5 font-khand text-xs font-bold text-white" />
-          </div>
-          <div class="flex flex-wrap items-center gap-3 text-[10px] font-mono text-on-surface-variant">
-            <label class="flex items-center gap-1.5">
-              <span>Size:</span>
-              <input id="stamperSizeSlider" type="range" min="5" max="20" value="11" oninput="renderInteractiveStamperCanvas()" class="w-24 accent-[#FFD700]" />
-            </label>
-            <button type="button" onclick="toggleStamperAlign()" id="stamperAlignBtn" class="px-2 py-1 rounded bg-surface-container border border-outline-variant/50 text-white font-bold">Align: Left</button>
-            <label class="flex items-center gap-1 cursor-pointer">
-              <input id="stamperSoftShadeCheck" type="checkbox" checked onchange="renderInteractiveStamperCanvas()" class="accent-[#FFD700]" />
-              <span>Soft Dark Shade</span>
-            </label>
-            <span class="text-tertiary font-bold">👆 Drag text anywhere!</span>
-          </div>
-          <canvas id="interactiveStamperCanvas" class="w-full rounded-xl border border-tertiary/50 bg-black cursor-move touch-none"></canvas>
-          <button type="button" onclick="downloadInteractiveStamperPng()" class="px-3.5 py-2 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">⬇️ Download Final PNG</button>
-        </div>
-      </div>
-
-      <!-- YOUTUBE HOME FEED SIMULATOR (TEST YOUR FINAL PNG!) -->
-      <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-2.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="font-mono text-[11px] font-bold text-white flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[16px] text-red-500">smart_display</span>
-            <span>YouTube Mobile Feed Simulator</span>
-          </span>
-          <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-mono text-[10px] font-bold">
-            Test Final PNG
-            <input type="file" accept="image/*" onchange="previewInYouTubeFeed(this)" class="hidden" />
-          </label>
-        </div>
-        <div id="ytFeedSimulatorCard" class="hidden max-w-sm mx-auto rounded-xl bg-[#0f0f0f] border border-white/10 overflow-hidden shadow-lg">
-          <div class="relative aspect-video bg-black">
-            <img id="ytFeedSimImg" src="" alt="Feed Preview" class="w-full h-full object-cover" />
-            <span class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/85 text-white font-mono text-[10px] font-bold">12:45</span>
-          </div>
-          <div class="p-2.5 flex items-start gap-2.5">
-            <div class="w-8 h-8 rounded-full bg-tertiary text-on-tertiary font-bold text-xs flex items-center justify-center shrink-0">YT</div>
-            <div class="min-w-0 flex-1">
-              <p id="ytFeedSimTitle" class="text-xs font-semibold text-white leading-snug line-clamp-2"></p>
-              <p class="text-[10px] text-slate-400 mt-0.5">Your Channel • 125K views • 2 hours ago</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ==================== 1-TAP FIGURE CROPPER MODAL (PPT / PDF / EXTRA IMAGES) ==================== -->
-  <div id="figureCropModalOverlay" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="w-full max-w-xl bg-surface-container-low border border-tertiary/50 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3">
-      <div class="flex items-center justify-between border-b border-outline-variant/40 pb-2.5">
-        <div>
-          <h3 class="font-display text-sm sm:text-base font-extrabold text-white">✂️ Crop Exact Figure / Subject</h3>
-          <p class="text-[11px] text-on-surface-variant">Drag the yellow corners, edges, or inside the box to crop any side cleanly.</p>
-        </div>
-        <button type="button" onclick="closeFigureCropModal()" class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-white">
-          <span class="material-symbols-outlined text-[18px]">close</span>
-        </button>
-      </div>
-      <canvas id="figureCropCanvas" class="w-full max-h-[60vh] object-contain rounded-xl border border-outline-variant/50 bg-black cursor-move touch-none"></canvas>
-      <div class="flex items-center justify-between gap-2 pt-1">
-        <button type="button" onclick="resetCropSelection()" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface-variant border border-outline-variant/50 font-mono text-xs font-bold">Reset Box</button>
-        <button type="button" onclick="applyFigureCrop()" class="px-4 py-2 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold shadow">✅ Apply Crop</button>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ==================== MOBILE STICKY BOTTOM QUICK ACTION BAR ==================== -->
-  <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest/95 backdrop-blur-xl border-t border-outline-variant/50 px-3 py-2 flex items-center justify-between gap-2 shadow-2xl">
-    <button type="button" onclick="runThumbnailResearchAndConcepts()" class="flex-1 h-11 rounded-xl bg-gradient-to-r from-tertiary to-amber-500 text-on-tertiary font-display font-bold text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
-      <span class="material-symbols-outlined text-[18px]">travel_explore</span>
-      <span>Generate</span>
-    </button>
-    <button type="button" onclick="resetStudioFresh(true)" class="h-11 px-3.5 rounded-xl bg-red-500/15 border border-red-500/40 text-red-400 font-mono text-xs font-bold flex items-center justify-center gap-1 active:scale-95 transition">
-      <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
-      <span>Clear</span>
-    </button>
-    <button type="button" onclick="openAiHealthModal()" class="h-11 px-3.5 rounded-xl bg-surface-container border border-outline-variant/50 text-secondary font-mono text-xs font-bold flex items-center justify-center gap-1 active:scale-95 transition">
-      <span class="material-symbols-outlined text-[18px]">monitoring</span>
-      <span>AI</span>
-    </button>
-  </nav>
 </body>
 </html>
