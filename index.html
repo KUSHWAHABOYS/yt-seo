@@ -427,20 +427,21 @@
   <!-- ==================== FIXED MATERIAL 3 TOP HEADER ==================== -->
   <header class="fixed top-0 left-0 right-0 z-40 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.45)] border-b border-outline-variant/25">
     <div class="max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto h-16 px-3 sm:px-4 lg:px-6 flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <img alt="YT SEO" src="./icon-192.png" class="h-8 w-8 rounded-lg object-cover shrink-0 border border-outline-variant/40" />
-        <div class="flex flex-col min-w-0">
+      <button type="button" onclick="showToast('✨ YT SEO — Powered by SSIRO • v1.0 | Thumbnail & SEO Studio')" title="YT SEO — Powered by SSIRO • v1.0" class="flex items-center gap-2 min-w-0 text-left group">
+        <img alt="YT SEO" src="./icon-192.png" class="h-8 w-8 rounded-lg object-cover shrink-0 border border-outline-variant/40 group-active:scale-95 transition" />
+        <span class="sm:hidden font-mono text-[9px] px-1.5 py-0.5 rounded bg-surface-container-high text-secondary font-bold border border-outline-variant/30 leading-none">v1.0</span>
+        <div class="hidden sm:flex flex-col min-w-0">
           <div class="flex items-center gap-1.5">
-            <span class="font-display text-base sm:text-lg text-on-surface font-bold tracking-tight truncate leading-none">YT SEO</span>
+            <span class="font-display text-lg text-on-surface font-bold tracking-tight leading-none">YT SEO</span>
             <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-bold border border-outline-variant/30 leading-none">v1.0</span>
           </div>
           <div class="flex items-center gap-1 mt-1">
             <span class="font-mono text-[9px] uppercase tracking-wider text-secondary font-bold leading-none">SSIRO</span>
             <span class="text-[9px] text-outline leading-none">•</span>
-            <span id="headerActiveTabLabel" class="font-mono text-[9px] uppercase tracking-wider text-outline truncate leading-none">Thumbnail Studio</span>
+            <span id="headerActiveTabLabel" class="font-mono text-[9px] uppercase tracking-wider text-outline leading-none">Thumbnail Studio</span>
           </div>
         </div>
-      </div>
+      </button>
 
       <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
         <button type="button" id="engineBadgeHeader" onclick="toggleAiEngineModal()" title="API Key Settings" class="hidden sm:flex items-center gap-1 h-8 px-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container-high border border-outline-variant/30 font-mono text-[10px] text-secondary font-bold transition">
@@ -1050,6 +1051,34 @@
           </button>
         </div>
       </div>
+      <!-- SAVED CHANNEL LINKS & PLAYLISTS (AUTO-INJECTED VERBATIM INTO DESCRIPTION) -->
+      <details class="p-3.5 rounded-xl bg-surface-container-lowest border border-outline-variant/40 space-y-3">
+        <summary class="cursor-pointer flex flex-wrap items-center justify-between gap-2 select-none">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary text-[18px]">link</span>
+            <span class="font-display text-xs sm:text-sm font-bold text-on-surface">🔗 My Saved Links &amp; Playlists (Auto-Fill in Description)</span>
+          </div>
+          <span id="savedLinksStatusBadge" class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">Tap to Edit</span>
+        </summary>
+        <div class="pt-2 space-y-2.5 border-t border-outline-variant/25">
+          <div>
+            <label for="savedLinkEbookInput" class="block font-mono text-[10px] uppercase text-secondary font-bold mb-1">📚 eBook / Store Links:</label>
+            <textarea id="savedLinkEbookInput" rows="2" oninput="saveSavedChannelLinks(false)" placeholder="e.g. https://store.example.com/my-ebook" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-3 py-2 font-mono text-xs text-on-surface focus:outline-none focus:border-secondary"></textarea>
+          </div>
+          <div>
+            <label for="savedLinkPlaylistInput" class="block font-mono text-[10px] uppercase text-tertiary font-bold mb-1">▶️ Playlists (Name &amp; Link, one per line):</label>
+            <textarea id="savedLinkPlaylistInput" rows="2" oninput="saveSavedChannelLinks(false)" placeholder="e.g. भारतीय इतिहास सीरीज़: https://youtube.com/playlist?list=..." class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-3 py-2 font-mono text-xs text-on-surface focus:outline-none focus:border-tertiary"></textarea>
+          </div>
+          <div>
+            <label for="savedLinkSocialInput" class="block font-mono text-[10px] uppercase text-primary font-bold mb-1">📲 Social Media Links (Instagram, Telegram, X, FB):</label>
+            <textarea id="savedLinkSocialInput" rows="2" oninput="saveSavedChannelLinks(false)" placeholder="e.g. Instagram: https://instagram.com/... | Telegram: https://t.me/..." class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-3 py-2 font-mono text-xs text-on-surface focus:outline-none focus:border-primary"></textarea>
+          </div>
+          <div class="flex items-center justify-between gap-2 pt-1">
+            <span class="font-mono text-[10px] text-outline">Saved permanently on device (kept even on Clear Data)</span>
+            <button type="button" onclick="saveSavedChannelLinks(true)" class="px-3 py-1.5 rounded-lg bg-tertiary-container hover:bg-tertiary text-on-tertiary-container font-mono text-[11px] font-bold transition">💾 Save Links</button>
+          </div>
+        </div>
+      </details>
 
       <div id="suggestedSeoOutputBox" class="hidden space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -1825,7 +1854,7 @@
       'yt_seo_ssiro_last_clean',
       STUDIO_STATE_STORAGE_KEY,
       'yt_seo_ssiro_history_v30',
-      'yt_seo_ssiro_presets_v30',
+      'yt_seo_ssiro_presets_v30', 'yt_seo_ssiro_channel_links_v1',
       'yt_seo_ssiro_creator_face_v31',
       'yt_seo_ssiro_chatgpt_chat_url_v32'
     ]);
@@ -4539,6 +4568,7 @@ Return strict JSON: {"details": "..."}`;
     function selectThumbnailSize(sizeId) {
       appState.selectedSizeId = sizeId;
       renderThumbnailSizeGrid();
+      loadSavedChannelLinks();
       updateSidebarActiveState();
       switchWorkspaceTab('seo');
       const sz = getSelectedThumbnailSize();
@@ -6259,7 +6289,7 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
 
 
     async function dispatchToGeminiBridge(promptText, toastMsg) {
-      copyTextSafe(promptText, toastMsg || 'Prompt copied & sent to Gemini!');
+      copyTextSafe(promptText, toastMsg || '📋 Prompt copied & sent to Gemini! (अगर टेक्स्ट न दिखे तो Paste करें)');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
         const fontRefImg = getActiveKhandFontRefImage(); const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
@@ -6866,6 +6896,73 @@ Return strict JSON: {"queries": ["...", "..."], "book_query": "..."}`;
 
 
     // ==================== 16. STEP 12: SUGGESTED-VIDEO YOUTUBE SEO PACK ====================
+    const CHANNEL_LINKS_STORAGE_KEY = 'yt_seo_ssiro_channel_links_v1';
+
+    function getSavedChannelLinks() {
+      try {
+        const raw = localStorage.getItem(CHANNEL_LINKS_STORAGE_KEY);
+        if (raw) {
+          const d = JSON.parse(raw);
+          return {
+            ebook: (d.ebook || '').trim(),
+            playlist: (d.playlist || '').trim(),
+            social: (d.social || '').trim()
+          };
+        }
+      } catch (e) {}
+      return { ebook: '', playlist: '', social: '' };
+    }
+
+    function saveSavedChannelLinks(notify = false) {
+      const ebook = (document.getElementById('savedLinkEbookInput')?.value || '').trim();
+      const playlist = (document.getElementById('savedLinkPlaylistInput')?.value || '').trim();
+      const social = (document.getElementById('savedLinkSocialInput')?.value || '').trim();
+      try {
+        localStorage.setItem(CHANNEL_LINKS_STORAGE_KEY, JSON.stringify({ ebook, playlist, social }));
+      } catch (e) {}
+      const badge = document.getElementById('savedLinksStatusBadge');
+      const count = [ebook, playlist, social].filter(Boolean).length;
+      if (badge) {
+        badge.textContent = count ? `✓ ${count} Saved` : 'Tap to Edit';
+        badge.className = count
+          ? 'font-mono text-[10px] px-2 py-0.5 rounded bg-tertiary-container/30 text-tertiary border border-tertiary/40 font-bold'
+          : 'font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30';
+      }
+      if (notify) showToast('🔗 Channel Links & Playlists saved permanently!');
+    }
+
+    function loadSavedChannelLinks() {
+      const d = getSavedChannelLinks();
+      const eEl = document.getElementById('savedLinkEbookInput');
+      const pEl = document.getElementById('savedLinkPlaylistInput');
+      const sEl = document.getElementById('savedLinkSocialInput');
+      if (eEl) eEl.value = d.ebook;
+      if (pEl) pEl.value = d.playlist;
+      if (sEl) sEl.value = d.social;
+      saveSavedChannelLinks(false);
+    }
+
+    function injectSavedChannelLinksIntoDescription(descText) {
+      const links = getSavedChannelLinks();
+      const hasAny = Boolean(links.ebook || links.playlist || links.social);
+      if (!hasAny || !descText) return descText;
+      const lines = ['🔗 लिंक'];
+      if (links.ebook) lines.push(`📚 ebook/store:\n${links.ebook}`);
+      if (links.playlist) lines.push(`▶️ प्लेलिस्ट:\n${links.playlist}`);
+      if (links.social) lines.push(`📲 सोशल मीडिया:\n${links.social}`);
+      const replacementBlock = lines.join('\n');
+
+      // Replace existing 🔗 लिंक ... block up to 🔔 or ⚠️ or end
+      const linkSectionRe = /🔗\s*लिंक[\s\S]*?(?=\n\s*[🔔⚠️#]|$)/;
+      if (linkSectionRe.test(descText)) {
+        return descText.replace(linkSectionRe, replacementBlock);
+      }
+      if (/\n\s*🔔/.test(descText)) {
+        return descText.replace(/(\n\s*🔔)/, `\n\n${replacementBlock}$1`);
+      }
+      return `${descText}\n\n${replacementBlock}`;
+    }
+
     async function runSuggestedVideoSeoPack(opts = {}) {
       const seoInpVal = (document.getElementById('seoStandaloneTopicInput')?.value || '').trim();
       const titleEl = document.getElementById('videoTitleInput');
@@ -6947,7 +7044,7 @@ Return strict JSON with ONLY these keys:
       const bpBox = document.getElementById('seoBlueprintBox');
       if (bpBox) bpBox.innerHTML = escHtml(seoData.suggestionBlueprint || '').replace(/\n/g, '<br/>');
       const descPre = document.getElementById('seoDescriptionPre');
-      if (descPre) descPre.textContent = seoData.youtubeDescription || '';
+      if (descPre) descPre.textContent = injectSavedChannelLinksIntoDescription(seoData.youtubeDescription || '');
       const tagsPre = document.getElementById('seoTagsPre');
       const tagsStr = Array.isArray(seoData.viralTags) ? seoData.viralTags.join(', ') : (seoData.viralTags || '');
       if (tagsPre) tagsPre.textContent = tagsStr;
