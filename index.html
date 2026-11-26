@@ -1071,31 +1071,59 @@
           </button>
         </div>
       </div>
-      <!-- SAVED CHANNEL LINKS & PLAYLISTS (AUTO-INJECTED VERBATIM INTO DESCRIPTION) -->
-      <details class="p-3.5 rounded-xl bg-surface-container-lowest border border-outline-variant/40 space-y-3">
-        <summary class="cursor-pointer flex flex-wrap items-center justify-between gap-2 select-none">
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-secondary text-[18px]">link</span>
-            <span class="font-display text-xs sm:text-sm font-bold text-on-surface">🔗 My Saved Links &amp; Playlists (Auto-Fill in Description)</span>
+      <!-- SAVED CHANNEL LINKS & PLAYLISTS (NEXT-LEVEL PREMIUM AUTO-FILL VAULT) -->
+      <details class="group rounded-2xl bg-gradient-to-br from-surface-container-lowest via-surface-container-low to-surface-container-lowest border border-secondary/30 shadow-lg overflow-hidden transition-all">
+        <summary class="cursor-pointer p-3.5 sm:p-4 flex items-center justify-between gap-3 select-none hover:bg-surface-container/40 transition">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-secondary/25 to-tertiary/20 border border-secondary/40 text-secondary flex items-center justify-center shrink-0 shadow-sm">
+              <span class="material-symbols-outlined text-[19px]">dataset_linked</span>
+            </div>
+            <div class="min-w-0">
+              <span class="font-display text-xs sm:text-sm font-extrabold text-on-surface block truncate">My Saved Links &amp; Playlists</span>
+              <span class="font-mono text-[10px] text-outline block truncate">Auto-fills verbatim in every Description</span>
+            </div>
           </div>
-          <span id="savedLinksStatusBadge" class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">Tap to Edit</span>
+          <div class="flex items-center gap-2 shrink-0">
+            <span id="savedLinksStatusBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-full bg-surface-container text-outline border border-outline-variant/30 font-bold">Tap to Edit</span>
+            <span class="material-symbols-outlined text-[18px] text-outline group-open:rotate-180 transition-transform">expand_more</span>
+          </div>
         </summary>
-        <div class="pt-2 space-y-2.5 border-t border-outline-variant/25">
-          <div>
-            <label for="savedLinkEbookInput" class="block font-mono text-[10px] uppercase text-secondary font-bold mb-1">📚 eBook / Store Links:</label>
-            <textarea id="savedLinkEbookInput" rows="2" oninput="saveSavedChannelLinks(false)" placeholder="e.g. https://store.example.com/my-ebook" class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-3 py-2 font-mono text-xs text-on-surface focus:outline-none focus:border-secondary"></textarea>
+        <div class="p-3.5 sm:p-4 pt-2 border-t border-outline-variant/25 space-y-3">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+            <!-- Card 1: eBook / Store -->
+            <div class="p-3 rounded-xl bg-surface-container/60 border border-secondary/30 space-y-2 hover:border-secondary/60 transition">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-lg bg-secondary/20 text-secondary flex items-center justify-center text-xs">📚</span>
+                <label for="savedLinkEbookInput" class="font-mono text-[10px] uppercase tracking-wider text-secondary font-extrabold">eBook / Store Links</label>
+              </div>
+              <textarea id="savedLinkEbookInput" rows="3" oninput="saveSavedChannelLinks(false)" placeholder="https://store.example.com/my-ebook" class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg px-2.5 py-2 font-mono text-[11px] text-on-surface focus:outline-none focus:border-secondary custom-scroll resize-none"></textarea>
+            </div>
+            <!-- Card 2: Playlists -->
+            <div class="p-3 rounded-xl bg-surface-container/60 border border-tertiary/30 space-y-2 hover:border-tertiary/60 transition">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-lg bg-tertiary/20 text-tertiary flex items-center justify-center text-xs">▶️</span>
+                <label for="savedLinkPlaylistInput" class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-extrabold">Playlists (1 per line)</label>
+              </div>
+              <textarea id="savedLinkPlaylistInput" rows="3" oninput="saveSavedChannelLinks(false)" placeholder="भारतीय इतिहास: https://youtube.com/playlist?list=..." class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg px-2.5 py-2 font-mono text-[11px] text-on-surface focus:outline-none focus:border-tertiary custom-scroll resize-none"></textarea>
+            </div>
+            <!-- Card 3: Social Media -->
+            <div class="p-3 rounded-xl bg-surface-container/60 border border-primary/30 space-y-2 hover:border-primary/60 transition">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-lg bg-primary/20 text-primary flex items-center justify-center text-xs">📲</span>
+                <label for="savedLinkSocialInput" class="font-mono text-[10px] uppercase tracking-wider text-primary font-extrabold">Social Media Links</label>
+              </div>
+              <textarea id="savedLinkSocialInput" rows="3" oninput="saveSavedChannelLinks(false)" placeholder="Instagram: https://instagram.com/...&#10;Telegram: https://t.me/..." class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg px-2.5 py-2 font-mono text-[11px] text-on-surface focus:outline-none focus:border-primary custom-scroll resize-none"></textarea>
+            </div>
           </div>
-          <div>
-            <label for="savedLinkPlaylistInput" class="block font-mono text-[10px] uppercase text-tertiary font-bold mb-1">▶️ Playlists (Name &amp; Link, one per line):</label>
-            <textarea id="savedLinkPlaylistInput" rows="2" oninput="saveSavedChannelLinks(false)" placeholder="e.g. भारतीय इतिहास सीरीज़: https://youtube.com/playlist?list=..." class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-3 py-2 font-mono text-xs text-on-surface focus:outline-none focus:border-tertiary"></textarea>
-          </div>
-          <div>
-            <label for="savedLinkSocialInput" class="block font-mono text-[10px] uppercase text-primary font-bold mb-1">📲 Social Media Links (Instagram, Telegram, X, FB):</label>
-            <textarea id="savedLinkSocialInput" rows="2" oninput="saveSavedChannelLinks(false)" placeholder="e.g. Instagram: https://instagram.com/... | Telegram: https://t.me/..." class="w-full bg-surface-container border border-outline-variant/50 rounded-lg px-3 py-2 font-mono text-xs text-on-surface focus:outline-none focus:border-primary"></textarea>
-          </div>
-          <div class="flex items-center justify-between gap-2 pt-1">
-            <span class="font-mono text-[10px] text-outline">Saved permanently on device (kept even on Clear Data)</span>
-            <button type="button" onclick="saveSavedChannelLinks(true)" class="px-3 py-1.5 rounded-lg bg-tertiary-container hover:bg-tertiary text-on-tertiary-container font-mono text-[11px] font-bold transition">💾 Save Links</button>
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <span class="font-mono text-[10px] text-tertiary flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]">verified_user</span>
+              <span>Permanent on device • Survives Clear Data &amp; Updates</span>
+            </span>
+            <button type="button" onclick="saveSavedChannelLinks(true)" class="px-4 py-2 rounded-xl bg-gradient-to-r from-tertiary-container to-tertiary text-on-tertiary font-display text-xs font-extrabold shadow-sm hover:brightness-110 transition flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[15px]">save</span>
+              <span>Save Links</span>
+            </button>
           </div>
         </div>
       </details>
