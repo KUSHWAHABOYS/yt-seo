@@ -3881,8 +3881,8 @@ STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
   "Before I generate this DSLR-realistic thumbnail, please upload **your own portrait photo (MANDATORY — YouTuber/Creator face)** so I can preserve 100% of your real identity. You may also optionally upload any extra reference photos (historical figures, monuments, manuscripts, or objects); if you don't have extra photos, I will generate all secondary elements in authentic DSLR studio photography quality."
 • WAIT until the user uploads their portrait photo (or explicitly replies 'skip').
 • ONCE UPLOADED:
-  1. STRICT ZERO-FACE-CHANGE IDENTITY LOCK (FOR ALL UPLOADED PEOPLE — YOUTUBER & ANY 2ND/3RD PERSON): Keep EVERY uploaded person's exact real face, eyes, nose, jawline, skin tone, hairline, glasses/beard, and natural skin pores 100% identical to their uploaded photo—NEVER morph or replace any face with a lookalike!
-  1B. IDENTITY LOCK ≠ FROZEN POSE (MANDATORY DYNAMIC EXPRESSION & BODY LANGUAGE): Keep the host's exact facial identity (eyes, nose, jawline, glasses, beard, hairline, skin tone) 100% recognizable as the exact same real person—BUT DO NOT copy the passive/calm pose from their uploaded reference photo! Actively re-pose their facial expression (eyebrows, eyes, mouth tension), head tilt, shoulder angle, and hand gesture to match the thumbnail's exact emotional punch: ${getSelectedMoodDirective(v)}.
+  1. STRICT ZERO-FACE-CHANGE IDENTITY LOCK (FOR ALL UPLOADED PEOPLE — HOST & ANY 2ND PERSON): Treat EVERY attached person's face as a locked, uneditable real photograph. Preserve 100% of their EXACT real eyes, eye shape, nose, mouth, jawline, cheekbones, skin tone, glasses, beard, and hairline verbatim—NEVER redraw, re-synthesize, or replace any face with an AI lookalike!
+  1B. POSE & DRAMA WITHOUT MORPHING FACES: Do NOT warp or redraw the person's eyes, mouth, or head geometry to force an expression (that ruins likeness!). Keep the exact real face from their uploaded photo intact, and deliver the emotional punch through upper-body framing, hand gesture (pointing/holding focus toward the evidence), split-screen lighting, and dramatic contrast: ${getSelectedMoodDirective(v)}.
   2. STRICT AS-IS ATTACHED PHOTO COMPOSITING LOCK (DO NOT REGENERATE ATTACHED PHOTOS): For EVERY uploaded/attached reference photo (Creator Portrait, 2nd Person, Statue, Monument, Book Front Cover, or Artifact), USE THAT EXACT ATTACHED PHOTOGRAPH AS-IS inside the Photoshop composition—NEVER redraw, re-imagine, or replace it with a generic AI-generated version! Simply isolate/crop out any slide/page borders, match perspective, apply Camera Raw true-color grading + Contact Shadows + 2px Atmospheric Edge Light-Wrap, and composite it seamlessly into the scene.
   3. REAL-WORLD WEB REFERENCE RULE (NO FAKE BUILDINGS OR INVENTED ARTIFACTS): For any real-world monument, temple, book cover, inscription, or historical site NOT uploaded by the user, USE YOUR WEB SEARCH TOOL FIRST to look up real, authentic photographs/Wikimedia references of that exact site/book so every architectural detail and proportion is 100% historically real—never invent generic fake temples or fictional objects.
 ${refDetailsLine}
@@ -4808,10 +4808,10 @@ Return strict JSON: {"details": "..."}`;
 
     const MOOD_DIRECTIVES = {
       auto: '',
-      curiosity: 'Wide-eyed stunned curiosity, slightly raised eyebrows, leaning slightly forward with an inquisitive/pointing gesture toward the focal evidence (face 100% unchanged).',
-      shock: 'Jaw-dropping revelation shock, intense wide-open eyes, raised hand or dramatic lean-back reaction toward the proof (face 100% unchanged).',
-      debate: 'Assertive, intense debate stance, sharp focused eye contact, confident hand gesture challenging the claim (face 100% unchanged).',
-      authority: 'Calm, commanding documentary authority, composed serious gaze, poised confident posture (face 100% unchanged).'
+      curiosity: 'Preserve the exact real face 100% unchanged from the uploaded photo; convey curiosity via slight forward lean, focused gaze, and an inquisitive hand gesture toward the evidence.',
+      shock: 'Preserve the exact real face 100% unchanged from the uploaded photo (do NOT warp eyes/mouth); convey revelation impact via dramatic rim lighting, angled shoulders, and a pointing/reactive hand gesture toward the proof.',
+      debate: 'Preserve BOTH real faces 100% unchanged from the uploaded photos; convey debate tension via assertive shoulder framing, split-tone lighting, and a confident hand gesture.',
+      authority: 'Preserve the exact real face 100% unchanged from the uploaded photo; convey calm documentary authority via poised posture and clean studio key lighting.'
     };
 
     function getSelectedMoodDirective(v) {
@@ -4819,14 +4819,12 @@ Return strict JSON: {"details": "..."}`;
       if (m !== 'auto' && MOOD_DIRECTIVES[m]) return MOOD_DIRECTIVES[m];
       const hookStr = (v?.activeHook || v?.hooks?.hindi || document.getElementById('videoTitleInput')?.value || '').trim();
       if (/[!]|मदिरा|मांस|धोखा|चौंका|खतरनाक|झूठ|खुलासा|shock|secret|banned/i.test(hookStr)) {
-        return 'Shocked, stunned-by-evidence expression: raised eyebrows, wide alert eyes, slight open-mouth disbelief, shoulders angled forward, one hand gesturing toward the proof (DO NOT copy a calm/neutral chin-resting pose from the reference photo!)';
+        return 'Preserve the exact real face 100% unchanged from the uploaded photo (ZERO eye/mouth warping); convey high-stakes revelation via dramatic contrast lighting, angled shoulders, and a pointing hand gesture toward the proof.';
       }
       if (/[?]|क्यों|कैसे|कौन|क्या|रहस्य|why|how|mystery/i.test(hookStr)) {
-        return 'Intense investigative curiosity: furrowed brow, sharp direct eye contact with camera, leaning slightly forward with one hand pointing or holding focus toward the central artifact/book';
+        return 'Preserve the exact real face 100% unchanged from the uploaded photo; convey investigative curiosity via subtle forward lean, focused eye contact, and a hand gesture toward the central artifact/book.';
       }
-      return v
-        ? `${v.expression}; active, expressive upper-body posture & natural hand gesture matching the headline mood (NEVER freeze into a passive neutral pose)`
-        : 'Expressive topic-matched facial emotion, raised eyebrows/engaged eyes & dynamic upper-body posture';
+      return 'Preserve every uploaded person’s exact real face 100% unchanged (ZERO facial morphing); convey the headline mood naturally through framing, lighting contrast, and hand gesture.';
     }
 
     function selectExpressionMood(moodId) {
