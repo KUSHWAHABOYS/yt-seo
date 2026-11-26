@@ -3651,6 +3651,35 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
     // ==================== 12. STEPS 9, 10 & 11: THREE DISTINCT VARIANTS (A, B, C) + FULL 9-VARIANT HUB ====================
     appState.fullHubMode = false;
 
+    function getForensicVisualCueSpec(niche, title, desc, pCtx) {
+      const combined = `${title || ''} ${desc || ''}`.toLowerCase();
+      const isTribute = pCtx && pCtx.mode === 'mahapurush_tribute';
+      const isReplyOrExpose = (pCtx && pCtx.mode === 'reply_two_person') || /(झूठ|धोखा|फर्जी|दावा|खोल|पर्दाफाश|बेनकाब|expose|debunk|myth|fake|reply|rebuttal|fact.?check)/i.test(combined);
+      const hasBookOrDoc = /(किताब|ग्रंथ|पुस्तक|पन्ना|अभिलेख|शिलालेख|दस्तावेज़|रिपोर्ट|book|page|manuscript|grantha|inscription|document|report|evidence|प्रमाण|साक्ष्य)/i.test(combined) || (studioExtraPhotosB64 && studioExtraPhotosB64.length > 0);
+      const isMystery = /(रहस्य|क्यों|कैसे|कौन|छिपाया|असली|mystery|hidden|secret|untold)/i.test(combined);
+
+      if (isTribute) {
+        const bookAddon = hasBookOrDoc
+          ? ' If a grantha/book is shown, optionally add a clean 2x Magnified Golden Spotlight Callout highlighting the key artifact/cover with soft 3D drop shadow.'
+          : '';
+        return `FORENSIC VISUAL CUE (DIGNIFIED TRIBUTE MODE): ZERO red arrows or debunk crosses. Use a clean Golden Museum Spotlight illuminating the Mahapurush & primary heritage artifact.${bookAddon}`;
+      }
+
+      const cues = [];
+      if (hasBookOrDoc) {
+        cues.push('BOOK / DOCUMENT ZOOM-SCALE POP-OUT: Keep the attached book/document AS-IS, and pull out a crisp 2.5x Magnified Zoom Pop-Out / Circular Loupe of its key visual or section with a subtle 3D drop shadow and translucent #FFD700 Documentary Highlighter glow (NEVER invent gibberish text inside the book).');
+      }
+      if (isReplyOrExpose) {
+        cues.push('EXPOSING / DEBUNK CALLOUT (MAX 1–2 CLEAN CUES): Add 1 sleek, minimalist Red/Gold Directional Arrow (#FF3B30 or #FFD700) + 1 crisp Forensic Circle Ring pointing directly at the key evidence or disproven claim (Johnny Harris / Dhruv Rathee editorial style—NEVER spam 5+ cheap arrows).');
+      } else if (isMystery) {
+        cues.push('MYSTERY CURIOSITY CALLOUT: Add 1 crisp Circular Glass Magnifier Zoom Loupe or Golden Spotlight Ring isolating the most intriguing historical clue/detail so the viewer’s eye locks onto it in 0.3s.');
+      } else {
+        cues.push('FOCAL SPOTLIGHT CUE: Use a subtle radial spotlight behind the primary evidence/object for instant mobile eye-pull.');
+      }
+      cues.push('STRICT CLEANLINESS RULE: NEVER place arrows, circles, or red strokes over the 2-line Khand Bold headline text.');
+      return `FORENSIC VISUAL CUES & EVIDENCE CALLOUTS (PRO EDITORIAL): ${cues.join(' ')}`;
+    }
+
     function getCategoryColorGradingSpec(niche) {
       const nId = (niche?.id || 'history').toLowerCase();
       const baseDslr = 'PRO CREATOR ADOBE PHOTOSHOP + 85mm f/2.0 DSLR MASTER GRADE (DHRUV RATHEE / MAGNATESMEDIA / NATGEO STANDARD): (1) TRUE-COLOR VIBRANCY & 5400K ISOLATED SKIN KEY-LIGHT — render rich, punchy, true-to-life colors with deep dynamic range; keep human skin 100% natural with real micro-pores, individual hair/beard strands, and crisp iris catchlights (ZERO waxy/plastic AI sheen, ZERO muddy orange/green cast on skin); (2) -2.5 EV BACKDROP SEPARATION — keep background 2.5 stops darker than the hero subject with clean f/2.0 optical bokeh so every foreground element pops on mobile; (3) PHOTOSHOP COMPOSITING PHYSICS — add realistic Contact Shadows, Ambient Occlusion where objects/hands meet, subtle mid-layer atmospheric depth haze, and crisp 2px Edge Light-Wrap around hair & shoulders; (4) MATERIAL MICRO-IMPERFECTIONS — authentic weathered book paper grain, carved stone texture, fabric weave, and natural metallic speculars so nothing looks synthetic.';
@@ -3832,6 +3861,7 @@ function buildThreeDistinctVariantsForConcept(concept, regenSeed = 0) {
         .map((im, idx) => `  - PPT Visual ${idx + 1}: "${im.name}" -> Recommended Placement: ${im.placement || 'Focal visual proof'}`)
         .join('\n');
       const pptPlacementSection = pptPlacementNotes ? `\n• AI-VERIFIED PPT VISUALS & PLACEMENT:\n${pptPlacementNotes}` : '';
+      const forensicCueSection = `\n• ${getForensicVisualCueSpec(niche, title, desc, appState.personSceneContext)}`;
       const pCtx = appState.personSceneContext;
       let personRelationSection = '';
       if (pCtx && pCtx.mode && pCtx.mode !== 'single_host_evidence') {
@@ -3871,7 +3901,7 @@ PHOTOSHOP & DSLR HUMANIZED REALISM LOCK (ZERO AI-PLASTIC LOOK):
 • PHOTOSHOP COMPOSITING & LIGHT-WRAP BLENDING (ZERO CUTOUT LOOK): Natural Adobe Camera Raw color grading, authentic human skin pores & fine beard/hair strands (ZERO waxy/plastic AI skin, ZERO CGI sheen). Apply realistic Atmospheric Edge Light-Wrap & shadow matching across the host's jacket/shoulders/hair edges so the host blends 100% seamlessly into the scene's lighting—NEVER look like a bright studio cutout pasted onto a dark background!
 • STRICT 3-ELEMENT MAXIMUM & ZERO TINY BACKGROUND FACES: Keep the entire thumbnail clean and uncluttered with AT MOST 3 main visual elements: (1) Expressive Host Portrait, (2) ONE large, sharp, mobile-readable Primary Proof/Book Cover/Artifact, and (3) ONE clean atmospheric background scene. STRICTLY FORBIDDEN: NO crowds, NO tiny background people with distorted faces, NO busy background clutter. Keep the bottom-right corner dark/clear for the YouTube timestamp badge.
 • FULL-FRAME MICRO-DETAILING: Render crisp photographic texture on every foreground & midground element (carved stone, brass/metal grain, weathered book cover paper, fabric weave) with natural f/2.2 optical depth falloff only in the far distance.
-• ZERO DECORATIVE CLUTTER ON TEXT: Render ONLY ultra-clean 2-line Khand Bold typography (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White, subtle soft drop shadow). STRICTLY FORBIDDEN: NO red brush strokes, NO underlines, NO neon outlines, NO boxes behind text.${pptPlacementSection}${personRelationSection}
+• ZERO DECORATIVE CLUTTER ON TEXT: Render ONLY ultra-clean 2-line Khand Bold typography (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White, subtle soft drop shadow). STRICTLY FORBIDDEN: NO red brush strokes, NO underlines, NO neon outlines, NO boxes behind text.${pptPlacementSection}${personRelationSection}${forensicCueSection}
 
 ===================================================================
 STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
