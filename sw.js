@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yt-seo-ssiro-v10';
+const CACHE_NAME = 'yt-seo-ssiro-v11';
 const APP_SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (event) => {
