@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>YT SEO — SSIRO AI Bridge</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 310px;
+      background: #10141a;
+      color: #dfe2eb;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      padding: 14px;
+    }
+    .card {
+      background: #181c22;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .logo { width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(255,185,95,0.4); }
+    .title { font-size: 14px; font-weight: 800; color: #fff; }
+    .sub { font-size: 11px; color: #ffb95f; font-weight: 700; margin-top: 2px; }
+    .status-row { display: flex; align-items: center; justify-content: space-between; font-size: 11px; padding: 4px 0; }
+    .pill { padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; background: rgba(78,222,163,0.16); color: #4edea3; }
+    .btn {
+      width: 100%;
+      padding: 9px 12px;
+      border: 0;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-primary { background: #ff5451; color: #fff; }
+    .btn-secondary { background: #262a31; color: #ffb95f; border: 1px solid rgba(255,185,95,0.3); }
+    .msg { font-size: 11px; color: #4edea3; margin-top: 8px; line-height: 1.4; min-height: 16px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="icon-48.png" alt="SSIRO" class="logo" />
+    <div>
+      <div class="title">YT SEO — SSIRO Bridge</div>
+      <div class="sub">v<span id="localVer">3.0</span> • Auto Photo + Prompt</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="status-row">
+      <span>ChatGPT Bridge</span>
+      <span class="pill">● Active</span>
+    </div>
+    <div class="status-row">
+      <span>Gemini Bridge</span>
+      <span class="pill">● Active</span>
+    </div>
+    <div class="status-row">
+      <span>Khand Font Specimen</span>
+      <span class="pill">● Auto-Attach</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <button id="checkUpdateBtn" class="btn btn-secondary">🔄 Check Update from GitHub</button>
+    <button id="openStudioBtn" class="btn btn-primary">🚀 Open YT SEO Studio</button>
+    <div id="updateMsg" class="msg">Ready to sync with GitHub.</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

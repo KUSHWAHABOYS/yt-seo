@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "YT SEO — SSIRO AI Bridge",
+  "short_name": "SSIRO Bridge",
+  "version": "3.0",
+  "description": "1-Click sends Reference Photos, Khand Bold Font Blueprint & Prompt directly to ChatGPT & Gemini.",
+  "permissions": ["storage", "unlimitedStorage"],
+  "host_permissions": [
+    "https://raw.githubusercontent.com/*",
+    "https://kushwahaboys.github.io/*"
+  ],
+  "icons": {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
+  "action": {
+    "default_title": "YT SEO — SSIRO AI Bridge",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon-16.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://kushwahaboys.github.io/*", "http://localhost/*", "http://127.0.0.1/*", "file:///*"],
+      "js": ["content_studio.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*"],
+      "js": ["content_chatgpt.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://gemini.google.com/*"],
+      "js": ["content_gemini.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -4745,15 +4745,15 @@ Return strict JSON: {"details": "..."}`;
       return renderKhandFontReferenceSheet(line1, line2);
     }
 
-    function dispatchToChatGPTBridge(promptText, toastMsg) {
+    async function dispatchToChatGPTBridge(promptText, toastMsg) {
       copyTextSafe(promptText, toastMsg || 'Prompt copied! Sending to ChatGPT...');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-        const fontRefImg = getActiveKhandFontRefImage(); const bridgeImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        const fontRefImg = getActiveKhandFontRefImage(); const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6); const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
         window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
       const qParam = (!studioCreatorPhotoB64 && !studioExtraPhotosB64.length && promptText.length <= 2800) ? '?q=' + encodeURIComponent(promptText) : '';
-      window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener');
+      setTimeout(() => { window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener'); }, 200);
     }
 
     const CREATOR_FACE_STORAGE_KEY = 'yt_seo_ssiro_creator_face_v31';
@@ -4834,7 +4834,7 @@ Return strict JSON: {"details": "..."}`;
         window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: fixPrompt, images: [], isFollowUp: true, ts: Date.now() }, '*');
       } catch (e) {}
       const qParam = fixPrompt.length <= 2800 ? '?q=' + encodeURIComponent(fixPrompt) : '';
-      window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener');
+      setTimeout(() => { window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener'); }, 200);
     }
 
     function previewInYouTubeFeed(input) {
