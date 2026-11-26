@@ -458,15 +458,15 @@
 
   <!-- ==================== ⋮ THREE-DOTS STUDIO MENU DRAWER ==================== -->
   <div id="studioMenuBackdrop" onclick="closeStudioMenuDrawer()" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px]"></div>
-  <div id="studioMenuDrawer" class="hidden fixed top-16 right-3 sm:right-6 z-50 w-72 bg-surface-container-low border border-outline-variant/50 rounded-2xl p-3 shadow-2xl space-y-2.5 fade-slide-up">
+  <div id="studioMenuDrawer" class="hidden fixed top-16 right-3 sm:right-6 z-50 w-80 max-w-[calc(100vw-1.5rem)] bg-surface-container-low border border-outline-variant/50 rounded-2xl p-3.5 shadow-2xl space-y-2.5 fade-slide-up overflow-hidden">
     <!-- Live AI Status + Quota Meter -->
-    <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/35 space-y-2">
-      <button type="button" id="aiCompactStatusBtn" onclick="closeStudioMenuDrawer(); openAiHealthModal();" class="w-full px-2.5 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 flex items-center justify-between gap-2 transition">
-        <span class="flex items-center gap-1.5 min-w-0">
+    <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/35 space-y-2 overflow-hidden">
+      <button type="button" id="aiCompactStatusBtn" onclick="closeStudioMenuDrawer(); openAiHealthModal();" class="w-full overflow-hidden px-2.5 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 flex items-center justify-between gap-2 transition">
+        <span class="flex items-center gap-1.5 min-w-0 flex-1">
           <span id="aiCompactStatusDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-          <span id="aiCompactStatusLabel" class="font-mono text-[11px] font-bold text-emerald-300 truncate">AI Ready</span>
+          <span id="aiCompactStatusLabel" class="font-mono text-[11px] font-bold text-emerald-300 truncate block min-w-0 text-left">AI Ready</span>
         </span>
-        <span class="material-symbols-outlined text-[14px] text-tertiary">monitoring</span>
+        <span class="material-symbols-outlined text-[14px] text-tertiary shrink-0">monitoring</span>
       </button>
       <div class="space-y-1">
         <div class="flex items-center justify-between font-mono text-[10px]">
@@ -481,9 +481,12 @@
 
     <!-- Menu Actions -->
     <div class="space-y-1">
-      <button type="button" onclick="closeStudioMenuDrawer(); toggleAiEngineModal();" class="w-full px-3 py-2 rounded-xl hover:bg-surface-container text-left font-display text-xs font-bold text-on-surface flex items-center gap-2.5 transition"><span id="engineBadgeHeader" class="hidden"></span>
-        <span class="material-symbols-outlined text-[17px] text-secondary">key</span>
-        <span>API Keys &amp; Settings</span>
+      <button type="button" onclick="closeStudioMenuDrawer(); toggleAiEngineModal();" class="w-full px-3 py-2 rounded-xl bg-surface-container/60 hover:bg-surface-container border border-outline-variant/30 text-left font-display text-xs font-bold text-on-surface flex items-center justify-between gap-2 transition">
+        <span class="flex items-center gap-2 min-w-0">
+          <span class="material-symbols-outlined text-[17px] text-secondary shrink-0">key</span>
+          <span class="truncate">API Keys &amp; Settings</span>
+        </span>
+        <span id="engineBadgeHeader" class="font-mono text-[9px] px-2 py-0.5 rounded-md bg-tertiary/15 text-tertiary border border-tertiary/35 font-bold whitespace-nowrap shrink-0">⚡ LIVE AI</span>
       </button>
       <button type="button" onclick="closeStudioMenuDrawer(); forceAppUpdate();" class="w-full px-3 py-2 rounded-xl hover:bg-surface-container text-left font-display text-xs font-bold text-on-surface flex items-center gap-2.5 transition">
         <span class="material-symbols-outlined text-[17px] text-tertiary">system_update</span>
@@ -2225,7 +2228,7 @@
 
       const configured = Object.values(aiHealthState).filter(x => x.status !== 'unconfigured');
       if (!configured.length) {
-        btn.className = 'px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 flex items-center gap-1.5 min-w-0 transition';
+        btn.className = 'w-full overflow-hidden px-2.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 flex items-center justify-between gap-2 min-w-0 transition';
         dot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0';
         lbl.className = 'font-mono text-[11px] font-bold text-amber-300 truncate';
         lbl.textContent = 'No AI Key Set';
@@ -2236,18 +2239,18 @@
       const errList = configured.filter(x => x.status === 'error');
 
       if (!okList.length && (quotaList.length || errList.length)) {
-        btn.className = 'px-2.5 py-1 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 flex items-center gap-1.5 min-w-0 transition';
+        btn.className = 'w-full overflow-hidden px-2.5 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 flex items-center justify-between gap-2 min-w-0 transition';
         dot.className = 'w-2 h-2 rounded-full bg-red-400 animate-ping shrink-0';
         lbl.className = 'font-mono text-[11px] font-bold text-red-300 truncate';
         lbl.textContent = quotaList.length ? 'AI Quota Exceeded (Tap)' : 'AI Key Error (Tap)';
       } else if (quotaList.length || errList.length) {
-        btn.className = 'px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 flex items-center gap-1.5 min-w-0 transition';
+        btn.className = 'w-full overflow-hidden px-2.5 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 flex items-center justify-between gap-2 min-w-0 transition';
         dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0';
         lbl.className = 'font-mono text-[11px] font-bold text-amber-300 truncate';
         const activeNames = okList.map(x => x.label.split(' ')[0]).filter((v, i, a) => a.indexOf(v) === i).join(' + ');
         lbl.textContent = `Multi-AI Active (${activeNames})`;
       } else {
-        btn.className = 'px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 flex items-center gap-1.5 min-w-0 transition';
+        btn.className = 'w-full overflow-hidden px-2.5 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 flex items-center justify-between gap-2 min-w-0 transition';
         dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0';
         lbl.className = 'font-mono text-[11px] font-bold text-emerald-300 truncate';
         const activeNames = okList.map(x => x.label.split(' ')[0]).filter((v, i, a) => a.indexOf(v) === i).join(' + ');
@@ -2547,16 +2550,16 @@
         if (compactLabel) compactLabel.textContent = `Gemini AI Active (${appState.geminiModel || '2.5-flash'})`;
         getTodayUsageCount(false);
         if (badge) {
-          badge.textContent = '⚡ LIVE AI STUDIO';
-          badge.className = 'hidden sm:inline-block cursor-pointer font-mono text-[10px] px-2 py-0.5 rounded-md bg-tertiary/20 text-tertiary border border-tertiary/40 font-bold whitespace-nowrap';
+          badge.textContent = '⚡ LIVE AI';
+          badge.className = 'font-mono text-[9px] px-2 py-0.5 rounded-md bg-tertiary/20 text-tertiary border border-tertiary/40 font-bold whitespace-nowrap shrink-0';
         }
         if (statusText) statusText.textContent = `✓ Connected to Live Gemini AI (${appState.geminiModel || 'gemini-2.5-flash'})`;
       } else {
         if (setupBar) setupBar.classList.remove('hidden');
         if (topSec) topSec.classList.remove('hidden');
         if (badge) {
-          badge.textContent = 'THUMBNAIL AI STUDIO';
-          badge.className = 'hidden sm:inline-block cursor-pointer font-mono text-[10px] px-2 py-0.5 rounded-md bg-secondary/15 text-secondary border border-secondary/30 font-bold whitespace-nowrap';
+          badge.textContent = 'SETUP';
+          badge.className = 'font-mono text-[9px] px-2 py-0.5 rounded-md bg-secondary/15 text-secondary border border-secondary/30 font-bold whitespace-nowrap shrink-0';
         }
         if (statusText) statusText.textContent = 'No API Key saved yet — paste your Gemini API Key below.';
       }
