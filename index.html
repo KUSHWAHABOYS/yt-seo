@@ -83,6 +83,49 @@
     .break-anywhere { overflow-wrap: anywhere; word-break: break-word; }
     .khand-thumb-shadow { text-shadow: 0 4px 14px rgba(0, 0, 0, 0.95), 0 2px 4px rgba(0, 0, 0, 1); }
 
+    /* ==================== MODERN CREATOR STUDIO UI ==================== */
+    body {
+      background-image: radial-gradient(ellipse 80% 40% at 50% -10%, rgba(250, 204, 21, 0.06), transparent 65%),
+                        radial-gradient(ellipse 60% 35% at 85% 15%, rgba(52, 211, 153, 0.04), transparent 60%);
+    }
+    html.light-mode body {
+      background-image: radial-gradient(ellipse 80% 40% at 50% -10%, rgba(99, 102, 241, 0.05), transparent 65%) !important;
+    }
+    .studio-card {
+      background: linear-gradient(180deg, rgba(23, 28, 40, 0.85) 0%, rgba(17, 21, 31, 0.96) 100%);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      box-shadow: 0 12px 36px -12px rgba(0, 0, 0, 0.55);
+      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .studio-card:hover { border-color: rgba(250, 204, 21, 0.28); }
+    html.light-mode .studio-card {
+      background: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      box-shadow: 0 8px 28px -10px rgba(15, 23, 42, 0.08) !important;
+    }
+    @keyframes studioShimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .shimmer-skeleton {
+      background: linear-gradient(90deg, rgba(33, 39, 56, 0.55) 25%, rgba(56, 66, 94, 0.7) 50%, rgba(33, 39, 56, 0.55) 75%);
+      background-size: 200% 100%;
+      animation: studioShimmer 1.4s infinite linear;
+    }
+    html.light-mode .shimmer-skeleton {
+      background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%) !important;
+      background-size: 200% 100% !important;
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-slide-up { animation: fadeSlideUp 0.28s ease-out both; }
+    .mini-thumb-card {
+      background: radial-gradient(circle at 80% 20%, rgba(250, 204, 21, 0.14), transparent 55%),
+                  linear-gradient(145deg, #0b0f19 0%, #05070c 100%);
+    }
+
     /* ==================== LIGHT MODE THEME OVERRIDES ==================== */
     html.light-mode body { background-color: #f3f5f9 !important; color: #0f172a !important; }
     html.light-mode .bg-surface,
@@ -334,55 +377,60 @@
     </div>
   </div>
 
-  <!-- ==================== STICKY TOP HEADER (MOBILE-FIRST ZERO OVERLAP) ==================== -->
-  <header class="sticky top-0 left-0 right-0 h-14 sm:h-16 bg-surface-container-lowest/95 backdrop-blur-xl border-b border-outline-variant/40 z-30 flex flex-nowrap items-center justify-between px-2.5 sm:px-6 gap-1.5">
-    <div class="min-w-0 shrink">
-      <div class="flex items-center gap-2">
-        <span class="font-display font-black text-base sm:text-2xl text-white tracking-tight whitespace-nowrap leading-none">
-          YT SEO
-        </span>
-        <span id="engineBadgeHeader" onclick="toggleAiEngineModal()" class="hidden md:inline-block cursor-pointer font-mono text-[10px] px-2 py-0.5 rounded-md bg-secondary/15 text-secondary border border-secondary/30 font-bold whitespace-nowrap">
-          THUMBNAIL AI STUDIO
-        </span>
+  <!-- ==================== MODERN STICKY STUDIO HEADER ==================== -->
+  <header class="sticky top-0 left-0 right-0 h-14 sm:h-16 bg-surface-container-lowest/90 backdrop-blur-2xl border-b border-outline-variant/30 z-30 flex flex-nowrap items-center justify-between px-3 sm:px-6 gap-2 shadow-sm">
+    <div class="min-w-0 shrink flex items-center gap-2.5">
+      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-tertiary to-amber-500 text-on-tertiary flex items-center justify-center shadow-md shrink-0">
+        <span class="material-symbols-outlined text-[18px] sm:text-[20px]">auto_awesome</span>
       </div>
-      <p class="font-mono text-[8px] sm:text-[11px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
-        <span class="hidden sm:inline">Powered by </span>SSIRO • v1.0
-      </p>
+      <div class="min-w-0">
+        <div class="flex items-center gap-2">
+          <span class="font-display font-black text-base sm:text-xl text-white tracking-tight whitespace-nowrap leading-none">
+            YT SEO
+          </span>
+          <span id="engineBadgeHeader" onclick="toggleAiEngineModal()" class="hidden md:inline-block cursor-pointer font-mono text-[10px] px-2 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/30 font-bold whitespace-nowrap">
+            THUMBNAIL AI STUDIO
+          </span>
+        </div>
+        <p class="font-mono text-[9px] sm:text-[10px] text-tertiary font-bold tracking-wider uppercase whitespace-nowrap leading-none mt-1">
+          <span class="hidden sm:inline">Powered by </span>SSIRO • v1.0
+        </p>
+      </div>
     </div>
 
-    <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-      <button type="button" onclick="toggleHistoryModal()" title="Saved Project History" class="flex items-center justify-center gap-1 w-7 h-7 sm:w-auto sm:h-9 sm:px-2.5 rounded-lg sm:rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 font-mono text-[11px] font-bold transition">
-        <span class="material-symbols-outlined text-[15px] sm:text-[16px]">history</span>
+    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+      <button type="button" onclick="toggleHistoryModal()" title="Saved Project History" class="flex items-center justify-center gap-1.5 w-8 h-8 sm:w-auto sm:h-9 sm:px-3 rounded-xl bg-surface-container/80 hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/40 font-mono text-[11px] font-bold transition">
+        <span class="material-symbols-outlined text-[16px]">history</span>
         <span class="hidden sm:inline">History</span>
       </button>
 
-      <button type="button" onclick="togglePresetsModal()" title="Channel Presets" class="flex items-center justify-center gap-1 w-7 h-7 sm:w-auto sm:h-9 sm:px-2.5 rounded-lg sm:rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 font-mono text-[11px] font-bold transition">
-        <span class="material-symbols-outlined text-[15px] sm:text-[16px]">bookmarks</span>
+      <button type="button" onclick="togglePresetsModal()" title="Channel Presets" class="flex items-center justify-center gap-1.5 w-8 h-8 sm:w-auto sm:h-9 sm:px-3 rounded-xl bg-surface-container/80 hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/40 font-mono text-[11px] font-bold transition">
+        <span class="material-symbols-outlined text-[16px]">bookmarks</span>
         <span class="hidden sm:inline">Presets</span>
       </button>
 
-      <button type="button" id="themeToggleBtn" onclick="toggleThemeMode()" title="Switch Dark / Light Mode" class="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 transition">
-        <span id="themeToggleIcon" class="material-symbols-outlined text-[15px] sm:text-[16px]">light_mode</span>
+      <button type="button" id="themeToggleBtn" onclick="toggleThemeMode()" title="Switch Dark / Light Mode" class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-surface-container/80 hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/40 transition">
+        <span id="themeToggleIcon" class="material-symbols-outlined text-[16px]">light_mode</span>
       </button>
 
-      <button type="button" onclick="lockAppNow()" title="Lock App with PIN" class="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/50 transition">
-        <span class="material-symbols-outlined text-[15px] sm:text-[16px]">lock</span>
+      <button type="button" onclick="lockAppNow()" title="Lock App with PIN" class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-surface-container/80 hover:bg-surface-container-high text-on-surface-variant hover:text-white border border-outline-variant/40 transition">
+        <span class="material-symbols-outlined text-[16px]">lock</span>
       </button>
 
-      <button type="button" onclick="exportSelectedVariantPrompts()" title="Export Prompts" class="flex items-center justify-center gap-1 px-2 h-7 sm:h-9 sm:px-3.5 rounded-lg sm:rounded-xl bg-tertiary text-on-tertiary hover:brightness-110 font-display text-[10px] sm:text-xs font-extrabold whitespace-nowrap shadow transition">
-        <span class="material-symbols-outlined text-[14px] sm:text-[15px]">download</span>
+      <button type="button" onclick="exportSelectedVariantPrompts()" title="Export Prompts" class="flex items-center justify-center gap-1.5 px-2.5 h-8 sm:h-9 sm:px-4 rounded-xl bg-gradient-to-r from-tertiary to-amber-500 text-on-tertiary hover:brightness-110 font-display text-[11px] sm:text-xs font-extrabold whitespace-nowrap shadow-md transition">
+        <span class="material-symbols-outlined text-[15px]">download</span>
         <span class="hidden xs:inline sm:inline">Export</span>
       </button>
     </div>
   </header>
 
-  <!-- ==================== MAIN 11-STEP WORKFLOW CONTAINER ==================== -->
-  <main class="w-full max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-5 space-y-4">
+  <!-- ==================== MAIN STUDIO CONTAINER ==================== -->
+  <main class="w-full max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-5">
 
-    <!-- ==================== COMPACT API STATUS BAR & INLINE KEY BAR ==================== -->
-    <section class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+    <!-- ==================== COMPACT API BAR & PILL NAVIGATION ==================== -->
+    <section class="studio-card rounded-2xl p-3 sm:p-4 space-y-3">
       <!-- Compact AI Status + Update + Daily Limit Bar (Shown when key is saved) -->
-      <div id="aiKeyCompactStatusBar" class="hidden px-2.5 py-2 rounded-xl bg-surface-container-lowest/90 border border-outline-variant/40 flex flex-wrap items-center justify-between gap-2">
+      <div id="aiKeyCompactStatusBar" class="hidden px-3 py-2 rounded-xl bg-surface-container-lowest/80 border border-outline-variant/30 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-1.5 min-w-0">
           <button type="button" onclick="toggleAiEngineModal()" title="API Key Settings" class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/40 text-on-surface-variant hover:text-white flex items-center justify-center shrink-0 transition">
             <span class="material-symbols-outlined text-[16px]">settings</span>
@@ -396,40 +444,40 @@
             <span id="aiCompactStatusLabel" class="font-mono text-[11px] font-bold text-emerald-300 truncate">AI Ready</span>
           </button>
         </div>
-        <span id="aiDailyUsageBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/35 whitespace-nowrap shrink-0">
+        <span id="aiDailyUsageBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant border border-outline-variant/35 whitespace-nowrap shrink-0">
           Calls Today: 0 / 1,500
         </span>
       </div>
 
-      <!-- Setup Bar (Mobile-First Stacked Layout — Full Text & Full-Width Input) -->
+      <!-- Setup Bar (Shown when no key saved yet) -->
       <div id="aiKeySetupBar" class="p-3.5 rounded-xl bg-surface-container-lowest border border-tertiary/30 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-        <div class="flex items-start gap-2.5">
-          <span class="material-symbols-outlined text-tertiary text-[20px] shrink-0 mt-0.5">bolt</span>
-          <div class="space-y-0.5">
-            <span class="font-display text-xs sm:text-sm font-bold text-white block leading-snug">Live Gemini AI &amp; YouTube Thumbnail Research Engine</span>
-            <span id="inlineApiStatusSub" class="text-[11px] sm:text-xs text-on-surface-variant block leading-relaxed">Paste Gemini API Key for live YouTube trends &amp; A/B/C prompts.</span>
+        <div class="flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-tertiary text-[20px] shrink-0">bolt</span>
+          <div>
+            <span class="font-display text-xs sm:text-sm font-bold text-white block leading-snug">Connect AI Engine</span>
+            <span id="inlineApiStatusSub" class="text-[11px] text-on-surface-variant block">Paste Gemini or Groq Key to unlock live AI.</span>
           </div>
         </div>
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto shrink-0">
           <input
             id="inlineGeminiKeyInput"
             type="password"
-            placeholder="Paste Gemini API Key (AIzaSy...)"
-            class="w-full sm:w-64 bg-surface-container border border-outline-variant/60 rounded-xl px-3.5 py-2.5 font-mono text-xs text-white focus:outline-none focus:border-tertiary"
+            placeholder="Paste Gemini / Groq API Key..."
+            class="w-full sm:w-64 bg-surface-container border border-outline-variant/60 rounded-xl px-3.5 py-2 font-mono text-xs text-white focus:outline-none focus:border-tertiary"
           />
           <div class="grid grid-cols-2 sm:flex items-center gap-2">
-            <button type="button" onclick="saveInlineGeminiKey()" class="py-2.5 px-4 rounded-xl bg-tertiary text-on-tertiary font-mono text-xs font-extrabold whitespace-nowrap shadow text-center">
-              Connect AI
+            <button type="button" onclick="saveInlineGeminiKey()" class="py-2 px-4 rounded-xl bg-tertiary text-on-tertiary font-mono text-xs font-extrabold whitespace-nowrap shadow text-center">
+              Connect
             </button>
-            <button type="button" onclick="forceAppUpdate()" title="Update App" class="py-2.5 px-3.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-tertiary font-mono text-xs font-bold text-center">
-              Update App
+            <button type="button" onclick="forceAppUpdate()" title="Update App" class="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/50 text-tertiary font-mono text-xs font-bold text-center">
+              Update
             </button>
           </div>
         </div>
       </div>
 
-      <!-- CLEAN 3-TAB WORKSPACE SWITCHER (1. TITLE SEO -> 2. THUMBNAIL STUDIO -> 3. LINK AUDITOR) -->
-      <div class="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-surface-container-lowest border border-outline-variant/40">
+      <!-- CLEAN 3-TAB PILL SWITCHER -->
+      <div class="grid grid-cols-3 gap-1.5 p-1 rounded-2xl bg-surface-container-lowest border border-outline-variant/35">
         <button type="button" id="mainTabBtn_seo" onclick="switchWorkspaceTab('seo')" class="py-2.5 px-2 sm:px-4 rounded-xl bg-tertiary text-on-tertiary font-display text-[11px] sm:text-xs font-extrabold flex items-center justify-center gap-1.5 shadow transition">
           <span>📈</span><span>Title SEO</span>
         </button>
@@ -440,45 +488,10 @@
           <span>🔍</span><span>Link SEO</span>
         </button>
       </div>
-
-      <!-- Workflow Progress Stepper Row (1-Col on Mobile so ZERO text is cut off, 2-Col on Tablet, 4-Col on PC) -->
-      <div class="flex items-center justify-between pt-1">
-        <button type="button" onclick="toggleCompactSection('workflowRoadmapWrap', this, 'ℹ️ Show Workflow Guide (4 Steps)', 'ℹ️ Hide Workflow Guide')" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/40 font-mono text-[10px] font-bold text-on-surface-variant hover:text-white transition">ℹ️ Show Workflow Guide (4 Steps)</button>
-      </div>
-      <div id="workflowRoadmapWrap" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 pt-1">
-        <a href="#section-step-1-4" class="p-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-tertiary/40 flex items-center gap-3 transition">
-          <span class="w-8 h-8 rounded-lg bg-tertiary text-on-tertiary font-mono text-xs font-black flex items-center justify-center shrink-0">01</span>
-          <div class="min-w-0 flex-1">
-            <p class="font-display text-xs sm:text-sm font-bold text-white leading-snug">Niche, Format &amp; Topic</p>
-            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">Niche, format, size &amp; topic</p>
-          </div>
-        </a>
-        <a href="#section-step-6" class="p-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 flex items-center gap-3 transition">
-          <span class="w-8 h-8 rounded-lg bg-secondary/20 text-secondary border border-secondary/30 font-mono text-xs font-black flex items-center justify-center shrink-0">02</span>
-          <div class="min-w-0 flex-1">
-            <p class="font-display text-xs sm:text-sm font-bold text-white leading-snug">YouTube Viral Research</p>
-            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">Live trends &amp; 3-layer insights</p>
-          </div>
-        </a>
-        <a href="#section-step-7-8" class="p-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 flex items-center gap-3 transition">
-          <span class="w-8 h-8 rounded-lg bg-primary/20 text-primary border border-primary/30 font-mono text-xs font-black flex items-center justify-center shrink-0">03</span>
-          <div class="min-w-0 flex-1">
-            <p class="font-display text-xs sm:text-sm font-bold text-white leading-snug">6 Thumbnail Concepts</p>
-            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">6 distinct design concepts</p>
-          </div>
-        </a>
-        <a href="#section-step-9-11" class="p-3 rounded-xl bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/40 flex items-center gap-3 transition">
-          <span class="w-8 h-8 rounded-lg bg-tertiary/20 text-tertiary border border-tertiary/30 font-mono text-xs font-black flex items-center justify-center shrink-0">04</span>
-          <div class="min-w-0 flex-1">
-            <p class="font-display text-xs sm:text-sm font-bold text-white leading-snug">Prompt Hub (Variants A, B, C)</p>
-            <p class="font-sans text-[11px] text-on-surface-variant leading-snug mt-0.5">Copy A/B/C prompts + Hindi guide</p>
-          </div>
-        </a>
-      </div>
     </section>
 
     <!-- ==================== STEPS 1 TO 5: NICHE, FORMAT, TOPIC INPUT & RESEARCH TRIGGER ==================== -->
-    <section id="section-step-1-4" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+    <section id="section-step-1-4" class="studio-card rounded-2xl p-4 sm:p-6 space-y-4 fade-slide-up">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/40 pb-3">
         <div>
           <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">Step 1 • Input &amp; Generate</span>
@@ -751,25 +764,36 @@
         </button>
       </div>
 
-      <!-- REAL-TIME STEP-BY-STEP PROGRESS TRACKER (NO FAKE INSTANT SUCCESS!) -->
-      <div id="liveProgressPanel" class="hidden p-4 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2.5">
+      <!-- REAL-TIME ANIMATED STUDIO PIPELINE & SKELETON LOADER -->
+      <div id="liveProgressPanel" class="hidden p-4 rounded-2xl bg-surface-container-lowest/95 border border-secondary/40 space-y-3 shadow-lg fade-slide-up">
         <div class="flex flex-wrap items-center justify-between gap-2">
-          <div class="flex items-center gap-2 min-w-0">
+          <div class="flex items-center gap-2.5 min-w-0">
             <span id="liveProgressSpinner" class="w-2.5 h-2.5 rounded-full bg-tertiary animate-ping shrink-0"></span>
-            <span id="liveProgressHeadline" class="font-mono text-xs font-bold text-white break-words min-w-0">Running Live YouTube &amp; AI Thumbnail Intelligence...</span>
+            <span id="liveProgressHeadline" class="font-mono text-xs font-bold text-white break-words min-w-0">Running Studio Pipeline...</span>
           </div>
-          <span id="liveProgressSourceBadge" class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container text-tertiary border border-tertiary/30">Checking API...</span>
+          <div class="flex items-center gap-2">
+            <span id="liveElapsedTimer" class="font-mono text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-secondary border border-secondary/30 font-bold tabular-nums">0.0s</span>
+            <span id="liveProgressSourceBadge" class="font-mono text-[10px] px-2.5 py-0.5 rounded-full bg-surface-container text-tertiary border border-tertiary/30">Connecting...</span>
+          </div>
+        </div>
+        <div class="w-full h-1.5 rounded-full bg-surface-container overflow-hidden">
+          <div id="liveProgressBarFill" class="h-full bg-gradient-to-r from-tertiary via-secondary to-primary transition-all duration-500 rounded-full" style="width: 18%;"></div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] font-mono">
-          <div id="stagePill1" class="p-2 rounded-lg bg-surface-container border border-outline-variant/40 text-outline">1. YouTube Viral Search &amp; Trend Scan</div>
-          <div id="stagePill2" class="p-2 rounded-lg bg-surface-container border border-outline-variant/40 text-outline">2. 3-Layer Topic &amp; Format Analysis</div>
-          <div id="stagePill3" class="p-2 rounded-lg bg-surface-container border border-outline-variant/40 text-outline">3. Building 6 Concepts &amp; A/B/C Engine</div>
+          <div id="stagePill1" class="p-2.5 rounded-xl bg-surface-container border border-outline-variant/40 text-outline transition-all">1. YouTube &amp; Material Scan</div>
+          <div id="stagePill2" class="p-2.5 rounded-xl bg-surface-container border border-outline-variant/40 text-outline transition-all">2. AI Hook &amp; Trend Research</div>
+          <div id="stagePill3" class="p-2.5 rounded-xl bg-surface-container border border-outline-variant/40 text-outline transition-all">3. Building 3 Designs (A/B/C)</div>
+        </div>
+        <div id="liveSkeletonPreview" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+          <div class="h-20 rounded-xl shimmer-skeleton border border-outline-variant/20"></div>
+          <div class="h-20 rounded-xl shimmer-skeleton border border-outline-variant/20"></div>
+          <div class="h-20 rounded-xl shimmer-skeleton border border-outline-variant/20"></div>
         </div>
       </div>
     </section>
 
     <!-- ==================== STEP 6: LIVE YOUTUBE VIRAL THUMBNAIL RESEARCH & 3-LAYER INTELLIGENCE INSIGHTS ==================== -->
-    <section id="section-step-6" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+    <section id="section-step-6" class="studio-card rounded-2xl p-4 sm:p-6 space-y-4 fade-slide-up">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/40 pb-3">
         <div>
           <span class="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold block">Background • Research</span>
@@ -838,7 +862,7 @@
     </section>
 
     <!-- ==================== STEPS 7 & 8: THUMBNAIL CONCEPT SELECTION DASHBOARD (6 DISTINCT CONCEPTS) ==================== -->
-    <section id="section-step-7-8" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+    <section id="section-step-7-8" class="studio-card rounded-2xl p-4 sm:p-6 space-y-4 fade-slide-up">
       <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-variant/40 pb-3">
         <div>
           <span class="font-mono text-[10px] uppercase tracking-wider text-primary font-bold block">Step 2 • Thumbnail Title</span>
@@ -882,7 +906,7 @@
     </section>
 
     <!-- ==================== STEPS 9, 10 & 11: THREE DISTINCT VARIANTS (A, B, C), COMPARISON MATRIX & FINAL PROMPTS ==================== -->
-    <section id="section-step-9-11" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+    <section id="section-step-9-11" class="studio-card rounded-2xl p-4 sm:p-6 space-y-4 fade-slide-up">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
           <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">Step 3 • Export &amp; ChatGPT</span>
@@ -958,7 +982,7 @@
       <button type="button" id="seoSubBtn13" onclick="switchSeoSubTab(13)" class="flex-1 py-2 px-3 rounded-lg bg-surface-container text-on-surface-variant hover:text-white font-mono text-xs font-bold transition">🖼️ Thumbnail CTR &amp; 4-View Test</button>
     </div>
     <!-- ==================== STEP 12: YOUTUBE SUGGESTED-VIDEO SEO & RANK BLUEPRINT ==================== -->
-    <section id="section-step-12" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+    <section id="section-step-12" class="studio-card rounded-2xl p-4 sm:p-6 space-y-4 fade-slide-up">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
           <span class="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold block">Title SEO</span>
@@ -1040,7 +1064,7 @@
     </section>
 
     <!-- ==================== STEP 13: TRUE MULTI-THUMBNAIL CTR & VISUAL ANALYZER (1-3 THUMBNAILS) ==================== -->
-    <section id="section-step-13" class="bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+    <section id="section-step-13" class="studio-card rounded-2xl p-4 sm:p-6 space-y-4 fade-slide-up">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
           <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">CTR Test</span>
@@ -1084,7 +1108,7 @@
 
 
     <!-- ==================== TAB 3: YOUTUBE VIDEO LINK & CHANNEL AUDITOR (NO OAUTH NEEDED) ==================== -->
-    <section id="section-tab-audit" class="hidden bg-surface-container-low border border-outline-variant/50 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+    <section id="section-tab-audit" class="hidden studio-card rounded-2xl p-4 sm:p-6 space-y-4 fade-slide-up">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
           <span class="font-mono text-[10px] uppercase tracking-wider text-primary font-bold block">Link SEO</span>
@@ -3091,20 +3115,51 @@ function hasAnyTextAiKey() {
     }
 
     // ==================== 10. STEP 5–8: RUN LIVE YOUTUBE RESEARCH & GENERATE 6 CONCEPTS ====================
+    let __liveElapsedInterval = null;
+    let __liveElapsedStart = 0;
+
+    function startLiveStudioTimer() {
+      stopLiveStudioTimer();
+      __liveElapsedStart = Date.now();
+      const timerEl = document.getElementById('liveElapsedTimer');
+      const skelEl = document.getElementById('liveSkeletonPreview');
+      if (skelEl) skelEl.classList.remove('hidden');
+      if (timerEl) timerEl.textContent = '0.0s';
+      __liveElapsedInterval = setInterval(() => {
+        if (timerEl) timerEl.textContent = ((Date.now() - __liveElapsedStart) / 1000).toFixed(1) + 's';
+      }, 100);
+    }
+
+    function stopLiveStudioTimer() {
+      if (__liveElapsedInterval) {
+        clearInterval(__liveElapsedInterval);
+        __liveElapsedInterval = null;
+      }
+      const skelEl = document.getElementById('liveSkeletonPreview');
+      if (skelEl) skelEl.classList.add('hidden');
+    }
+
     function setStageStatus(stageNum, state, text) {
       const el = document.getElementById('stagePill' + stageNum);
+      const fill = document.getElementById('liveProgressBarFill');
+      if (stageNum === 1 && state === 'active') startLiveStudioTimer();
+      if (stageNum === 3 && (state === 'done' || state === 'warn')) stopLiveStudioTimer();
+      if (fill) {
+        const pct = stageNum === 1 ? (state === 'done' ? 35 : 18) : (stageNum === 2 ? (state === 'done' ? 72 : 52) : (state === 'done' ? 100 : 85));
+        fill.style.width = pct + '%';
+      }
       if (!el) return;
       if (state === 'active') {
-        el.className = 'p-2 rounded-lg bg-tertiary/20 border border-tertiary text-tertiary font-bold';
+        el.className = 'p-2.5 rounded-xl bg-tertiary/15 border border-tertiary text-tertiary font-bold shadow-sm transition-all';
         el.textContent = '⏳ ' + text;
       } else if (state === 'done') {
-        el.className = 'p-2 rounded-lg bg-secondary/15 border border-secondary/40 text-secondary font-bold';
+        el.className = 'p-2.5 rounded-xl bg-secondary/15 border border-secondary/40 text-secondary font-bold transition-all';
         el.textContent = '✓ ' + text;
       } else if (state === 'warn') {
-        el.className = 'p-2 rounded-lg bg-error-container/30 border border-error/40 text-error font-bold';
+        el.className = 'p-2.5 rounded-xl bg-error-container/30 border border-error/40 text-error font-bold transition-all';
         el.textContent = '⚠️ ' + text;
       } else {
-        el.className = 'p-2 rounded-lg bg-surface-container border border-outline-variant/40 text-outline';
+        el.className = 'p-2.5 rounded-xl bg-surface-container border border-outline-variant/40 text-outline transition-all';
         el.textContent = text;
       }
     }
@@ -3398,7 +3453,8 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
         setStageStatus(3, 'warn', 'Error: ' + (err?.message || 'Interrupted'));
         showToast('Error: ' + (err?.message || 'Research interrupted'));
       } finally {
-        if (btnText) btnText.textContent = 'Step 5: Start Live YouTube Research & Generate 6 Thumbnail Concepts';
+        stopLiveStudioTimer();
+        if (btnText) btnText.textContent = '⚡ Generate Thumbnail';
       }
     }
 
@@ -4380,13 +4436,18 @@ Return strict JSON: {"details": "..."}`;
         const { line1, line2 } = splitHookIntoTwoLines(h.hindi || h.hinglish || h.english || '');
         const label = i === 0 ? '1. Curiosity Hook' : (i === 1 ? '2. Evidence Hook' : '3. Shock / Story');
         const isSelected = !hasCustom && (lockedIdx === i);
-        return `<button type="button" onclick="selectLockedThumbnailHook(${i})" class="dark-badge-keep text-left w-full p-3 rounded-xl bg-[#090b10] border transition space-y-1 ${isSelected ? 'border-[#FFD700] ring-2 ring-[#FFD700]/40' : 'border-tertiary/30 hover:border-tertiary/70'}">
-          <div class="flex items-center justify-between gap-1">
-            <span class="font-mono text-[9px] uppercase text-slate-400 font-bold">${label}${h.score ? ` • ⭐ ${Number(h.score).toFixed(1)}/10` : ""}</span>
-            <span class="font-mono text-[9px] font-bold ${isSelected ? 'text-[#FFD700]' : 'text-tertiary'}">${isSelected ? '🔒 LOCKED' : 'Click to Lock'}</span>
+        return `<button type="button" onclick="selectLockedThumbnailHook(${i})" class="dark-badge-keep mini-thumb-card text-left w-full p-3.5 rounded-2xl border transition-all space-y-1.5 shadow-md hover:-translate-y-0.5 ${isSelected ? 'border-[#FFD700] ring-2 ring-[#FFD700]/35' : 'border-outline-variant/40 hover:border-tertiary/60'}">
+          <div class="flex items-center justify-between gap-1.5">
+            <span class="font-mono text-[9px] uppercase text-slate-300 font-bold tracking-wide">${label}</span>
+            <div class="flex items-center gap-1.5">
+              ${h.score ? `<span class="px-1.5 py-0.5 rounded-full bg-tertiary/20 text-[#FFD700] font-mono text-[9px] font-extrabold">⭐ ${Number(h.score).toFixed(1)}</span>` : ''}
+              <span class="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-[#FFD700] text-slate-950' : 'bg-white/10 text-slate-200'}">${isSelected ? '🔒 Locked' : 'Select'}</span>
+            </div>
           </div>
-          <p class="font-khand text-base font-bold text-[#FFD700] leading-tight khand-thumb-shadow">${line1}</p>
-          <p class="font-khand text-sm font-bold text-[#FFFFFF] leading-tight khand-thumb-shadow">${line2 || ''}</p>
+          <div class="pt-1">
+            <p class="font-khand text-lg font-bold text-[#FFD700] leading-tight khand-thumb-shadow">${line1}</p>
+            <p class="font-khand text-base font-bold text-[#FFFFFF] leading-tight khand-thumb-shadow">${line2 || ''}</p>
+          </div>
         </button>`;
       }).join('');
     }
