@@ -143,15 +143,31 @@
     /* ==================== LIGHT MODE THEME OVERRIDES ==================== */
     html.light-mode body { background-color: #f3f5f9 !important; color: #0f172a !important; }
     html.light-mode .bg-surface,
-    html.light-mode .bg-surface\/95 { background-color: #f3f5f9 !important; }
+    html.light-mode .bg-surface\/95,
+    html.light-mode .bg-surface\/90,
+    html.light-mode .bg-surface\/85 { background-color: #f3f5f9 !important; }
     html.light-mode .bg-surface-container-lowest,
     html.light-mode .bg-surface-container-lowest\/95,
-    html.light-mode .bg-surface-container-lowest\/90 { background-color: #ffffff !important; border-color: #cbd5e1 !important; }
+    html.light-mode .bg-surface-container-lowest\/90,
+    html.light-mode .bg-surface-container-lowest\/80 { background-color: #ffffff !important; border-color: #cbd5e1 !important; }
     html.light-mode #compactStyleSummaryText span { border-color: #cbd5e1 !important; }
-    html.light-mode .bg-surface-container-low { background-color: #f8fafc !important; box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05) !important; }
-    html.light-mode .bg-surface-container { background-color: #eef2f6 !important; }
+    html.light-mode .bg-surface-container-low,
+    html.light-mode .bg-surface-container-low\/92,
+    html.light-mode .bg-surface-container-low\/90 { background-color: #ffffff !important; box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06) !important; border-color: #cbd5e1 !important; }
+    html.light-mode .bg-surface-container,
+    html.light-mode .bg-surface-container\/60,
+    html.light-mode .bg-surface-container\/40,
+    html.light-mode .bg-surface-container\/70 { background-color: #eef2f6 !important; }
     html.light-mode .bg-surface-container-high,
-    html.light-mode .bg-surface-container-highest { background-color: #e2e8f0 !important; }
+    html.light-mode .bg-surface-container-highest,
+    html.light-mode .bg-surface-container-highest\/60 { background-color: #e2e8f0 !important; }
+    html.light-mode details.bg-gradient-to-br { background-image: none !important; background-color: #ffffff !important; border-color: #cbd5e1 !important; }
+    html.light-mode nav { background-color: rgba(255, 255, 255, 0.96) !important; border-color: #cbd5e1 !important; }
+    html.light-mode .text-primary-fixed { color: #b91c1c !important; }
+    html.light-mode .bg-primary-container { background-color: #ef4444 !important; }
+    html.light-mode .text-on-primary-container { color: #ffffff !important; }
+    html.light-mode .bg-tertiary-container { background-color: #059669 !important; }
+    html.light-mode .text-on-tertiary-container { color: #ffffff !important; }
     html.light-mode .text-white,
     html.light-mode .text-on-surface { color: #0f172a !important; }
     html.light-mode .text-on-surface-variant,
@@ -500,6 +516,16 @@
         <span class="material-symbols-outlined text-[17px] text-secondary">bookmarks</span>
         <span>Channel Brand Presets</span>
       </button>
+      <div class="grid grid-cols-2 gap-1.5">
+        <button type="button" onclick="closeStudioMenuDrawer(); exportEncryptedApiVault();" class="px-2.5 py-2 rounded-xl bg-secondary/15 hover:bg-secondary/25 border border-secondary/30 text-secondary font-mono text-[10px] font-bold flex items-center justify-center gap-1 transition">
+          <span class="material-symbols-outlined text-[14px]">upload</span>
+          <span>Sync Copy</span>
+        </button>
+        <button type="button" onclick="closeStudioMenuDrawer(); importEncryptedApiVault();" class="px-2.5 py-2 rounded-xl bg-tertiary/15 hover:bg-tertiary/25 border border-tertiary/30 text-tertiary font-mono text-[10px] font-bold flex items-center justify-center gap-1 transition">
+          <span class="material-symbols-outlined text-[14px]">download</span>
+          <span>Sync Paste</span>
+        </button>
+      </div>
       <button type="button" onclick="closeStudioMenuDrawer(); exportSelectedVariantPrompts();" class="w-full px-3 py-2 rounded-xl hover:bg-surface-container text-left font-display text-xs font-bold text-on-surface flex items-center gap-2.5 transition">
         <span class="material-symbols-outlined text-[17px] text-tertiary">download</span>
         <span>Export Prompts (.txt)</span>
@@ -2087,6 +2113,10 @@
 
     function saveEncryptedApiVault() {
       try {
+        let links = { ebook: '', playlist: '', social: '' };
+        try { links = typeof getSavedChannelLinks === 'function' ? getSavedChannelLinks() : JSON.parse(localStorage.getItem('yt_seo_ssiro_channel_links_v1') || '{}'); } catch (e) {}
+        let presets = null;
+        try { presets = JSON.parse(localStorage.getItem('yt_seo_ssiro_presets_v30') || 'null'); } catch (e) {}
         const payload = {
           g1: appState.geminiApiKey || '',
           g2: appState.geminiApiKey2 || '',
@@ -2095,7 +2125,9 @@
           mistral: appState.mistralApiKey || '',
           or: appState.openrouterApiKey || '',
           yt: appState.youtubeApiKey || '',
-          model: appState.geminiModel || 'gemini-2.5-flash'
+          model: appState.geminiModel || 'gemini-2.5-flash',
+          links: links || { ebook: '', playlist: '', social: '' },
+          presets: Array.isArray(presets) ? presets : null
         };
         localStorage.setItem(ENCRYPTED_VAULT_KEY, encryptVaultPayload(payload));
       } catch (e) {}
@@ -2125,7 +2157,7 @@
     function exportEncryptedApiVault() {
       saveEncryptedApiVault();
       const raw = localStorage.getItem(ENCRYPTED_VAULT_KEY) || '';
-      if (!raw) { showToast('⚠️ Pehle kam se kam 1 API key save karen.', true); return; }
+      if (!raw) { showToast('⚠️ Pehle API key ya Links save karen.', true); return; }
       copyTextSafe(raw, '🔐 Encrypted Vault Code copied! Paste on your other device via Import Vault.');
     }
 
@@ -2148,11 +2180,26 @@
         if (document.getElementById('mistralApiKeyInput')) document.getElementById('mistralApiKeyInput').value = appState.mistralApiKey;
         if (document.getElementById('openrouterApiKeyInput')) document.getElementById('openrouterApiKeyInput').value = appState.openrouterApiKey;
         if (document.getElementById('youtubeApiKeyInput')) document.getElementById('youtubeApiKeyInput').value = appState.youtubeApiKey;
-        saveEncryptedApiVault();
+        if (v.links && typeof v.links === 'object') {
+          try {
+            localStorage.setItem('yt_seo_ssiro_channel_links_v1', JSON.stringify({
+              ebook: v.links.ebook || '',
+              playlist: v.links.playlist || '',
+              social: v.links.social || ''
+            }));
+            if (typeof loadSavedChannelLinks === 'function') loadSavedChannelLinks();
+          } catch (e) {}
+        }
+        if (Array.isArray(v.presets)) {
+          try {
+            localStorage.setItem('yt_seo_ssiro_presets_v30', JSON.stringify(v.presets));
+            if (typeof renderPresetsList === 'function') renderPresetsList();
+          } catch (e) {}
+        }
         saveEncryptedApiVault();
         syncAiHealthConfiguredFlags();
         updateEngineBadgeUI(hasAnyTextAiKey());
-        showToast('🔐 Encrypted API Vault imported & saved permanently!');
+        showToast('🔐 Vault Synced! API Keys + Saved Links + Presets restored.');
       } catch (e) {
         showToast('❌ Invalid Vault Code or PIN mismatch!', true);
       }
