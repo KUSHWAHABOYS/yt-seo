@@ -13,7 +13,7 @@
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
   <title>YT SEO — Powered by SSIRO • v1.0 | Thumbnail Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Bebas+Neue&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Khand:wght@600;700&amp;family=Montserrat:wght@800;900&amp;family=Noto+Sans+Devanagari:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Teko:wght@600;700&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script id="tailwind-config">
@@ -1420,6 +1420,26 @@
           <button type="button" data-hlang="hindi" onclick="setGlobalHookLanguageLock('hindi')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Hindi Only</button>
           <button type="button" data-hlang="hinglish" onclick="setGlobalHookLanguageLock('hinglish')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Hinglish</button>
           <button type="button" data-hlang="english" onclick="setGlobalHookLanguageLock('english')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">English</button>
+        </div>
+      </div>
+
+      <!-- SIGNATURE FONT PAIR & SMART CASE LOCK -->
+      <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 space-y-2 font-mono text-[10px]">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-bold uppercase text-tertiary">🔤 Brand Font &amp; Case (AI Smart):</span>
+          <div id="studioCaseBar" class="flex flex-wrap gap-1">
+            <button type="button" data-fcase="auto" onclick="setStudioFontCase('auto')" class="fcase-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold">Auto Case</button>
+            <button type="button" data-fcase="upper" onclick="setStudioFontCase('upper')" class="fcase-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">ALL CAPS</button>
+            <button type="button" data-fcase="title" onclick="setStudioFontCase('title')" class="fcase-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Title Case (Aa)</button>
+          </div>
+        </div>
+        <div id="studioFontPickerBar" class="flex flex-wrap gap-1.5">
+          <button type="button" data-ffont="auto" onclick="setStudioFontFamily('auto')" class="ffont-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold">Auto (AI)</button>
+          <button type="button" data-ffont="Khand" onclick="setStudioFontFamily('Khand')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Khand Bold (HI)</button>
+          <button type="button" data-ffont="Teko" onclick="setStudioFontFamily('Teko')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Teko Bold (HI)</button>
+          <button type="button" data-ffont="Anton" onclick="setStudioFontFamily('Anton')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Anton (EN)</button>
+          <button type="button" data-ffont="Bebas Neue" onclick="setStudioFontFamily('Bebas Neue')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Bebas Neue (EN)</button>
+          <button type="button" data-ffont="Montserrat" onclick="setStudioFontFamily('Montserrat')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Montserrat Black (EN)</button>
         </div>
       </div>
 
@@ -4185,7 +4205,10 @@ function buildThreeDistinctVariantsForConcept(concept, regenSeed = 0) {
     }
 
     function composeFullVariantPrompt(v, concept, niche, fmt, title, desc, refInfo, hookRaw) {
-      const { line1, line2 } = splitHookIntoTwoLines(hookRaw);
+      const typoSpec = (typeof getActiveThumbnailTypographySpec === 'function')
+        ? getActiveThumbnailTypographySpec(hookRaw, niche, fmt)
+        : { fontName: 'Khand', weight: '700', descriptor: 'Khand Bold geometric display', caseLabel: 'ALL CAPS / Natural Hindi', line1: splitHookIntoTwoLines(hookRaw).line1, line2: splitHookIntoTwoLines(hookRaw).line2 };
+      const { line1, line2 } = typoSpec;
       const sz = getSelectedThumbnailSize();
       const refDetailsLine = refInfo
         ? `• User-Specified Reference Details to Incorporate: "${refInfo}"
@@ -4277,13 +4300,14 @@ STEP 2 — VARIANT ${v.code} VISUAL ARCHITECTURE (100% DISTINCT DIRECTION):
 • Historical / Domain Visual Accuracy Lock: ${niche.accuracyRule}
 
 ===================================================================
-STEP 3 — LOCKED TYPOGRAPHY & BRAND RULES (KHAND BOLD • YELLOW & WHITE):
+STEP 3 — LOCKED TYPOGRAPHY & BRAND RULES (${typoSpec.fontName.toUpperCase()} • YELLOW & WHITE):
 ===================================================================
 • Render this exact 2-line thumbnail headline in "${v.textPlacement}":
-  - LINE 1 (Top Line): "${line1}" -> Render in Bold 'Khand' (Khand Bold) geometric display font, SOLID GOLDEN YELLOW (#FFD700) fill.
-  - LINE 2 (Bottom Line): "${line2}" -> Render in Bold 'Khand' (Khand Bold) geometric display font, SOLID PURE CRISP WHITE (#FFFFFF) fill.
+  - LINE 1 (Top Line): "${line1}" -> Render in '${typoSpec.descriptor}', SOLID GOLDEN YELLOW (#FFD700) fill.
+  - LINE 2 (Bottom Line): "${line2}" -> Render in '${typoSpec.descriptor}', SOLID PURE CRISP WHITE (#FFFFFF) fill.
+  - LETTER CASE STYLE: ${typoSpec.caseLabel}
 • STRICT TYPOGRAPHY & ZERO-TYPO SPELLING LOCK:
-  - ATTACHED KHAND BOLD FONT SPECIMEN IMAGE: Use the attached "KHAND BOLD FONT REFERENCE" image as your EXACT visual font blueprint—replicate its tall, narrow, condensed, sharp-edged geometric Devanagari/Latin letterforms, stroke weight, #FFD700 Yellow Line 1 + #FFFFFF White Line 2, and clean matra geometry (NEVER substitute rounded, bubbly, or generic sans-serif fonts!).
+  - ATTACHED FONT SPECIMEN IMAGE: Use the attached "${typoSpec.fontName.toUpperCase()} FONT BLUEPRINT" image as your EXACT visual font reference—replicate its exact letterform geometry, stroke weight, #FFD700 Yellow Line 1 + #FFFFFF White Line 2, and clean matra/character proportions (NEVER substitute generic rounded or bubbly fonts!).
   - Colors MUST be exact: Line 1 = SOLID GOLDEN YELLOW (#FFD700), Line 2 = SOLID PURE WHITE (#FFFFFF), with heavy black 3D drop-shadow and dark vignette scrim behind the text.
   - DEVANAGARI / HINDI SPELLING & SMART HINGLISH FALLBACK: Render "${line1}" and "${line2}" cleanly with ZERO typos. If any complex Hindi/Sanskrit conjunct word risks a spelling error or broken matra in image generation, automatically transliterate THAT tricky word into clean uppercase Hinglish/English (or use mixed Hindi + English in the EXACT SAME 'Khand Bold' font style, #FFD700 Yellow Line 1 + #FFFFFF White Line 2)—NEVER output broken or garbled Hindi letters!
 • Do NOT add any other random words, gibberish text, or extra labels anywhere on the image.
@@ -5111,9 +5135,109 @@ Return strict JSON: {"details": "..."}`;
       });
     }
 
+    function formatSmartEnglishCase(str, mode) {
+      const s = String(str || '').trim();
+      if (!s || /[\u0900-\u097F]/.test(s)) return s;
+      if (mode === 'upper') return s.toUpperCase();
+      if (mode === 'title') {
+        return s.toLowerCase().replace(/(?:^|\s)\S/g, ch => ch.toUpperCase());
+      }
+      return s;
+    }
+
+    function getActiveThumbnailTypographySpec(hookRaw, niche, fmt) {
+      const { line1: r1, line2: r2 } = splitHookIntoTwoLines(hookRaw || '');
+      const hasHindi = /[\u0900-\u097F]/.test(r1 + ' ' + r2);
+      const fmtId = (fmt?.id || (typeof getActiveFormatObj === 'function' ? getActiveFormatObj()?.id : '') || 'documentary').toLowerCase();
+      const nicheId = (niche?.id || (typeof getActiveNicheObj === 'function' ? getActiveNicheObj()?.id : '') || 'history').toLowerCase();
+
+      let fontName = appState.selectedFontFamily && appState.selectedFontFamily !== 'auto'
+        ? appState.selectedFontFamily
+        : '';
+      if (!fontName) {
+        if (hasHindi) {
+          fontName = (fmtId === 'debate' || fmtId === 'podcast') ? 'Teko' : 'Khand';
+        } else {
+          if (fmtId === 'debate' || nicheId === 'mystery' || nicheId === 'true_crime') fontName = 'Anton';
+          else if (fmtId === 'podcast' || nicheId === 'finance' || nicheId === 'motivation') fontName = 'Montserrat';
+          else fontName = 'Bebas Neue';
+        }
+      }
+
+      const metaMap = {
+        'Khand': { weight: '700', descriptor: 'Khand Bold (tall condensed geometric Devanagari display)', canvasFont: '"Khand", "Noto Sans Devanagari", sans-serif' },
+        'Teko': { weight: '700', descriptor: 'Teko Bold (tall blocky high-energy Devanagari display)', canvasFont: '"Teko", "Noto Sans Devanagari", sans-serif' },
+        'Anton': { weight: '400', descriptor: 'Anton (ultra-heavy condensed viral YouTube display)', canvasFont: '"Anton", "Impact", sans-serif' },
+        'Bebas Neue': { weight: '400', descriptor: 'Bebas Neue (tall structured documentary display)', canvasFont: '"Bebas Neue", "Anton", sans-serif' },
+        'Montserrat': { weight: '900', descriptor: 'Montserrat Black 900 (wide geometric premium display)', canvasFont: '"Montserrat", "Plus Jakarta Sans", sans-serif' }
+      };
+      const meta = metaMap[fontName] || metaMap['Khand'];
+
+      let caseMode = appState.selectedCaseMode && appState.selectedCaseMode !== 'auto'
+        ? appState.selectedCaseMode
+        : '';
+      if (!caseMode) {
+        if (fontName === 'Anton' || fontName === 'Bebas Neue' || fmtId === 'debate') caseMode = 'upper';
+        else if (fontName === 'Montserrat') caseMode = 'title';
+        else caseMode = 'upper';
+      }
+
+      const line1 = formatSmartEnglishCase(r1, caseMode);
+      const line2 = formatSmartEnglishCase(r2, caseMode);
+      const caseLabel = hasHindi
+        ? 'Natural crisp Devanagari bold lettering'
+        : (caseMode === 'title' ? 'Title Case (Capital + Small letters for calm analytical trust)' : 'ALL CAPS (uniform block height for maximum mobile CTR)');
+
+      return { fontName, weight: meta.weight, descriptor: meta.descriptor, canvasFont: meta.canvasFont, caseMode, caseLabel, line1, line2 };
+    }
+
+    function setStudioFontFamily(font) {
+      appState.selectedFontFamily = font || 'auto';
+      document.querySelectorAll('#studioFontPickerBar .ffont-btn').forEach(btn => {
+        const active = btn.getAttribute('data-ffont') === appState.selectedFontFamily;
+        btn.className = active
+          ? 'ffont-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold'
+          : 'ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold';
+      });
+      refreshStudioTypographyAndPrompt();
+      showToast(`🔤 Font locked: ${appState.selectedFontFamily}`);
+    }
+
+    function setStudioFontCase(cMode) {
+      appState.selectedCaseMode = cMode || 'auto';
+      document.querySelectorAll('#studioCaseBar .fcase-btn').forEach(btn => {
+        const active = btn.getAttribute('data-fcase') === appState.selectedCaseMode;
+        btn.className = active
+          ? 'fcase-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold'
+          : 'fcase-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold';
+      });
+      refreshStudioTypographyAndPrompt();
+      showToast(`🔠 Letter Case: ${appState.selectedCaseMode}`);
+    }
+
+    function refreshStudioTypographyAndPrompt() {
+      const v = appState.variantsList?.[activeStudioVariantIndex || 0];
+      const concept = appState.conceptsList?.[appState.selectedConceptIndex || 0];
+      const niche = getActiveNicheObj();
+      const fmt = getActiveFormatObj();
+      if (v && concept) {
+        const title = (document.getElementById('videoTitleInput')?.value || concept.title || '').trim();
+        const desc = (document.getElementById('videoTopicDetailsInput')?.value || '').trim();
+        v.promptText = composeFullVariantPrompt(v, concept, niche, fmt, title, desc, '', v.activeHook);
+        const spec = getActiveThumbnailTypographySpec(v.activeHook, niche, fmt);
+        const l1El = document.getElementById('stamperLine1Input');
+        const l2El = document.getElementById('stamperLine2Input');
+        if (l1El && l1El.value) l1El.value = formatSmartEnglishCase(l1El.value, spec.caseMode);
+        if (l2El && l2El.value) l2El.value = formatSmartEnglishCase(l2El.value, spec.caseMode);
+        if (typeof renderInteractiveStamperCanvas === 'function' && stamperImgObj) renderInteractiveStamperCanvas();
+        if (typeof renderVariantsComparisonAndCards === 'function') renderVariantsComparisonAndCards();
+      }
+    }
+
     function renderKhandFontReferenceSheet(line1, line2) {
       try {
         if (typeof document === 'undefined' || !document.createElement) return null;
+        const spec = getActiveThumbnailTypographySpec((line1 || '') + ' | ' + (line2 || ''));
         const c = document.createElement('canvas');
         c.width = 960;
         c.height = 420;
@@ -5121,38 +5245,34 @@ Return strict JSON: {"details": "..."}`;
         ctx.fillStyle = '#090b10';
         ctx.fillRect(0, 0, c.width, c.height);
 
-        // Header bar
         ctx.fillStyle = '#181c22';
         ctx.fillRect(0, 0, c.width, 56);
         ctx.fillStyle = '#4edea3';
-        ctx.font = 'bold 20px "JetBrains Mono", monospace';
+        ctx.font = 'bold 19px "JetBrains Mono", monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('EXACT FONT BLUEPRINT: KHAND BOLD (CONDENSED GEOMETRIC DISPLAY)', c.width / 2, 36);
+        ctx.fillText(`EXACT FONT BLUEPRINT: ${spec.fontName.toUpperCase()} (${spec.caseMode.toUpperCase()})`, c.width / 2, 36);
 
-        // Line 1 (#FFD700 Yellow)
-        const l1 = (line1 || 'हड़प्पा में गाय').trim();
-        const l2 = (line2 || 'क्यों नकारी गई?').trim();
+        const l1 = (spec.line1 || 'हड़प्पा में गाय').trim();
+        const l2 = (spec.line2 || 'क्यों नकारी गई?').trim();
         ctx.shadowColor = 'rgba(0,0,0,0.95)';
         ctx.shadowBlur = 14;
         ctx.shadowOffsetY = 5;
 
         ctx.fillStyle = '#FFD700';
-        ctx.font = '700 84px "Khand", "Noto Sans Devanagari", sans-serif';
+        ctx.font = `${spec.weight} 84px ${spec.canvasFont}`;
         ctx.fillText(l1, c.width / 2, 165, 880);
 
-        // Line 2 (#FFFFFF White)
         ctx.fillStyle = '#FFFFFF';
-        ctx.font = '700 76px "Khand", "Noto Sans Devanagari", sans-serif';
+        ctx.font = `${spec.weight} 76px ${spec.canvasFont}`;
         ctx.fillText(l2, c.width / 2, 265, 880);
 
-        // Specimen footer
         ctx.shadowBlur = 0;
         ctx.shadowOffsetY = 0;
         ctx.fillStyle = '#181c22';
         ctx.fillRect(0, 330, c.width, 90);
         ctx.fillStyle = '#ffb95f';
-        ctx.font = '700 28px "Khand", "Noto Sans Devanagari", sans-serif';
-        ctx.fillText('अ आ इ क ख ग घ च ज ट त द न प ब म य र ल व श स ह  |  A B C D E F G 0 1 2 3 4 5 6 7 8 9', c.width / 2, 385, 910);
+        ctx.font = `${spec.weight} 28px ${spec.canvasFont}`;
+        ctx.fillText('अ आ इ क ख ग घ च ज ट त द न प ब म य र ल व श स ह  |  A B C D E F G a b c 0 1 2 3 4 5', c.width / 2, 385, 910);
 
         return c.toDataURL('image/png');
       } catch (e) {
@@ -6592,7 +6712,8 @@ Return strict JSON:
       const useShade = document.getElementById('stamperSoftShadeCheck')?.checked !== false;
 
       const fontSize = Math.round(canvas.height * sizePct);
-      ctx.font = `700 ${fontSize}px Khand, "Noto Sans Devanagari", sans-serif`;
+      const spec = getActiveThumbnailTypographySpec(line1 + ' | ' + line2);
+      ctx.font = `${spec.weight} ${fontSize}px ${spec.canvasFont}`;
       ctx.textBaseline = 'top';
       ctx.textAlign = stamperAlign;
 
