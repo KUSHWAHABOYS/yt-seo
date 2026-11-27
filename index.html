@@ -5449,18 +5449,17 @@ Return strict JSON: {"details": "..."}`;
       return renderKhandFontReferenceSheet(line1, line2);
     }
 
-    async function dispatchToChatGPTBridge(promptText, toastMsg) {
-      const qParam = (!studioCreatorPhotoB64 && !studioExtraPhotosB64.length && promptText.length <= 2800) ? '?q=' + encodeURIComponent(promptText) : '';
-      const openedWin = window.open('https://chatgpt.com/' + qParam, '_blank');
-      if (!openedWin) document.getElementById('studioPopupFallbackBar')?.classList.remove('hidden');
+    function dispatchToChatGPTBridge(promptText, toastMsg) {
       copyTextSafe(promptText, toastMsg || 'Prompt copied! Sending to ChatGPT...');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
         const fontRefImg = getActiveKhandFontRefImage();
         const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
-        const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
-        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, getSafePostMessageOrigin());
+        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: rawImgs, ts: Date.now() }, getSafePostMessageOrigin());
       } catch (e) {}
+      const qParam = (!studioCreatorPhotoB64 && !studioExtraPhotosB64.length && promptText.length <= 2800) ? '?q=' + encodeURIComponent(promptText) : '';
+      const openedWin = window.open('https://chatgpt.com/' + qParam, '_blank');
+      if (!openedWin) document.getElementById('studioPopupFallbackBar')?.classList.remove('hidden');
     }
 
     const CREATOR_FACE_STORAGE_KEY = 'yt_seo_ssiro_creator_face_v31';
@@ -5743,29 +5742,28 @@ Return ONLY JSON: {"nicheId": "...", "formatId": "..."}`;
       showToast(`🌐 All Variants A/B/C locked to: ${appState.globalHookLangLock.toUpperCase()}`);
     }
 
-    async function dispatchBatchToPlatforms(target) {
+    function dispatchBatchToPlatforms(target) {
       if (!Array.isArray(appState.variantsList) || !appState.variantsList.length) {
         showToast('⚠️ Pehle Variants A, B, C generate karen!', true);
         return;
       }
+      const prompts = appState.variantsList.slice(0, 3).map(v => ({ code: v.code || v.shortCode, text: v.promptText }));
+      const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
+      const fontRefImg = getActiveKhandFontRefImage();
+      const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+
+      if (target === 'chatgpt' || target === 'both') {
+        window.postMessage({ type: 'SSIRO_CHATGPT_BATCH', prompts, images: rawImgs, ts: Date.now() }, getSafePostMessageOrigin());
+      }
+      if (target === 'gemini' || target === 'both') {
+        window.postMessage({ type: 'SSIRO_GEMINI_BATCH', prompts, images: rawImgs, ts: Date.now() }, getSafePostMessageOrigin());
+      }
+
       let w1 = null, w2 = null;
       if (target === 'chatgpt' || target === 'both') w1 = window.open('https://chatgpt.com/', '_blank');
       if (target === 'gemini' || target === 'both') w2 = window.open('https://gemini.google.com/app', '_blank');
       if ((target !== 'gemini' && !w1) || (target !== 'chatgpt' && !w2)) {
         document.getElementById('studioPopupFallbackBar')?.classList.remove('hidden');
-      }
-
-      const prompts = appState.variantsList.slice(0, 3).map(v => ({ code: v.code || v.shortCode, text: v.promptText }));
-      const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-      const fontRefImg = getActiveKhandFontRefImage();
-      const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
-      const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
-
-      if (target === 'chatgpt' || target === 'both') {
-        window.postMessage({ type: 'SSIRO_CHATGPT_BATCH', prompts, images: bridgeImgs, ts: Date.now() }, getSafePostMessageOrigin());
-      }
-      if (target === 'gemini' || target === 'both') {
-        window.postMessage({ type: 'SSIRO_GEMINI_BATCH', prompts, images: bridgeImgs, ts: Date.now() }, getSafePostMessageOrigin());
       }
       showToast((w1 === null && w2 === null)
         ? '⚠️ Browser blocked popup! Click Open ChatGPT / Gemini link below.'
@@ -7364,17 +7362,16 @@ Return strict JSON:
 
 
 
-    async function dispatchToGeminiBridge(promptText, toastMsg) {
-      const openedWin = window.open('https://gemini.google.com/app', '_blank');
-      if (!openedWin) document.getElementById('studioPopupFallbackBar')?.classList.remove('hidden');
+    function dispatchToGeminiBridge(promptText, toastMsg) {
       copyTextSafe(promptText, toastMsg || '📋 Prompt copied & sent to Gemini! (अगर टेक्स्ट न दिखे तो Paste करें)');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
         const fontRefImg = getActiveKhandFontRefImage();
         const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
-        const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
-        window.postMessage({ type: 'SSIRO_GEMINI_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, getSafePostMessageOrigin());
+        window.postMessage({ type: 'SSIRO_GEMINI_SEND', prompt: promptText, images: rawImgs, ts: Date.now() }, getSafePostMessageOrigin());
       } catch (e) {}
+      const openedWin = window.open('https://gemini.google.com/app', '_blank');
+      if (!openedWin) document.getElementById('studioPopupFallbackBar')?.classList.remove('hidden');
     }
 
     function smartSendToGemini(idxOverride) {
