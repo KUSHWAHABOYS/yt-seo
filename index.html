@@ -3286,6 +3286,49 @@ function hasAnyTextAiKey() {
       };
     }
 
+    function enforceThumbnailPunchlineCap(rawHook, maxWords = 4) {
+      const cleaned = fixBrokenDevanagariSpacing(String(rawHook || "").replace(/\s+/g, " ").trim());
+      if (!cleaned) return "";
+      const trailingParticles = new Set(["का", "की", "के", "में", "को", "से", "पर", "और", "या", "है", "हैं", "था", "थे", "थी", "कि", "जो", "तो", "of", "in", "on", "the", "and", "or", "is", "are", "to", "for"]);
+      const trimTrailing = (arr) => {
+        const out = [...arr];
+        while (out.length > 1 && trailingParticles.has(out[out.length - 1].toLowerCase())) out.pop();
+        return out;
+      };
+      const parts = cleaned.split("|").map(s => s.trim()).filter(Boolean);
+      if (parts.length >= 2) {
+        let w1 = parts[0].split(/\s+/).filter(Boolean);
+        let w2 = parts.slice(1).join(" ").split(/\s+/).filter(Boolean);
+        if (w1.length + w2.length > maxWords) {
+          const half = Math.max(1, Math.floor(maxWords / 2));
+          if (w1.length > half && w2.length > maxWords - half) {
+            w1 = trimTrailing(w1.slice(0, half));
+            w2 = trimTrailing(w2.slice(0, Math.max(1, maxWords - w1.length)));
+          } else if (w1.length > w2.length) {
+            w1 = trimTrailing(w1.slice(0, Math.max(1, maxWords - Math.min(w2.length, half))));
+            w2 = trimTrailing(w2.slice(0, Math.max(1, maxWords - w1.length)));
+          } else {
+            w2 = trimTrailing(w2.slice(0, Math.max(1, maxWords - Math.min(w1.length, half))));
+            w1 = trimTrailing(w1.slice(0, Math.max(1, maxWords - w2.length)));
+          }
+        }
+        return w1.join(" ") + " | " + w2.join(" ");
+      }
+      const allWords = trimTrailing(cleaned.split(/\s+/).filter(Boolean).slice(0, maxWords));
+      if (allWords.length <= 1) return allWords.join(" ");
+      const mid = Math.ceil(allWords.length / 2);
+      return allWords.slice(0, mid).join(" ") + " | " + allWords.slice(mid).join(" ");
+    }
+
+    function detectThumbnailNicheAngle(title, desc, fmtId) {
+      const activeNiche = (typeof getActiveNicheObj === "function" ? getActiveNicheObj()?.name : "") || "";
+      const blob = activeNiche + " " + (title || "") + " " + (desc || "") + " " + (fmtId || "");
+      if (/(बनाम|vs\.?|डिबेट|debate|बहस|दावा|जवाब|सवाल|controversy|reply|exposed)/i.test(blob)) return "debate";
+      if (/(श्लोक|वेद|गीता|पुराण|रामायण|महाभारत|ग्रंथ|धर्म|शास्त्र|मंदिर|religion|sanatan|upanishad)/i.test(blob)) return "religion";
+      if (/(हड़प्पा|सिंधु|खुदाई|कंकाल|शिलालेख|अभिलेख|अवशेष|dna|archaeology|excavation|artifact|carbon)/i.test(blob)) return "archaeology";
+      return "history";
+    }
+
     function buildContextAwareTopicHooks(title, desc, fmtId) {
       const cleanT = fixBrokenDevanagariSpacing(String(title || '').replace(/\s+/g, ' ').trim());
       const cleanD = fixBrokenDevanagariSpacing(String(desc || '').replace(/\s+/g, ' ').trim());
@@ -3304,40 +3347,68 @@ function hasAnyTextAiKey() {
         return w.slice(0, maxW).join(' ');
       };
 
-      const pShort = trimWords(primaryClause, 4);
-      const sShort = secondaryClause ? trimWords(secondaryClause, 4) : '';
+      const angle = detectThumbnailNicheAngle(cleanT, cleanD, fmtId);
+      const p2 = trimWords(primaryClause, 2) || "यह विषय";
+      const s2 = secondaryClause ? trimWords(secondaryClause, 2) : "";
 
-      // Check for comparison / negation pattern (e.g. "A नहीं, B" / "vs" / "बनाम")
       const vsMatch = cleanT.match(/([^,?!।]+?)\s*(?:नहीं|बनाम|vs\.?)\s+([^?!।]+)/i);
       if (vsMatch) {
-        const sideA = trimWords(vsMatch[1].replace(/^(क्या आपको लगता है कि|क्या)\s+/i, ''), 3);
-        const sideB = trimWords(vsMatch[2], 3);
+        const sideA = trimWords(vsMatch[1].replace(/^(क्या आपको लगता है कि|क्या)\s+/i, ""), 1);
+        const sideB = trimWords(vsMatch[2], 1);
         return [
-          { hiA: `${sideA} नहीं, ${sideB}? | साक्ष्य क्या कहते हैं?`, hiB: `${pShort} | प्रमाण किसके पक्ष में?`, hg: `${sideA.toUpperCase()} NAHI, ${sideB.toUpperCase()}? | PROOF KYA HAI?`, en: `${sideB}, NOT ${sideA}? | WHAT PROOFS SHOW` },
-          { hiA: `${sideB} बनाम ${sideA} | असली आधार क्या है?`, hiB: `${pShort} | इतिहास का पन्ना`, hg: `${sideB.toUpperCase()} VS ${sideA.toUpperCase()} | ASLI AADHAR?`, en: `${sideB} VS ${sideA} | REAL BASIS` },
-          { hiA: `${pShort} | क्यों उठा यह सवाल?`, hiB: `${sideB} का दावा | कितना सही, कितना गलत?`, hg: `${pShort.toUpperCase()} | KYON UTHA SAWAL?`, en: `${pShort.toUpperCase()} | WHY THIS DEBATE?` },
-          { hiA: `${sideB} पर नया खुलासा | ${sideA} से क्या संबंध?`, hiB: `${pShort} | मूल संदर्भ`, hg: `${sideB.toUpperCase()} | ${sideA.toUpperCase()} CONNECTION`, en: `${sideB} | ${sideA} LINK` },
-          { hiA: `${sideA} के दावे की जांच | ${sideB} में क्या मिला?`, hiB: `${pShort} | तथ्य की कसौटी`, hg: `${sideA.toUpperCase()} CLAIM CHECK | ${sideB.toUpperCase()}`, en: `CLAIM CHECK | ${sideB.toUpperCase()}` },
-          { hiA: `${pShort} | ${sShort || sideB}`, hiB: `${sideB} की पूरी बात | बिना किसी मिलावट के`, hg: `${pShort.toUpperCase()} | ${(sShort || sideB).toUpperCase()}`, en: `${pShort.toUpperCase()} | FULL CONTEXT` }
+          { hiA: `${sideA} vs ${sideB} | सच क्या?`, hiB: `${p2} | प्रमाण किसके?`, hg: `${sideA.toUpperCase()} VS ${sideB.toUpperCase()} | REAL PROOF?`, en: `${sideA.toUpperCase()} VS ${sideB.toUpperCase()} | THE TRUTH` },
+          { hiA: `${sideB} नहीं? | बड़ा दावा!`, hiB: `${p2} | सच या झूठ?`, hg: `NOT ${sideB.toUpperCase()}? | BIG CLAIM!`, en: `NOT ${sideB.toUpperCase()}? | FACT CHECK` },
+          { hiA: `1 सवाल | जवाब गायब!`, hiB: `${p2} | क्यों बहस?`, hg: `1 QUESTION | NO ANSWER!`, en: `1 QUESTION | NO REPLY!` },
+          { hiA: `${sideB} का सच | 100% सबूत`, hiB: `${p2} | असली प्रमाण`, hg: `${sideB.toUpperCase()} TRUTH | 100% PROOF`, en: `${sideB.toUpperCase()} | HARD PROOF` },
+          { hiA: `इनका दावा | कितना सच?`, hiB: `${p2} | खुली बहस`, hg: `THEIR CLAIM | TRUE OR FALSE?`, en: `THIS CLAIM | TRUE OR NOT?` },
+          { hiA: `${p2} | ${s2 || "असली बात!"}`, hiB: `${sideB} | पूरा संदर्भ`, hg: `${p2.toUpperCase()} | FULL CONTEXT`, en: `${p2.toUpperCase()} | REAL CONTEXT` }
         ];
       }
 
-      // Extract a key noun/evidence phrase from description if title only had 1 clause
-      const stopWords = new Set(['है', 'हैं', 'था', 'थे', 'थी', 'का', 'की', 'के', 'में', 'को', 'से', 'पर', 'और', 'या', 'कि', 'यह', 'वह', 'इस', 'उस', 'क्या', 'कैसे', 'क्यों', 'नहीं', 'ही', 'भी', 'तो', 'एक', 'जो', 'कर', 'रहा', 'रहे', 'वीडियो', 'इसमें']);
-      const descTokens = cleanD.replace(/[?!।|,."']+/g, ' ').split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w) && !pShort.includes(w));
-      const descAnchor = trimWords(descTokens.slice(0, 3).join(' '), 3);
+      const stopWords = new Set(["है", "हैं", "था", "थे", "थी", "का", "की", "के", "में", "को", "से", "पर", "और", "या", "कि", "यह", "वह", "इस", "उस", "क्या", "कैसे", "क्यों", "नहीं", "ही", "भी", "तो", "एक", "जो", "कर", "रहा", "रहे", "वीडियो", "इसमें"]);
+      const descTokens = cleanD.replace(/[?!।|,."']+/g, " ").split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w) && !p2.includes(w));
+      const d1 = descTokens[0] || "";
 
-      const line2Q = sShort || (descAnchor ? `${descAnchor} का प्रमाण?` : 'क्यों बदली यह कहानी?');
-      const line2Curiosity = sShort || (descAnchor ? `${descAnchor} से खुला राज़!` : 'प्रमाण क्या कहते हैं?');
-      const line2Story = descAnchor ? `${descAnchor} | पूरा प्रसंग` : (sShort || 'संदर्भ और साक्ष्य');
+      if (angle === "archaeology") {
+        return [
+          { hiA: `${p2} | बड़ा सबूत!`, hiB: `${p2} | खुदाई सच?`, hg: `${p2.toUpperCase()} | HARD PROOF!`, en: `${p2.toUpperCase()} | REAL PROOF!` },
+          { hiA: `${p2} | सच या झूठ?`, hiB: `${s2 || p2} | क्या मिला?`, hg: `${p2.toUpperCase()} | REAL OR FAKE?`, en: `${p2.toUpperCase()} | FACT OR MYTH?` },
+          { hiA: `खुदाई में | क्या मिला?`, hiB: `${p2} | DNA सच!`, hg: `EXCAVATION | WHAT FOUND?`, en: `THE DIG | NEW PROOF!` },
+          { hiA: `${p2} | वैज्ञानिक रिपोर्ट!`, hiB: `${d1 || p2} | पक्का प्रमाण`, hg: `${p2.toUpperCase()} | LAB REPORT!`, en: `${p2.toUpperCase()} | LAB PROOF!` },
+          { hiA: `दावा फेल! | नया सबूत`, hiB: `${p2} | समय बदला?`, hg: `CLAIM FAILED! | NEW PROOF`, en: `MYTH BUSTED! | NEW FIND` },
+          { hiA: `${p2} | ${s2 || "असली प्रमाण!"}`, hiB: `${p2} | खुदाई का सच`, hg: `${p2.toUpperCase()} | REAL EVIDENCE`, en: `${p2.toUpperCase()} | EVIDENCE` }
+        ];
+      }
+
+      if (angle === "religion") {
+        return [
+          { hiA: `मूल ग्रंथ | असली अर्थ!`, hiB: `${p2} | क्या लिखा?`, hg: `ORIGINAL TEXT | REAL MEANING!`, en: `ORIGINAL VERSE | TRUE MEANING` },
+          { hiA: `क्यों छिपाया | यह श्लोक?`, hiB: `${p2} | सही संदर्भ`, hg: `WHY HIDDEN | THIS VERSE?`, en: `HIDDEN VERSE? | REAL CONTEXT` },
+          { hiA: `${p2} | बड़ा भ्रम!`, hiB: `${s2 || p2} | शास्त्र प्रमाण`, hg: `${p2.toUpperCase()} | BIG MYTH!`, en: `${p2.toUpperCase()} | BIG MYTH!` },
+          { hiA: `ग्रंथ में | कुछ और!`, hiB: `${p2} | मूल पाठ`, hg: `IN SCRIPTURE | SOMETHING ELSE!`, en: `THE TEXT SAYS | OTHERWISE!` },
+          { hiA: `${p2} | सच क्या?`, hiB: `${d1 || p2} | प्रमाण सहित`, hg: `${p2.toUpperCase()} | WHAT TRUTH?`, en: `${p2.toUpperCase()} | THE TRUTH` },
+          { hiA: `${p2} | ${s2 || "मूल संदर्भ!"}`, hiB: `${p2} | सही व्याख्या`, hg: `${p2.toUpperCase()} | TRUE CONTEXT`, en: `${p2.toUpperCase()} | TRUE CONTEXT` }
+        ];
+      }
+
+      if (angle === "debate") {
+        return [
+          { hiA: `1 सवाल | जवाब गायब!`, hiB: `${p2} | सच या झूठ?`, hg: `1 QUESTION | NO ANSWER!`, en: `1 QUESTION | NO REPLY!` },
+          { hiA: `इनका दावा | कितना सच?`, hiB: `${p2} | खुली बहस`, hg: `THEIR CLAIM | HOW TRUE?`, en: `THIS CLAIM | TRUE OR FALSE?` },
+          { hiA: `${p2} | असली जवाब!`, hiB: `${s2 || p2} | तथ्य देखें`, hg: `${p2.toUpperCase()} | REAL REPLY!`, en: `${p2.toUpperCase()} | REAL REPLY!` },
+          { hiA: `तर्क फेल? | सबूत देखें`, hiB: `${p2} | सीधा सच`, hg: `LOGIC FAILED? | SEE PROOF`, en: `CLAIM DEBUNKED | SEE PROOF` },
+          { hiA: `${p2} | कौन सही?`, hiB: `${d1 || p2} | आमने-सामने`, hg: `${p2.toUpperCase()} | WHO IS RIGHT?`, en: `${p2.toUpperCase()} | WHO IS RIGHT?` },
+          { hiA: `${p2} | ${s2 || "पक्का जवाब!"}`, hiB: `${p2} | तर्क और तथ्य`, hg: `${p2.toUpperCase()} | FACTS FIRST`, en: `${p2.toUpperCase()} | FACTS FIRST` }
+        ];
+      }
 
       return [
-        { hiA: `${pShort} | ${line2Q}`, hiB: `${pShort} | आखिर वजह क्या थी?`, hg: `${pShort.toUpperCase()} | KYON HUA AISA?`, en: `${pShort.toUpperCase()} | WHY DID THIS HAPPEN?` },
-        { hiA: `${pShort} | ${line2Curiosity}`, hiB: `${sShort || pShort} | ऐतिहासिक साक्ष्य क्या हैं?`, hg: `${pShort.toUpperCase()} | REAL EVIDENCE`, en: `${pShort.toUpperCase()} | THE EVIDENCE` },
-        { hiA: `क्यों खास है ${trimWords(pShort, 3)}? | ${sShort || descAnchor || 'जानिए पूरा प्रसंग'}`, hiB: `${pShort} | अनकहा पहलू`, hg: `WHY ${trimWords(pShort, 3).toUpperCase()}? | UNTOLD ANGLE`, en: `WHY ${trimWords(pShort, 3).toUpperCase()}? | UNTOLD STORY` },
-        { hiA: `${pShort} | ${line2Story}`, hiB: `${pShort} | मूल ग्रंथ व तथ्य`, hg: `${pShort.toUpperCase()} | FULL STORY`, en: `${pShort.toUpperCase()} | KEY FACTS` },
-        { hiA: `${pShort} पर सवाल | ${sShort || descAnchor || 'तथ्य क्या बताते हैं?'}`, hiB: `${pShort} | साक्ष्यों की कसौटी`, hg: `${pShort.toUpperCase()} | FACT CHECK`, en: `${pShort.toUpperCase()} | FACT CHECK` },
-        { hiA: `${pShort} | ${sShort || descAnchor || 'पूरा ऐतिहासिक प्रसंग'}`, hiB: `${pShort} | मूल संदर्भ`, hg: `${pShort.toUpperCase()} | FULL CONTEXT`, en: `${pShort.toUpperCase()} | FULL CONTEXT` }
+        { hiA: `${p2} | बड़ा सबूत!`, hiB: `${p2} | क्यों हुआ?`, hg: `${p2.toUpperCase()} | BIG PROOF!`, en: `${p2.toUpperCase()} | HARD PROOF!` },
+        { hiA: `${p2} | सच या झूठ?`, hiB: `${s2 || p2} | इतिहास गवाह`, hg: `${p2.toUpperCase()} | TRUE OR FALSE?`, en: `${p2.toUpperCase()} | FACT OR MYTH?` },
+        { hiA: `किताबों से | क्यों गायब?`, hiB: `${p2} | अनकहा पन्ना`, hg: `WHY MISSING | FROM BOOKS?`, en: `ERASED HISTORY? | UNTOLD` },
+        { hiA: `${p2} | ऐतिहासिक मोड़!`, hiB: `${d1 || p2} | पक्का प्रमाण`, hg: `${p2.toUpperCase()} | TURNING POINT!`, en: `${p2.toUpperCase()} | TURNING POINT!` },
+        { hiA: `किसने बदला | ${p2}?`, hiB: `${p2} | मूल दस्तावेज़`, hg: `WHO CHANGED | ${p2.toUpperCase()}?`, en: `WHO CHANGED | ${p2.toUpperCase()}?` },
+        { hiA: `${p2} | ${s2 || "पूरा सच!"}`, hiB: `${p2} | मूल संदर्भ`, hg: `${p2.toUpperCase()} | REAL CONTEXT`, en: `${p2.toUpperCase()} | REAL CONTEXT` }
       ];
     }
 
@@ -3439,9 +3510,10 @@ PPT / Story Material:
 
 CRITICAL CLARITY & CONTEXT RULES (MUST FOLLOW):
 1. SELF-CONTAINED MEANING: A viewer scrolling YouTube MUST understand the EXACT topic/prakaran/person/event just by reading the 2-line thumbnail text—WITHOUT needing to read the long video title first! Keep the core subject noun/entity clearly visible.
-2. DISTILL, DO NOT DUMP OR BE VAGUE: Do NOT copy the full 60-char Video Title word-for-word, AND do NOT write vague filler like "क्या जानते हैं आप?" or "क्या है असली सच?". Compress the core story + curiosity into 4 to 6 crisp, natural spoken Hindi words split into EXACTLY 2 short lines with "|" (Line 1 = Subject/Setup, Line 2 = Sharp Question, Contrast, or Specific Hook).
-   - Good Example for Harappan Cow topic: "हड़प्पा में गाय | क्यों नकारी गई?" / "गाय नहीं, बैल की पूजा? | हड़प्पा के सबूत" / "सिंधु सभ्यता में गाय | दावा सच या झूठ?"
-   - Good Example for historical battle/book: "17वीं सदी का ग्रंथ | क्यों छिपाया गया?" / "अकेले भिड़े शिवाजी? | मुगल दस्तावेज़ में क्या?"
+2. STRICT 2–4 WORDS CAP (3-PART DIVISION OF LABOR): Do NOT explain the whole video on the thumbnail! The Visual shows the subject/artifact/face, and the Video Title underneath gives full context. Compress the Thumbnail Text into **2 to 4 words TOTAL** across BOTH lines (1–2 words per line, max ~22 characters total), split with "|" (Line 1 = 1-2 words, Line 2 = 1-2 words). NEVER write 5+ word sentences!
+   - History / Archaeology: "4500 साल | DNA सच!" / "हड़प्पा गाय? | बड़ा सबूत!" / "किताबों से | क्यों गायब?"
+   - Religion / Grantha: "मूल श्लोक | असली अर्थ!" / "क्यों छिपाया | यह सच?" / "ग्रंथ में | कुछ और!"
+   - Open Debate / Reply: "1 सवाल | जवाब गायब!" / "इनका दावा | सच या झूठ?" / "तर्क फेल? | सबूत देखें"
 3. 3 DISTINCT ANGLES (ALL 3 MUST EXPLAIN THE TOPIC CLEARLY):
    - Hook 1 (Direct Question / सवाल): Poses the sharpest, most specific question about the core subject.
    - Hook 2 (Curiosity / Evidence Contrast / जिज्ञासा): Contrasts the popular claim vs real proof/person/century/book from the material.
@@ -3461,11 +3533,11 @@ Return ONLY valid JSON:
       const bannedClicheRe = /(क्या है असली सच|असली सच\?|क्या जानते हैं आप|सबसे बड़ा रहस्य|99% लोग|अंतिम निष्कर्ष|पूरा विश्लेषण|यही असली इतिहास)/i;
       if (res && Array.isArray(res.hooks) && res.hooks.length) {
         const cleaned = res.hooks.slice(0, 3).map(h => ({
-          hindi: fixBrokenDevanagariSpacing(h.hindi || ''),
-          hinglish: h.hinglish || '',
-          english: h.english || '',
+          hindi: enforceThumbnailPunchlineCap(h.hindi || "", 4),
+          hinglish: enforceThumbnailPunchlineCap(h.hinglish || "", 4),
+          english: enforceThumbnailPunchlineCap(h.english || "", 4),
           score: Number(h.score) || 8.8
-        })).filter(h => h.hindi && h.hindi.includes('|') && !bannedClicheRe.test(h.hindi));
+        })).filter(h => h.hindi && h.hindi.includes("|") && !bannedClicheRe.test(h.hindi));
         if (cleaned.length >= 2) return cleaned;
       }
       return null;
@@ -3537,9 +3609,9 @@ Use Google Search to research popular and currently trending YouTube videos and 
 
 CRITICAL INSTRUCTIONS:
 1. Analyze BOTH the Video Title AND Video Details deeply.
-2. Apply the YOUTUBE THUMBNAIL TEXT SKILL: Understand the main Video Title "${title}" deeply and generate 3 COMPLETELY ORIGINAL, SHORT, HIGH-IMPACT 2-line Thumbnail Text variations in PURE, PUNCHY HINDI (2–4 words per line) that complement—NOT repeat—the main title, paired with concrete visual ideas (STRICTLY FORBIDDEN: never use generic clichés like "अनसुना सच", "सबसे बड़ा रहस्य", "दावे बनाम प्रमाण", or "99% लोग नहीं जानते" — write natural, topic-specific Hindi directly from the Title & Description!). Keep each line 2–4 crisp Hindi words that read instantly on mobile; only transliterate a rare Sanskrit proper noun to English/Hinglish if absolutely necessary to prevent typos.
+2. Apply the YOUTUBE THUMBNAIL TEXT SKILL (2–4 WORDS STANDARD): Understand the main Video Title "${title}" deeply and generate 3 COMPLETELY ORIGINAL, ULTRA-PUNCHY 2-line Thumbnail Hooks in PURE HINDI (**STRICTLY 2–4 WORDS TOTAL** across both lines, i.e., 1–2 words per line, max ~22 chars) that complement—NOT repeat—the main title (STRICTLY FORBIDDEN: never use generic clichés like "अनसुना सच", "सबसे बड़ा रहस्य", "दावे बनाम प्रमाण", or "99% लोग नहीं जानते"). Use the 3-Part Division of Labor: the Visual shows the artifact/person, the Video Title explains the full topic, and the Thumbnail Text ONLY drops the **Paradox, Date/Proof, or Sharp Question** (e.g., History/Archaeology: "4500 साल | DNA सच!", Religion: "मूल श्लोक | असली अर्थ!", Debate: "1 सवाल | जवाब गायब!").
 - NO CLICHÉ TEMPLATES: NEVER use generic recycled phrases like "यही असली इतिहास", "जानिए चौंकाने वाला सच", or "सबसे बड़ा रहस्य". Generate 3 fresh, vivid, topic-specific hooks.
-- THUMBNAIL TEXT RULE: Distill the Video Title & story into a crisp 4–6 word 2-line Hindi hook ("Line 1 | Line 2") that keeps the core subject/prakaran crystal clear so viewers immediately understand the topic AND feel intense curiosity (no vague fillers like "क्या जानते हैं आप?" or "क्या है असली सच?").
+- THUMBNAIL TEXT RULE: Keep every thumbnail hook to **2–4 words TOTAL** ("Line 1 | Line 2", 1–2 crisp words per line) so it reads in 0.5 seconds on mobile!
 - AUTHENTIC PROOF + CINEMATIC SHOCK RULE: Keep the uploaded material/artifact/diagram/book as the real hero proof (never swap it for unrelated fake props), AND elevate the scene around it with bold, jaw-dropping YouTube visual drama—dramatic chiaroscuro lighting, glowing rim-light, forensic zoom/spotlight, intense human reaction, and atmospheric historical depth so it is factually faithful yet visually shocking and impossible to scroll past.
 - 3 DISTINCT ANGLES: Variation 1 = Evidence-focused (artifact/inscription close-up, minimal text); Variation 2 = Curiosity/Question (bold question text + highlighted element); Variation 3 = Story/Emotion (face or dramatic scene, contrasting color mood).
 3. Generate 6 genuinely distinct Thumbnail Design Concepts with REAL, DESCRIPTIVE, TOPIC-SPECIFIC TITLES (never generic "Concept 1" titles) tailored to "${fmt.name}" and hyper-realistic 8K YouTube quality.
@@ -3620,10 +3692,22 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
             viralDesignAnalysis: aiResult.viralDesignAnalysis || {},
             observedViralVideos: directYtVideos || aiResult.observedViralVideos || []
           };
-          appState.conceptsList = aiResult.concepts.slice(0, 6);
-          appState.thumbnailHooksPreview = Array.isArray(aiResult.thumbnailTextVariations) && aiResult.thumbnailTextVariations.length >= 3
+          appState.conceptsList = aiResult.concepts.slice(0, 6).map(c => ({
+            ...c,
+            hookHindi: enforceThumbnailPunchlineCap(c.hookHindi, 4),
+            hookHindiAlt: enforceThumbnailPunchlineCap(c.hookHindiAlt, 4),
+            hookHinglish: enforceThumbnailPunchlineCap(c.hookHinglish, 4),
+            hookEnglish: enforceThumbnailPunchlineCap(c.hookEnglish, 4)
+          }));
+          appState.thumbnailHooksPreview = (Array.isArray(aiResult.thumbnailTextVariations) && aiResult.thumbnailTextVariations.length >= 3
             ? aiResult.thumbnailTextVariations.slice(0, 3)
-            : appState.conceptsList.slice(0, 3).map(c => ({ hindi: c.hookHindi, hinglish: c.hookHinglish, english: c.hookEnglish }));
+            : appState.conceptsList.slice(0, 3).map(c => ({ hindi: c.hookHindi, hinglish: c.hookHinglish, english: c.hookEnglish }))
+          ).map(h => ({
+            ...h,
+            hindi: enforceThumbnailPunchlineCap(h.hindi, 4),
+            hinglish: enforceThumbnailPunchlineCap(h.hinglish, 4),
+            english: enforceThumbnailPunchlineCap(h.english, 4)
+          }));
 
           if (progSpinner) progSpinner.className = 'w-2.5 h-2.5 rounded-full bg-secondary shrink-0';
           if (progHeadline) {
@@ -6435,9 +6519,10 @@ Return strict JSON:
       const v = appState.variantsList && appState.variantsList[activeStudioVariantIndex || 0];
       const rawHook = (v?.hooks?.[v.defaultLang || 'hindi'] || '').replace(/\|/g, ' ').trim();
       const hookLen = [...rawHook].length;
-      const hookOk = hookLen > 0 && hookLen <= 32;
-      hEl.className = `px-2 py-0.5 rounded font-bold ${hookOk ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}`;
-      hEl.textContent = hookOk ? `✓ Hook (${hookLen}ch)` : `⚠ Hook (${hookLen}ch — shorten)`;
+      const hookWords = rawHook ? rawHook.split(/\s+/).filter(Boolean).length : 0;
+      const hookOk = hookWords > 0 && hookWords <= 4 && hookLen <= 28;
+      hEl.className = `px-2 py-0.5 rounded font-bold ${hookOk ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" : "bg-amber-500/20 text-amber-300 border border-amber-500/30"}`;
+      hEl.textContent = hookOk ? `✓ Punchy (${hookWords}w · ${hookLen}ch)` : `⚠ ${hookWords}w · ${hookLen}ch (keep 2–4w)`;
 
       const hasFace = Boolean(studioCreatorPhotoB64);
       fEl.className = `px-2 py-0.5 rounded font-bold ${hasFace ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}`;
