@@ -7096,9 +7096,14 @@ Return strict JSON:
           if (document.getElementById('seoOverallScoreBadge') && item.seoPackHtml.score) document.getElementById('seoOverallScoreBadge').textContent = item.seoPackHtml.score;
           if (document.getElementById('seoTagCharMeter') && item.seoPackHtml.meter) document.getElementById('seoTagCharMeter').textContent = item.seoPackHtml.meter;
         }
-        saveProjectToHistory(title);
+        if (typeof updateCompactStyleSummary === 'function') updateCompactStyleSummary();
         saveStudioState();
-        toggleHistoryModal();
+        document.getElementById('historyModalOverlay')?.classList.add('hidden');
+        if (typeof switchWorkspaceTab === 'function') switchWorkspaceTab('thumb');
+        setTimeout(() => {
+          const targetEl = document.getElementById(appState.conceptsList.length ? 'section-step-9-11' : 'section-step-1-4');
+          targetEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
         showToast('✅ Loaded project from History!');
       } catch (e) {}
     }
