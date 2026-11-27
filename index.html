@@ -1160,6 +1160,7 @@
           <div class="flex flex-wrap items-center gap-2">
             <span id="seoOverallScoreBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-tertiary/20 text-tertiary border border-tertiary/40 font-extrabold">SEO Score: --/100</span>
             <button type="button" onclick="copyFullYouTubeUploadPack()" class="px-3 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-extrabold">📋 Copy Full Upload Pack</button>
+            <button type="button" onclick="downloadFullYouTubeUploadKit()" class="px-3 py-1 rounded-lg bg-secondary/20 text-secondary border border-secondary/40 font-mono text-[10px] font-extrabold">⬇️ Download .txt Kit</button>
           </div>
         </div>
 
@@ -1395,6 +1396,22 @@
         </div>
       </div>
 
+      <!-- VISUAL PATTERN & POSE QUICK-CHIPS + WINNING STYLE MEMORY -->
+      <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="font-mono text-[10px] font-bold uppercase text-tertiary">🎭 Pattern &amp; Pose Quick-Switch:</span>
+          <button type="button" onclick="saveWinningStyleFromStudio()" class="px-2 py-0.5 rounded bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/35 font-mono text-[10px] font-bold transition">⭐ Save Winning Style</button>
+        </div>
+        <div id="studioPatternChipBar" class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+          <button type="button" data-pat="auto" onclick="setStudioPatternOverride('auto')" class="pat-chip px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-extrabold transition">Auto (Variant)</button>
+          <button type="button" data-pat="heritage" onclick="setStudioPatternOverride('heritage')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold transition">Imperial Heritage</button>
+          <button type="button" data-pat="closeup" onclick="setStudioPatternOverride('closeup')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold transition">Studio Close-Up</button>
+          <button type="button" data-pat="yellow_split" onclick="setStudioPatternOverride('yellow_split')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold transition">3-Panel Yellow Split</button>
+          <button type="button" data-pat="faceoff" onclick="setStudioPatternOverride('faceoff')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold transition">Low-Angle Face-Off</button>
+        </div>
+        <div id="winningStyleMemoryBar" class="hidden pt-1 border-t border-outline-variant/30 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]"></div>
+      </div>
+
       <div id="preFlightGuardBar" class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 flex flex-wrap items-center gap-2 font-mono text-[10px]">
         <span class="text-outline font-bold uppercase">Pre-Flight Check:</span>
         <span id="pfHookBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Hook</span>
@@ -1424,9 +1441,13 @@
       </div>
 
       <div id="studioImageResultBox" class="hidden p-3 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2.5">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <span id="studioImageStatusText" class="font-mono text-xs font-bold text-secondary">Generating...</span>
-          <a id="studioDownloadImageLink" href="#" download="thumbnail_8k.png" class="hidden px-3 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">Download PNG</a>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button id="studioToStamperBtn" type="button" onclick="sendStudioImageToStamper()" class="hidden px-2.5 py-1 rounded-lg bg-secondary/20 text-secondary border border-secondary/40 font-mono text-[10px] font-extrabold">✍️ Edit Text</button>
+            <button id="studioToCtrBtn" type="button" onclick="sendStudioImageToCtr4View('generated')" class="hidden px-2.5 py-1 rounded-lg bg-primary text-slate-950 font-mono text-[10px] font-extrabold">📊 Test CTR 4-View</button>
+            <a id="studioDownloadImageLink" href="#" download="thumbnail_8k.png" class="hidden px-3 py-1 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">Download PNG</a>
+          </div>
         </div>
         <img id="studioGeneratedImg" src="" alt="Generated Thumbnail" class="hidden w-full rounded-xl border border-outline-variant/50 object-contain max-h-80" />
       </div>
@@ -1477,34 +1498,46 @@
             <span class="text-tertiary font-bold">👆 Drag text anywhere!</span>
           </div>
           <canvas id="interactiveStamperCanvas" class="w-full rounded-xl border border-tertiary/50 bg-black cursor-move touch-none"></canvas>
-          <button type="button" onclick="downloadInteractiveStamperPng()" class="px-3.5 py-2 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">⬇️ Download Final PNG</button>
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" onclick="downloadInteractiveStamperPng()" class="px-3.5 py-2 rounded-lg bg-tertiary text-on-tertiary font-mono text-[11px] font-extrabold">⬇️ Download Final PNG</button>
+            <button type="button" onclick="sendStudioImageToCtr4View('stamper')" class="px-3.5 py-2 rounded-lg bg-primary text-slate-950 font-mono text-[11px] font-extrabold">📊 Test in CTR 4-View</button>
+            <button type="button" onclick="loadCompetitorFeedFromStudio('stamper')" class="px-3.5 py-2 rounded-lg bg-secondary/20 text-secondary border border-secondary/40 font-mono text-[11px] font-extrabold">⚔️ Feed Battle</button>
+          </div>
         </div>
       </div>
 
-      <!-- YOUTUBE HOME FEED SIMULATOR (TEST YOUR FINAL PNG!) -->
+      <!-- COMPETITOR FEED BATTLE (YOUTUBE HOME FEED COMPARISON) -->
       <div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-2.5">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="font-mono text-[11px] font-bold text-white flex items-center gap-1.5">
             <span class="material-symbols-outlined text-[16px] text-red-500">smart_display</span>
-            <span>YouTube Mobile Feed Simulator</span>
+            <span>⚔️ Competitor Feed Battle (Home Feed)</span>
           </span>
-          <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-mono text-[10px] font-bold">
-            Test Final PNG
-            <input type="file" accept="image/*" onchange="previewInYouTubeFeed(this)" class="hidden" />
-          </label>
-        </div>
-        <div id="ytFeedSimulatorCard" class="hidden max-w-sm mx-auto rounded-xl bg-[#0f0f0f] border border-white/10 overflow-hidden shadow-lg">
-          <div class="relative aspect-video bg-black">
-            <img id="ytFeedSimImg" src="" alt="Feed Preview" class="w-full h-full object-cover" />
-            <span class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/85 text-white font-mono text-[10px] font-bold">12:45</span>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button type="button" onclick="loadCompetitorFeedFromStudio('auto')" class="px-2.5 py-1 rounded-lg bg-tertiary/20 hover:bg-tertiary/30 text-tertiary border border-tertiary/40 font-mono text-[10px] font-bold">⚡ Use Studio PNG</button>
+            <label class="cursor-pointer px-2.5 py-1 rounded-lg bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-mono text-[10px] font-bold">
+              Upload PNG
+              <input type="file" accept="image/*" onchange="previewInYouTubeFeed(this)" class="hidden" />
+            </label>
           </div>
-          <div class="p-2.5 flex items-start gap-2.5">
-            <div class="w-8 h-8 rounded-full bg-tertiary text-on-tertiary font-bold text-xs flex items-center justify-center shrink-0">YT</div>
-            <div class="min-w-0 flex-1">
-              <p id="ytFeedSimTitle" class="text-xs font-semibold text-white leading-snug line-clamp-2"></p>
-              <p class="text-[10px] text-slate-400 mt-0.5">Your Channel • 125K views • 2 hours ago</p>
+        </div>
+        <div id="ytFeedSimulatorCard" class="hidden max-w-sm mx-auto space-y-2.5">
+          <div id="ytFeedCompetitorTop"></div>
+          <div class="rounded-xl bg-[#0f0f0f] border-2 border-emerald-400/70 overflow-hidden shadow-lg">
+            <div class="relative aspect-video bg-black">
+              <img id="ytFeedSimImg" src="" alt="Feed Preview" class="w-full h-full object-cover" />
+              <span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-emerald-500 text-slate-950 font-mono text-[9px] font-extrabold">YOUR THUMBNAIL</span>
+              <span class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/85 text-white font-mono text-[10px] font-bold">12:45</span>
+            </div>
+            <div class="p-2.5 flex items-start gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-tertiary text-on-tertiary font-bold text-xs flex items-center justify-center shrink-0">YT</div>
+              <div class="min-w-0 flex-1">
+                <p id="ytFeedSimTitle" class="text-xs font-semibold text-white leading-snug line-clamp-2"></p>
+                <p class="text-[10px] text-slate-400 mt-0.5">Your Channel • 125K views • 2 hours ago</p>
+              </div>
             </div>
           </div>
+          <div id="ytFeedCompetitorBottom"></div>
         </div>
       </div>
     </div>
@@ -3945,10 +3978,11 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
 
     function getGlossyPoseAndPatternSpec(v, fmt, niche, pCtx) {
       const sc = (v?.shortCode || 'A').toUpperCase();
+      const ov = (appState.selectedPatternOverride || 'auto').toLowerCase();
       const isDebate = (fmt?.id === 'debate' || fmt?.id === 'podcast' || (pCtx && pCtx.mode === 'reply_two_person'));
       const isHeritage = ['history', 'religion', 'ancient', 'mythology', 'documentary'].includes((niche?.id || '').toLowerCase());
 
-      if (sc === 'B') {
+      if (ov === 'yellow_split' || (ov === 'auto' && sc === 'B')) {
         return [
           'DESIGN PATTERN (3-PANEL YELLOW DIAGONAL SPLIT + 3D OVERLAP): Split the frame into 3 distinct color-coded story zones using razor-sharp diagonal #FFD700 Golden-Yellow divider bars (approx 6-8px clean graphic line), with the Hero Subject breaking IN FRONT of the dividers (3D foreground overlap!) for instant scroll-stopping depth.',
           isDebate
@@ -3956,14 +3990,14 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
             : 'DETAILED POSE, EYES & HANDS: Hero Subject centered in bold chest-up 3D overlap pose (subtle 6° head tilt, expressive hands framing face or presenting key evidence cleanly inside frame); eyes sharp with bright specular catchlights, furrowed brow showing shock/discovery.'
         ].join(' ');
       }
-      if (sc === 'C') {
+      if (ov === 'faceoff' || (ov === 'auto' && sc === 'C')) {
         return [
           'DESIGN PATTERN (LOW-ANGLE 24mm FACE-OFF / 3-LAYER MONUMENTAL SCALE): Shoot with dramatic 24mm wide-angle perspective pitting Foreground Proof/Monument on the Left-Center against the Hero Subject on the Right Third, with rich volumetric light rays and atmospheric sky/backdrop behind.',
           'DETAILED POSE, EYES & HANDS: Authoritative 3/4 chest-up stance (shoulders angled 35° toward center, chin slightly lifted, dignified yet intense gaze toward the viewer or key artifact); crisp iris catchlights, natural micro-expression (awe/gravitas), hands cleanly resting on chest/desk or gesturing toward the monument.'
         ].join(' ');
       }
       return [
-        isHeritage && !isDebate
+        (ov === 'heritage' || (ov === 'auto' && isHeritage && !isDebate))
           ? 'DESIGN PATTERN (IMPERIAL 3-LAYER HERITAGE + STUDIO GLOSS): Foreground-Left features crisp historical monument/artifact; Midground-Center holds architectural/archival scene; Foreground-Right anchors Hero Portrait with warm golden rim-light and clean dark/amber sky on Upper-Left for text.'
           : 'DESIGN PATTERN (ULTRA-CLOSE STUDIO TENSION): Massive foreground close-up portrait on one third (filling 55-65% frame height) balanced against high-contrast dark navy/obsidian backdrop + primary proof/2nd subject on the opposite side.',
         isDebate
@@ -5206,19 +5240,168 @@ Return strict JSON: {"details": "..."}`;
       setTimeout(() => { window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener'); }, 200);
     }
 
+    function renderCompetitorFeedCardHtml(vid, fallbackIdx) {
+      const title = escHtml(vid?.title || (fallbackIdx === 0 ? 'Ancient History Mystery Documentary' : 'Viral Fact-Check Debate Analysis'));
+      const ch = escHtml(vid?.channel || 'Top Creator');
+      const views = escHtml(vid?.views || '1.4M views');
+      const thumbUrl = vid?.thumbnail || (vid?.videoId ? `https://i.ytimg.com/vi/${encodeURIComponent(vid.videoId)}/hqdefault.jpg` : '');
+      const thumbEl = thumbUrl
+        ? `<img src="${thumbUrl}" alt="Competitor" class="w-full h-full object-cover opacity-90" />`
+        : `<div class="w-full h-full bg-gradient-to-br from-slate-800 via-slate-900 to-black flex items-center justify-center p-3 text-center"><span class="font-display text-xs font-extrabold text-amber-300/90">${title.slice(0, 48)}</span></div>`;
+      return `<div class="rounded-xl bg-[#0f0f0f] border border-white/10 overflow-hidden opacity-85">
+        <div class="relative aspect-video bg-black">${thumbEl}<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/75 text-slate-300 font-mono text-[9px] font-bold">COMPETITOR</span><span class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/85 text-white font-mono text-[10px] font-bold">18:22</span></div>
+        <div class="p-2 flex items-start gap-2"><div class="w-7 h-7 rounded-full bg-slate-700 text-white font-bold text-[10px] flex items-center justify-center shrink-0">YT</div><div class="min-w-0 flex-1"><p class="text-[11px] font-semibold text-slate-200 leading-snug line-clamp-2">${title}</p><p class="text-[9px] text-slate-400 mt-0.5">${ch} • ${views}</p></div></div>
+      </div>`;
+    }
+
+    function showCompetitorFeedWithDataUrl(dataUrl) {
+      if (!dataUrl) return;
+      const card = document.getElementById('ytFeedSimulatorCard');
+      const img = document.getElementById('ytFeedSimImg');
+      const ttl = document.getElementById('ytFeedSimTitle');
+      const topEl = document.getElementById('ytFeedCompetitorTop');
+      const botEl = document.getElementById('ytFeedCompetitorBottom');
+      if (img) img.src = dataUrl;
+      if (ttl) ttl.textContent = (document.getElementById('videoTitleInput')?.value || 'Your YouTube Video Title').trim();
+      const viralList = appState.researchInsights?.observedViralVideos || [];
+      if (topEl) topEl.innerHTML = renderCompetitorFeedCardHtml(viralList[0], 0);
+      if (botEl) botEl.innerHTML = renderCompetitorFeedCardHtml(viralList[1], 1);
+      if (card) card.classList.remove('hidden');
+    }
+
+    function loadCompetitorFeedFromStudio(source) {
+      let dataUrl = '';
+      if (source === 'stamper' || (!document.getElementById('stampedResultBox')?.classList.contains('hidden') && source === 'auto')) {
+        const c = document.getElementById('interactiveStamperCanvas');
+        if (c && c.width > 0 && stamperImgObj) dataUrl = c.toDataURL('image/png');
+      }
+      if (!dataUrl) {
+        const im = document.getElementById('studioGeneratedImg');
+        if (im && im.src && !im.classList.contains('hidden')) dataUrl = im.src;
+      }
+      if (!dataUrl) {
+        showToast('⚠️ Pehle image generate karen ya Upload PNG par click karen!', true);
+        return;
+      }
+      showCompetitorFeedWithDataUrl(dataUrl);
+      document.getElementById('ytFeedSimulatorCard')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
     function previewInYouTubeFeed(input) {
       const file = (input.files || [])[0];
       if (!file) return;
       const r = new FileReader();
-      r.onload = () => {
-        const card = document.getElementById('ytFeedSimulatorCard');
-        const img = document.getElementById('ytFeedSimImg');
-        const ttl = document.getElementById('ytFeedSimTitle');
-        if (img) img.src = String(r.result || '');
-        if (ttl) ttl.textContent = (document.getElementById('videoTitleInput')?.value || 'Your YouTube Video Title').trim();
-        if (card) card.classList.remove('hidden');
-      };
+      r.onload = () => showCompetitorFeedWithDataUrl(String(r.result || ''));
       r.readAsDataURL(file);
+    }
+
+    const WINNING_STYLE_MEMORY_KEY = 'yt_seo_ssiro_winning_styles_v1';
+    function loadWinningStylesMap() {
+      try { return JSON.parse(localStorage.getItem(WINNING_STYLE_MEMORY_KEY) || '{}') || {}; } catch (e) { return {}; }
+    }
+    function saveWinningStyleFromStudio(explicitScore) {
+      const niche = getActiveNicheObj();
+      const v = appState.variantsList?.[activeStudioVariantIndex || 0];
+      const pat = appState.selectedPatternOverride && appState.selectedPatternOverride !== 'auto'
+        ? appState.selectedPatternOverride
+        : (v?.shortCode === 'B' ? 'yellow_split' : (v?.shortCode === 'C' ? 'faceoff' : 'heritage'));
+      const hook = v?.hooks?.[v.defaultLang || 'hindi'] || v?.activeHook || '';
+      const score = Number(explicitScore) || 9.2;
+      const map = loadWinningStylesMap();
+      const prev = map[niche.id];
+      if (!prev || score >= (prev.score || 0) || !explicitScore) {
+        map[niche.id] = { nicheId: niche.id, nicheName: niche.name, pattern: pat, hook, score, savedAt: new Date().toISOString() };
+        try { localStorage.setItem(WINNING_STYLE_MEMORY_KEY, JSON.stringify(map)); } catch (e) {}
+      }
+      renderWinningStyleBanner();
+      if (!explicitScore) showToast(`⭐ Winning Style saved for ${niche.name} (${pat})!`);
+    }
+    function applyWinningStyleMemory() {
+      const niche = getActiveNicheObj();
+      const rec = loadWinningStylesMap()[niche.id];
+      if (!rec) return;
+      setStudioPatternOverride(rec.pattern || 'auto');
+      showToast(`🏆 Applied Winning Pattern: ${rec.pattern}`);
+    }
+    function renderWinningStyleBanner() {
+      const el = document.getElementById('winningStyleMemoryBar');
+      if (!el) return;
+      const niche = getActiveNicheObj();
+      const rec = loadWinningStylesMap()[niche.id];
+      if (!rec) { el.classList.add('hidden'); return; }
+      el.classList.remove('hidden');
+      el.innerHTML = `<span class="text-emerald-300 font-bold">🏆 Top Formula (${escHtml(niche.name)}): <span class="text-white">${escHtml(rec.pattern)}</span> • Score ${rec.score}/10</span><button type="button" onclick="applyWinningStyleMemory()" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold hover:brightness-110">Apply</button>`;
+    }
+    function setStudioPatternOverride(pat) {
+      appState.selectedPatternOverride = pat || 'auto';
+      document.querySelectorAll('#studioPatternChipBar .pat-chip').forEach(btn => {
+        const active = btn.getAttribute('data-pat') === appState.selectedPatternOverride;
+        btn.className = active
+          ? 'pat-chip px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-extrabold transition'
+          : 'pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold transition';
+      });
+      const v = appState.variantsList?.[activeStudioVariantIndex || 0];
+      const concept = appState.conceptsList?.[appState.selectedConceptIndex || 0];
+      if (v && concept) {
+        const niche = getActiveNicheObj();
+        const fmt = getActiveFormatObj();
+        const title = (document.getElementById('videoTitleInput')?.value || concept.title || '').trim();
+        const desc = (document.getElementById('videoTopicDetailsInput')?.value || '').trim();
+        v.promptText = composeFullVariantPrompt(v, concept, niche, fmt, title, desc, '', v.activeHook);
+        if (typeof renderVariantsComparisonAndCards === 'function') renderVariantsComparisonAndCards();
+      }
+    }
+    function sendStudioImageToStamper() {
+      const imgEl = document.getElementById('studioGeneratedImg');
+      if (!imgEl || !imgEl.src) { showToast('⚠️ Pehle image generate karen!', true); return; }
+      const v = appState.variantsList?.[activeStudioVariantIndex || 0];
+      const hookText = v ? v.activeHook : 'असली सच! | बड़ा सबूत';
+      const { line1, line2 } = splitHookIntoTwoLines(hookText);
+      const l1El = document.getElementById('stamperLine1Input');
+      const l2El = document.getElementById('stamperLine2Input');
+      if (l1El) l1El.value = line1;
+      if (l2El) l2El.value = line2;
+      const im = new Image();
+      im.onload = () => {
+        stamperImgObj = im;
+        stamperPosX = 0.05;
+        stamperPosY = 0.06;
+        document.getElementById('stampedResultBox')?.classList.remove('hidden');
+        const canvas = document.getElementById('interactiveStamperCanvas');
+        bindStamperDragEvents(canvas);
+        renderInteractiveStamperCanvas();
+        canvas?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showToast('✍️ Image loaded into Text Stamper!');
+      };
+      im.src = imgEl.src;
+    }
+    function sendStudioImageToCtr4View(source) {
+      let dataUrl = '';
+      if (source === 'stamper') {
+        const c = document.getElementById('interactiveStamperCanvas');
+        if (c && c.width > 0 && stamperImgObj) dataUrl = c.toDataURL('image/png');
+      } else {
+        const im = document.getElementById('studioGeneratedImg');
+        if (im && im.src) dataUrl = im.src;
+      }
+      if (!dataUrl) { showToast('⚠️ Pehle image generate ya stamp karen!', true); return; }
+      closeImageStudioModal();
+      if (typeof switchWorkspaceTab === 'function') switchWorkspaceTab('seo');
+      ctrCompareImages = [{ name: 'Studio_Thumbnail.png', dataUrl }];
+      const grid = document.getElementById('ctrThumbsPreviewGrid');
+      const tb = document.getElementById('ctrTinyBwToggleBar');
+      const emptyDz = document.getElementById('ctrEmptyDropzone');
+      const clrBtn = document.getElementById('ctrClearBtn');
+      if (emptyDz) emptyDz.classList.add('hidden');
+      if (clrBtn) clrBtn.classList.remove('hidden');
+      if (tb) tb.classList.remove('hidden');
+      if (grid) {
+        grid.classList.remove('hidden');
+        grid.innerHTML = `<div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-1.5"><div class="flex items-center justify-between font-mono text-[10px]"><span class="text-tertiary font-bold">Thumbnail #1</span><span class="text-outline">Studio Export</span></div><img src="${dataUrl}" class="ctr-thumb-img w-full aspect-video object-cover rounded-lg border border-outline-variant/40 transition-all" /></div>`;
+      }
+      renderRealYouTube4Views();
+      document.getElementById('section-step-13')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      analyzeUploadedThumbnailsCTR();
     }
 
 
@@ -6632,6 +6815,8 @@ Return strict JSON:
       if (titleEl && v) titleEl.innerHTML = `<span class="material-symbols-outlined text-tertiary">auto_fix_high</span><span>Image Studio — Variant ${v.code}</span>`;
       loadSavedCreatorFace();
       renderExtraStudioPreview();
+      setStudioPatternOverride(appState.selectedPatternOverride || 'auto');
+      renderWinningStyleBanner();
       setTimeout(updatePreFlightQualityGuard, 80);
       const resBox = document.getElementById('studioImageResultBox');
       if (resBox) resBox.classList.add('hidden');
@@ -6798,6 +6983,8 @@ Return strict JSON:
       if (resBox) resBox.classList.remove('hidden');
       if (imgEl) imgEl.classList.add('hidden');
       if (dlEl) dlEl.classList.add('hidden');
+      document.getElementById('studioToStamperBtn')?.classList.add('hidden');
+      document.getElementById('studioToCtrBtn')?.classList.add('hidden');
 
       if (!appState.geminiApiKey) {
         if (statusEl) statusEl.textContent = '⚠️ No Gemini API Key connected — use "Copy & Open ChatGPT" on the right!';
@@ -6827,6 +7014,8 @@ Return strict JSON:
           const outSrc = `data:${imgPart.inlineData.mimeType || 'image/png'};base64,${imgPart.inlineData.data}`;
           if (imgEl) { imgEl.src = outSrc; imgEl.classList.remove('hidden'); }
           if (dlEl) { dlEl.href = outSrc; dlEl.download = `thumbnail_${v.code}.png`; dlEl.classList.remove('hidden'); }
+          document.getElementById('studioToStamperBtn')?.classList.remove('hidden');
+          document.getElementById('studioToCtrBtn')?.classList.remove('hidden');
           getTodayUsageCount(true);
           if (statusEl) statusEl.textContent = '✅ 8K Thumbnail Generated!';
           return;
@@ -8054,14 +8243,28 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
       });
     }
 
-    function copyFullYouTubeUploadPack() {
+    function buildFullYouTubeUploadKitText() {
+      const v = appState.variantsList?.[activeStudioVariantIndex || 0];
+      const thumbHook = v?.activeHook || appState.thumbnailHooksPreview?.[0]?.hindi || '';
       const titles = document.getElementById('seoTitlesList')?.innerText || '';
       const desc = document.getElementById('seoDescriptionPre')?.textContent || '';
       const tags = document.getElementById('seoTagsPre')?.textContent || '';
       const hook = document.getElementById('seoOpeningHookPre')?.textContent || '';
       const pin = document.getElementById('seoPinnedCommentPre')?.textContent || '';
-      const full = `=== TITLES ===\n${titles}\n\n=== OPENING 15S HOOK ===\n${hook}\n\n=== DESCRIPTION ===\n${desc}\n\n=== TAGS ===\n${tags}\n\n=== PINNED COMMENT ===\n${pin}`;
-      copyTextSafe(full, '📋 Full YouTube Upload Pack copied!');
+      return `=== THUMBNAIL PUNCHLINE (2-4 WORDS) ===\n${thumbHook}\n\n=== TITLES ===\n${titles}\n\n=== OPENING 15S HOOK ===\n${hook}\n\n=== DESCRIPTION ===\n${desc}\n\n=== TAGS ===\n${tags}\n\n=== PINNED COMMENT ===\n${pin}`;
+    }
+    function copyFullYouTubeUploadPack() {
+      copyTextSafe(buildFullYouTubeUploadKitText(), '📋 Full YouTube Upload Kit copied!');
+    }
+    function downloadFullYouTubeUploadKit() {
+      const txt = buildFullYouTubeUploadKitText();
+      const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'youtube_upload_kit.txt';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      showToast('⬇️ YouTube Upload Kit (.txt) downloaded!');
     }
 
     async function autoFixWeakThumbnailInChatGPT(fixHint, thumbIdx = 0) {
