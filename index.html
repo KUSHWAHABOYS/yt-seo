@@ -1396,86 +1396,93 @@
         </div>
       </div>
 
-      <!-- VISUAL PATTERN & POSE QUICK-CHIPS + WINNING STYLE MEMORY -->
-      <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 space-y-2">
+      <!-- CLEAN PRO GENERATE PANEL (AUTO-PILOT SELECTS PATTERN, FONT & CASE AUTOMATICALLY) -->
+      <div class="p-3.5 rounded-2xl bg-surface-container border border-outline-variant/50 space-y-3 shadow-sm">
         <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="font-mono text-[10px] font-bold uppercase text-tertiary">🎭 Pattern &amp; Pose Quick-Switch:</span>
-          <button type="button" onclick="saveWinningStyleFromStudio()" class="px-2 py-0.5 rounded bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/35 font-mono text-[10px] font-bold transition">⭐ Save Winning Style</button>
-        </div>
-        <div id="studioPatternChipBar" class="flex flex-wrap gap-1.5 font-mono text-[10px]">
-          <button type="button" data-pat="auto" onclick="setStudioPatternOverride('auto')" class="pat-chip px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-extrabold transition">Auto (Variant)</button>
-          <button type="button" data-pat="heritage" onclick="setStudioPatternOverride('heritage')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold transition">Imperial Heritage</button>
-          <button type="button" data-pat="closeup" onclick="setStudioPatternOverride('closeup')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold transition">Studio Close-Up</button>
-          <button type="button" data-pat="yellow_split" onclick="setStudioPatternOverride('yellow_split')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold transition">3-Panel Yellow Split</button>
-          <button type="button" data-pat="faceoff" onclick="setStudioPatternOverride('faceoff')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold transition">Low-Angle Face-Off</button>
-        </div>
-        <div id="winningStyleMemoryBar" class="hidden pt-1 border-t border-outline-variant/30 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]"></div>
-      </div>
-
-      <!-- GLOBAL HOOK LANGUAGE LOCK (ALL VARIANTS A/B/C) -->
-      <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]">
-        <span class="font-bold uppercase text-secondary">🌐 Global Hook Language (A+B+C):</span>
-        <div id="globalHookLangBar" class="flex flex-wrap gap-1.5">
-          <button type="button" data-hlang="mix" onclick="setGlobalHookLanguageLock('mix')" class="hlang-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold">Mix (A/B/C)</button>
-          <button type="button" data-hlang="hindi" onclick="setGlobalHookLanguageLock('hindi')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Hindi Only</button>
-          <button type="button" data-hlang="hinglish" onclick="setGlobalHookLanguageLock('hinglish')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Hinglish</button>
-          <button type="button" data-hlang="english" onclick="setGlobalHookLanguageLock('english')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">English</button>
-        </div>
-      </div>
-
-      <!-- SIGNATURE FONT PAIR & SMART CASE LOCK -->
-      <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 space-y-2 font-mono text-[10px]">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="font-bold uppercase text-tertiary">🔤 Brand Font &amp; Case (AI Smart):</span>
-          <div id="studioCaseBar" class="flex flex-wrap gap-1">
-            <button type="button" data-fcase="auto" onclick="setStudioFontCase('auto')" class="fcase-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold">Auto Case</button>
-            <button type="button" data-fcase="upper" onclick="setStudioFontCase('upper')" class="fcase-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">ALL CAPS</button>
-            <button type="button" data-fcase="title" onclick="setStudioFontCase('title')" class="fcase-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Title Case (Aa)</button>
+          <span class="font-display text-xs font-extrabold text-white tracking-wide">Generate Thumbnail</span>
+          <div id="preFlightGuardBar" class="flex flex-wrap items-center gap-1.5 font-mono text-[9px]">
+            <span id="pfHookBadge" class="px-2 py-0.5 rounded-md bg-surface-container-lowest text-on-surface-variant">Hook</span>
+            <span id="pfFaceBadge" class="px-2 py-0.5 rounded-md bg-surface-container-lowest text-on-surface-variant">Face</span>
+            <span id="pfRefBadge" class="px-2 py-0.5 rounded-md bg-surface-container-lowest text-on-surface-variant">Refs</span>
           </div>
         </div>
-        <div id="studioFontPickerBar" class="flex flex-wrap gap-1.5">
-          <button type="button" data-ffont="auto" onclick="setStudioFontFamily('auto')" class="ffont-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold">Auto (AI)</button>
-          <button type="button" data-ffont="Khand" onclick="setStudioFontFamily('Khand')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Khand Bold (HI)</button>
-          <button type="button" data-ffont="Teko" onclick="setStudioFontFamily('Teko')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Teko Bold (HI)</button>
-          <button type="button" data-ffont="Anton" onclick="setStudioFontFamily('Anton')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Anton (EN)</button>
-          <button type="button" data-ffont="Bebas Neue" onclick="setStudioFontFamily('Bebas Neue')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Bebas Neue (EN)</button>
-          <button type="button" data-ffont="Montserrat" onclick="setStudioFontFamily('Montserrat')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Montserrat Black (EN)</button>
-        </div>
-      </div>
-
-      <div id="preFlightGuardBar" class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 flex flex-wrap items-center gap-2 font-mono text-[10px]">
-        <span class="text-outline font-bold uppercase">Pre-Flight Check:</span>
-        <span id="pfHookBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Hook</span>
-        <span id="pfFaceBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Face</span>
-        <span id="pfRefBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Ref Photo</span>
-      </div>
-
-      <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/50 space-y-2">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="font-mono text-[11px] font-bold text-white">Generate Options:</span>
-          <span class="font-mono text-[10px] text-outline">Reuses your saved ChatGPT chat + copies prompt!</span>
-        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <button type="button" onclick="generateThumbnailViaGeminiInApp()" class="py-2.5 px-3 rounded-xl bg-primary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
-            <span class="material-symbols-outlined text-[17px]">bolt</span>
-            <span>Try Gemini Image API</span>
-          </button>
-          <button type="button" onclick="smartSendToChatGPT()" class="py-2.5 px-3 rounded-xl bg-tertiary text-on-tertiary font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
+          <button type="button" onclick="smartSendToChatGPT()" class="py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-2 shadow-sm hover:brightness-105 active:scale-[0.99] transition">
             <span>🚀</span>
             <span>Send to ChatGPT</span>
           </button>
-          <button type="button" onclick="smartSendToGemini()" class="sm:col-span-2 py-2.5 px-3 rounded-xl bg-secondary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 hover:brightness-110 transition">
+          <button type="button" onclick="smartSendToGemini()" class="py-3 px-4 rounded-xl bg-gradient-to-r from-amber-300 to-orange-300 text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-2 shadow-sm hover:brightness-105 active:scale-[0.99] transition">
             <span>✨</span>
             <span>Send to Gemini</span>
           </button>
+          <button type="button" onclick="generateThumbnailViaGeminiInApp()" class="py-2.5 px-3 rounded-xl bg-surface-container-high hover:bg-surface-bright text-white border border-outline-variant/60 font-display text-xs font-bold flex items-center justify-center gap-1.5 transition">
+            <span class="material-symbols-outlined text-[16px] text-primary">bolt</span>
+            <span>In-App Gemini Image API</span>
+          </button>
+          <button type="button" onclick="dispatchBatchToPlatforms('both')" class="py-2.5 px-3 rounded-xl bg-tertiary/15 hover:bg-tertiary/25 text-tertiary border border-tertiary/40 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 transition">
+            <span>⚡</span>
+            <span>Batch All 3 (A+B+C)</span>
+          </button>
         </div>
-        <div class="pt-2 border-t border-outline-variant/40 grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <button type="button" onclick="dispatchBatchToPlatforms('chatgpt')" class="py-2 px-3 rounded-xl bg-tertiary/20 hover:bg-tertiary/30 text-tertiary border border-tertiary/40 font-mono text-[10px] font-extrabold transition">🚀 Batch A+B+C → ChatGPT</button>
-          <button type="button" onclick="dispatchBatchToPlatforms('gemini')" class="py-2 px-3 rounded-xl bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-mono text-[10px] font-extrabold transition">✨ Batch A+B+C → Gemini</button>
-          <button type="button" onclick="dispatchBatchToPlatforms('both')" class="sm:col-span-2 py-2.5 px-3 rounded-xl bg-gradient-to-r from-tertiary via-primary to-secondary text-slate-950 font-display text-xs font-extrabold shadow hover:brightness-110 transition">⚡ Auto-Pilot Batch A+B+C → BOTH (6 Thumbnails → CTR Winner)</button>
-          <button type="button" onclick="shareStudioBundleOnMobile()" class="sm:col-span-2 py-2 px-3 rounded-xl bg-surface-container-high hover:bg-surface-bright text-white border border-outline-variant/60 font-mono text-[10px] font-bold transition">📲 Mobile Native Share (Photos + Prompt)</button>
+        <div id="studioPopupFallbackBar" class="hidden p-2.5 rounded-xl bg-amber-500/10 border border-amber-400/40 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]">
+          <span class="text-amber-200 font-bold">⚠️ Popup blocked? Open directly:</span>
+          <div class="flex flex-wrap gap-2">
+            <a href="https://chatgpt.com/" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-emerald-400 text-slate-950 font-extrabold">Open ChatGPT ↗</a>
+            <a href="https://gemini.google.com/app" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-amber-300 text-slate-950 font-extrabold">Open Gemini ↗</a>
+          </div>
         </div>
       </div>
+
+      <!-- COLLAPSED BY DEFAULT: ADVANCED AI OVERRIDES (AUTO-PILOT HANDLES THESE AUTOMATICALLY) -->
+      <details class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/40 space-y-2.5">
+        <summary class="cursor-pointer font-mono text-[11px] font-bold text-on-surface-variant select-none flex items-center justify-between">
+          <span>⚙️ Advanced AI Controls (Auto-Pilot Active)</span>
+          <span class="text-[10px] text-outline">Optional</span>
+        </summary>
+        <div class="pt-2 space-y-2.5 border-t border-outline-variant/30">
+          <div class="space-y-1.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]">
+              <span class="font-bold uppercase text-tertiary">🎭 Pattern &amp; Pose:</span>
+              <button type="button" onclick="saveWinningStyleFromStudio()" class="px-2 py-0.5 rounded bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/35 font-bold">⭐ Save Winning</button>
+            </div>
+            <div id="studioPatternChipBar" class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+              <button type="button" data-pat="auto" onclick="setStudioPatternOverride('auto')" class="pat-chip px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-extrabold">Auto (Variant)</button>
+              <button type="button" data-pat="heritage" onclick="setStudioPatternOverride('heritage')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Imperial Heritage</button>
+              <button type="button" data-pat="closeup" onclick="setStudioPatternOverride('closeup')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Studio Close-Up</button>
+              <button type="button" data-pat="yellow_split" onclick="setStudioPatternOverride('yellow_split')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">3-Panel Yellow Split</button>
+              <button type="button" data-pat="faceoff" onclick="setStudioPatternOverride('faceoff')" class="pat-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Low-Angle Face-Off</button>
+            </div>
+            <div id="winningStyleMemoryBar" class="hidden pt-1 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]"></div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]">
+            <span class="font-bold uppercase text-secondary">🌐 Hook Language (A+B+C):</span>
+            <div id="globalHookLangBar" class="flex flex-wrap gap-1">
+              <button type="button" data-hlang="mix" onclick="setGlobalHookLanguageLock('mix')" class="hlang-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold">Mix</button>
+              <button type="button" data-hlang="hindi" onclick="setGlobalHookLanguageLock('hindi')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Hindi</button>
+              <button type="button" data-hlang="hinglish" onclick="setGlobalHookLanguageLock('hinglish')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Hinglish</button>
+              <button type="button" data-hlang="english" onclick="setGlobalHookLanguageLock('english')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">English</button>
+            </div>
+          </div>
+          <div class="space-y-1.5 font-mono text-[10px]">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-bold uppercase text-tertiary">🔤 Brand Font &amp; Case:</span>
+              <div id="studioCaseBar" class="flex flex-wrap gap-1">
+                <button type="button" data-fcase="auto" onclick="setStudioFontCase('auto')" class="fcase-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold">Auto</button>
+                <button type="button" data-fcase="upper" onclick="setStudioFontCase('upper')" class="fcase-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">CAPS</button>
+                <button type="button" data-fcase="title" onclick="setStudioFontCase('title')" class="fcase-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Title (Aa)</button>
+              </div>
+            </div>
+            <div id="studioFontPickerBar" class="flex flex-wrap gap-1.5">
+              <button type="button" data-ffont="auto" onclick="setStudioFontFamily('auto')" class="ffont-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold">Auto (AI)</button>
+              <button type="button" data-ffont="Khand" onclick="setStudioFontFamily('Khand')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Khand (HI)</button>
+              <button type="button" data-ffont="Teko" onclick="setStudioFontFamily('Teko')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Teko (HI)</button>
+              <button type="button" data-ffont="Anton" onclick="setStudioFontFamily('Anton')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Anton (EN)</button>
+              <button type="button" data-ffont="Bebas Neue" onclick="setStudioFontFamily('Bebas Neue')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Bebas Neue</button>
+              <button type="button" data-ffont="Montserrat" onclick="setStudioFontFamily('Montserrat')" class="ffont-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Montserrat</button>
+            </div>
+          </div>
+        </div>
+      </details>
 
       <div id="studioImageResultBox" class="hidden p-3 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2.5">
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -5288,14 +5295,17 @@ Return strict JSON: {"details": "..."}`;
     }
 
     async function dispatchToChatGPTBridge(promptText, toastMsg) {
+      const qParam = (!studioCreatorPhotoB64 && !studioExtraPhotosB64.length && promptText.length <= 2800) ? '?q=' + encodeURIComponent(promptText) : '';
+      const openedWin = window.open('https://chatgpt.com/' + qParam, '_blank');
+      if (!openedWin) document.getElementById('studioPopupFallbackBar')?.classList.remove('hidden');
       copyTextSafe(promptText, toastMsg || 'Prompt copied! Sending to ChatGPT...');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-        const fontRefImg = getActiveKhandFontRefImage(); const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6); const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
+        const fontRefImg = getActiveKhandFontRefImage();
+        const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
         window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
-      const qParam = (!studioCreatorPhotoB64 && !studioExtraPhotosB64.length && promptText.length <= 2800) ? '?q=' + encodeURIComponent(promptText) : '';
-      setTimeout(() => { window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener'); }, 200);
     }
 
     const CREATOR_FACE_STORAGE_KEY = 'yt_seo_ssiro_creator_face_v31';
@@ -5583,6 +5593,13 @@ Return ONLY JSON: {"nicheId": "...", "formatId": "..."}`;
         showToast('⚠️ Pehle Variants A, B, C generate karen!', true);
         return;
       }
+      let w1 = null, w2 = null;
+      if (target === 'chatgpt' || target === 'both') w1 = window.open('https://chatgpt.com/', '_blank');
+      if (target === 'gemini' || target === 'both') w2 = window.open('https://gemini.google.com/app', '_blank');
+      if ((target !== 'gemini' && !w1) || (target !== 'chatgpt' && !w2)) {
+        document.getElementById('studioPopupFallbackBar')?.classList.remove('hidden');
+      }
+
       const prompts = appState.variantsList.slice(0, 3).map(v => ({ code: v.code || v.shortCode, text: v.promptText }));
       const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
       const fontRefImg = getActiveKhandFontRefImage();
@@ -5591,15 +5608,13 @@ Return ONLY JSON: {"nicheId": "...", "formatId": "..."}`;
 
       if (target === 'chatgpt' || target === 'both') {
         window.postMessage({ type: 'SSIRO_CHATGPT_BATCH', prompts, images: bridgeImgs, ts: Date.now() }, '*');
-        setTimeout(() => window.open('https://chatgpt.com/', '_blank', 'noopener'), 150);
       }
       if (target === 'gemini' || target === 'both') {
         window.postMessage({ type: 'SSIRO_GEMINI_BATCH', prompts, images: bridgeImgs, ts: Date.now() }, '*');
-        setTimeout(() => window.open('https://gemini.google.com/app', '_blank', 'noopener'), target === 'both' ? 450 : 150);
       }
-      showToast(target === 'both'
-        ? '⚡ Batch Queue (A+B+C) sent to BOTH ChatGPT & Gemini! Generated thumbnails will auto-return to CTR Winner.'
-        : `🚀 Batch Queue (A+B+C) sent to ${target.toUpperCase()}!`);
+      showToast((w1 === null && w2 === null)
+        ? '⚠️ Browser blocked popup! Click Open ChatGPT / Gemini link below.'
+        : '⚡ Batch Queue (A+B+C) started! Generated thumbnails will auto-return to CTR Winner.');
     }
 
     async function shareStudioBundleOnMobile() {
@@ -7189,16 +7204,16 @@ Return strict JSON:
 
 
     async function dispatchToGeminiBridge(promptText, toastMsg) {
+      const openedWin = window.open('https://gemini.google.com/app', '_blank');
+      if (!openedWin) document.getElementById('studioPopupFallbackBar')?.classList.remove('hidden');
       copyTextSafe(promptText, toastMsg || '📋 Prompt copied & sent to Gemini! (अगर टेक्स्ट न दिखे तो Paste करें)');
       try {
         const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
-        const fontRefImg = getActiveKhandFontRefImage(); const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+        const fontRefImg = getActiveKhandFontRefImage();
+        const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
         const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
         window.postMessage({ type: 'SSIRO_GEMINI_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
       } catch (e) {}
-      setTimeout(() => {
-        window.open('https://gemini.google.com/app', '_blank', 'noopener');
-      }, 200);
     }
 
     function smartSendToGemini(idxOverride) {
@@ -7293,15 +7308,22 @@ Return strict JSON:
           const mime = (meta.match(/data:(.*?);/) || [])[1] || 'image/jpeg';
           if (b64) parts.push({ inlineData: { mimeType: mime, data: b64 } });
         });
-        const ep = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
-        const resp = await fetch(ep, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseModalities: ['TEXT', 'IMAGE'] } })
-        });
-        const data = await resp.json().catch(() => ({}));
-        const outParts = data?.candidates?.[0]?.content?.parts || [];
-        const imgPart = outParts.find(pt => pt.inlineData && pt.inlineData.data);
+        resBox?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        const imgModels = ['gemini-2.5-flash-image', 'gemini-2.0-flash-preview-image-generation', 'gemini-2.0-flash-exp-image-generation'];
+        let data = {}, imgPart = null;
+        for (const mName of imgModels) {
+          if (statusEl) statusEl.textContent = `⏳ Calling ${mName}...`;
+          const ep = `https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${encodeURIComponent(appState.geminiApiKey)}`;
+          const resp = await fetch(ep, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseModalities: ['TEXT', 'IMAGE'] } })
+          });
+          data = await resp.json().catch(() => ({}));
+          const outParts = data?.candidates?.[0]?.content?.parts || [];
+          imgPart = outParts.find(pt => pt.inlineData && pt.inlineData.data);
+          if (imgPart) break;
+        }
         if (imgPart) {
           const outSrc = `data:${imgPart.inlineData.mimeType || 'image/png'};base64,${imgPart.inlineData.data}`;
           if (imgEl) { imgEl.src = outSrc; imgEl.classList.remove('hidden'); }
