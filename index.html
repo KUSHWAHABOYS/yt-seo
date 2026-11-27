@@ -3500,17 +3500,19 @@ function hasAnyTextAiKey() {
     }
 
     function splitHookIntoTwoLines(rawHook) {
-      const cleaned = (rawHook || 'असली सच! | ऐतिहासिक प्रमाण').trim();
+      const cleaned = (rawHook || 'असली प्रमाण?').trim();
       if (cleaned.includes('|')) {
-        const parts = cleaned.split('|').map(s => s.trim());
+        const parts = cleaned.split('|').map(s => s.trim()).filter(Boolean);
         return {
-          line1: parts[0] || 'असली सच!',
-          line2: parts.slice(1).join(' ') || 'ऐतिहासिक प्रमाण'
+          line1: parts[0] || cleaned,
+          line2: parts.slice(1).join(' ') || ''
         };
       }
-      const words = cleaned.split(/\s+/);
-      if (words.length <= 1) return { line1: cleaned, line2: '' };
-      if (words.length === 2) return { line1: words[0], line2: words[1] };
+      const words = cleaned.split(/\s+/).filter(Boolean);
+      // Keep 1-3 crisp words (<= 22 chars) as ONE giant punchy line instead of forcing filler!
+      if (words.length <= 3 && [...cleaned].length <= 22) {
+        return { line1: cleaned, line2: '' };
+      }
       const mid = Math.ceil(words.length / 2);
       return {
         line1: words.slice(0, mid).join(' '),
@@ -3527,10 +3529,15 @@ function hasAnyTextAiKey() {
         while (out.length > 1 && trailingParticles.has(out[out.length - 1].toLowerCase())) out.pop();
         return out;
       };
+      const genericFillerRe = /^(भारत के प्राचीन साक्ष्य|प्राचीन साक्ष्य|ऐतिहासिक साक्ष्य|असली प्रमाण|पूरा सच|मूल संदर्भ|बड़ा सबूत|पूरी कहानी|full context|real evidence|the truth)[!?.]*$/i;
       const parts = cleaned.split("|").map(s => s.trim()).filter(Boolean);
       if (parts.length >= 2) {
         let w1 = parts[0].split(/\s+/).filter(Boolean);
-        let w2 = parts.slice(1).join(" ").split(/\s+/).filter(Boolean);
+        let p2Text = parts.slice(1).join(" ").trim();
+        if (w1.length >= 2 && genericFillerRe.test(p2Text)) {
+          return trimTrailing(w1.slice(0, maxWords)).join(" ");
+        }
+        let w2 = p2Text.split(/\s+/).filter(Boolean);
         if (w1.length + w2.length > maxWords) {
           const half = Math.max(1, Math.floor(maxWords / 2));
           if (w1.length > half && w2.length > maxWords - half) {
@@ -3547,7 +3554,7 @@ function hasAnyTextAiKey() {
         return w1.join(" ") + " | " + w2.join(" ");
       }
       const allWords = trimTrailing(cleaned.split(/\s+/).filter(Boolean).slice(0, maxWords));
-      if (allWords.length <= 1) return allWords.join(" ");
+      if (allWords.length <= 3) return allWords.join(" ");
       const mid = Math.ceil(allWords.length / 2);
       return allWords.slice(0, mid).join(" ") + " | " + allWords.slice(mid).join(" ");
     }
@@ -3742,7 +3749,7 @@ PPT / Story Material:
 
 CRITICAL CLARITY & CONTEXT RULES (MUST FOLLOW):
 1. SELF-CONTAINED MEANING: A viewer scrolling YouTube MUST understand the EXACT topic/prakaran/person/event just by reading the 2-line thumbnail text—WITHOUT needing to read the long video title first! Keep the core subject noun/entity clearly visible.
-2. STRICT 2–4 WORDS CAP (3-PART DIVISION OF LABOR): Do NOT explain the whole video on the thumbnail! The Visual shows the subject/artifact/face, and the Video Title underneath gives full context. Compress the Thumbnail Text into **2 to 4 words TOTAL** across BOTH lines (1–2 words per line, max ~22 characters total), split with "|" (Line 1 = 1-2 words, Line 2 = 1-2 words). NEVER write 5+ word sentences!
+2. STRICT 2–4 WORDS CAP & 1-LINE OR 2-LINE FLEXIBILITY: Do NOT explain the whole video on the thumbnail! Compress into **2 to 4 words TOTAL** (max ~22 chars). If 1 crisp line of 2–3 words says it all (e.g. "यूनानी दावा गलत?" or "4500 साल पुराना?"), DO NOT add a generic 2nd line! Only use "Line 1 | Line 2" (1–2 words each) when both halves add sharp contrast.
    - History / Archaeology: "4500 साल | DNA सच!" / "हड़प्पा गाय? | बड़ा सबूत!" / "किताबों से | क्यों गायब?"
    - Religion / Grantha: "मूल श्लोक | असली अर्थ!" / "क्यों छिपाया | यह सच?" / "ग्रंथ में | कुछ और!"
    - Open Debate / Reply: "1 सवाल | जवाब गायब!" / "इनका दावा | सच या झूठ?" / "तर्क फेल? | सबूत देखें"
@@ -3769,7 +3776,7 @@ Return ONLY valid JSON:
           hinglish: enforceThumbnailPunchlineCap(h.hinglish || "", 4),
           english: enforceThumbnailPunchlineCap(h.english || "", 4),
           score: Number(h.score) || 8.8
-        })).filter(h => h.hindi && h.hindi.includes("|") && !bannedClicheRe.test(h.hindi));
+        })).filter(h => h.hindi && !bannedClicheRe.test(h.hindi));
         if (cleaned.length >= 2) return cleaned;
       }
       return null;
@@ -4413,7 +4420,7 @@ Create an authentic, Photoshop-composited, ultra-detailed, EXACT ${sz.ratio} (${
 ===================================================================
 STEP 0 — SMART THUMBNAIL TITLE RANKING GATE (DO THIS FIRST!):
 ===================================================================
-• Current Proposed Thumbnail Text: Line 1: "${line1}" | Line 2: "${line2}"
+• Current Proposed Thumbnail Text: ${line2 ? `Line 1: "${line1}" | Line 2: "${line2}"` : `1-Line Punch Headline: "${line1}" (DO NOT add a 2nd line!)`}
 • Evaluate this headline out of 10 for Hindi YouTube CTR against the Video Title "${title}".
 • IF SCORE IS 8/10 OR HIGHER: State the score briefly (e.g. "Title CTR Score: 9/10 — Strong!") and PROCEED IMMEDIATELY to generate the thumbnail image.
 • IF SCORE IS BELOW 8/10 (WEAK): Pause BEFORE generating the image and offer 3 stronger, punchier Hindi 2-line alternatives in clean numbered boxes:
@@ -4439,7 +4446,7 @@ STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
   "Before I generate this DSLR-realistic thumbnail, please upload **your own portrait photo (MANDATORY — YouTuber/Creator face)** so I can preserve 100% of your real identity. You may also optionally upload any extra reference photos (historical figures, monuments, manuscripts, or objects); if you don't have extra photos, I will generate all secondary elements in authentic DSLR studio photography quality."
 • WAIT until the user uploads their portrait photo (or explicitly replies 'skip').
 • ONCE UPLOADED:
-  1. 99% BIOMETRIC IDENTITY LOCK (FOR ALL UPLOADED PEOPLE — HOST & ANY 2ND PERSON): Keep EVERY attached person's exact biometric facial structure 99% identical to their uploaded photo—exact eye spacing & shape, nose bridge & tip, cheekbones, jawline, skin tone, hairline, glasses, and beard/mustache pattern. Treat them as the EXACT SAME real human actor on set—NEVER replace them with a lookalike!
+  1. 99% BIOMETRIC IDENTITY LOCK (IMAGE #1 = CREATOR FACE ANCHOR): Attached **IMAGE #1** is the Creator's real portrait; **IMAGE #2** is the Typography Blueprint; **IMAGES #3+** are historical artifacts/evidence. You MUST preserve the EXACT face from IMAGE #1 (eye spacing, glasses frame, nose bridge, jawline, beard stubble, hairline, skin tone) with 99% biometric fidelity. NEVER redesign, beautify, or swap IMAGE #1's face with a generic lookalike!
   1B. TOPIC-MATCHED EXPRESSION & DYNAMIC BODY LANGUAGE (NO FROZEN STICKER CUTOUT): While keeping the person's 99% biometric identity & bone structure locked, DO NOT paste them as a stiff, emotionless passport photo! Naturally animate their facial expression (eyebrows, focused eyes, authentic mouth/brow tension) and upper-body language (head tilt, angled shoulders, expressive hand gesture pointing or presenting the proof) to match the topic mood: ${getSelectedMoodDirective(v)}.
   2. STRICT AS-IS ATTACHED PHOTO COMPOSITING LOCK (DO NOT REGENERATE ATTACHED PHOTOS): For EVERY uploaded/attached reference photo (Creator Portrait, 2nd Person, Statue, Monument, Book Front Cover, or Artifact), USE THAT EXACT ATTACHED PHOTOGRAPH AS-IS inside the Photoshop composition—NEVER redraw, re-imagine, or replace it with a generic AI-generated version! Simply isolate/crop out any slide/page borders, match perspective, apply Camera Raw true-color grading + Contact Shadows + 2px Atmospheric Edge Light-Wrap, and composite it seamlessly into the scene.
   3. REAL FOOTAGE & AUTHENTIC PHOTOGRAPH PRIORITY (ZERO FAKE AI SCENES): Prioritize REAL-WORLD PHOTOGRAPHS, real documentary/archival footage stills, Wikimedia/museum archives, real excavation/monument photos, and user-uploaded reference photos as the photographic base layers—composited like a senior Photoshop editor. For any real-world monument, temple, book cover, inscription, or site NOT uploaded by the user, USE YOUR WEB SEARCH TOOL FIRST to fetch authentic photographic references so every detail is 100% original and real—never invent generic fake AI buildings or cartoon props.
@@ -4464,9 +4471,10 @@ STEP 2 — VARIANT ${v.code} VISUAL ARCHITECTURE (100% DISTINCT DIRECTION):
 ===================================================================
 STEP 3 — LOCKED TYPOGRAPHY & BRAND RULES (${typoSpec.fontName.toUpperCase()} • YELLOW & WHITE):
 ===================================================================
-• Render this exact 2-line thumbnail headline in "${v.textPlacement}":
+${line2 ? `• Render this exact 2-line thumbnail headline in "${v.textPlacement}":
   - LINE 1 (Top Line): "${line1}" -> Render in '${typoSpec.descriptor}', SOLID GOLDEN YELLOW (#FFD700) fill.
-  - LINE 2 (Bottom Line): "${line2}" -> Render in '${typoSpec.descriptor}', SOLID PURE CRISP WHITE (#FFFFFF) fill.
+  - LINE 2 (Bottom Line): "${line2}" -> Render in '${typoSpec.descriptor}', SOLID PURE CRISP WHITE (#FFFFFF) fill.` : `• Render this exact **1-LINE GIANT HEADLINE** in "${v.textPlacement}" (STRICTLY 1 LINE ONLY — DO NOT invent or append any second line!):
+  - SINGLE LINE: "${line1}" -> Render in '${typoSpec.descriptor}' with 2-color editorial pop (highlight the main hook/number/shock word in SOLID GOLDEN YELLOW #FFD700 and remaining word(s) in SOLID PURE WHITE #FFFFFF, OR full #FFD700 with crisp black 3D drop shadow).` }
   - LETTER CASE STYLE: ${typoSpec.caseLabel}
 • STRICT TYPOGRAPHY & ZERO-TYPO SPELLING LOCK:
   - ATTACHED FONT SPECIMEN IMAGE: Use the attached "${typoSpec.fontName.toUpperCase()} FONT BLUEPRINT" image as your EXACT visual font reference—replicate its exact letterform geometry, stroke weight, #FFD700 Yellow Line 1 + #FFFFFF White Line 2, and clean matra/character proportions (NEVER substitute generic rounded or bubbly fonts!).
@@ -4480,10 +4488,10 @@ STEP 4 — GLOSSY PURE-HD 8K SHARPNESS, COLOR ACCURACY & 3-LAYER DEPTH LOCK:
 • Format & Resolution Lock: Exact ${sz.ratio} aspect ratio (${sz.resolution}px, ${sz.orientation}) for ${sz.platform}.
 • Glossy Studio Color Accuracy (Pro Commercial Standard):
   1. Subject Skin Key Light: Clean 5400K neutral-natural daylight studio softbox on the face with authentic satin skin sheen, crisp white eye catchlights, and ZERO muddy yellow/brown color cast.
-  2. Contrasting Cool/Dark Backdrop: Background MUST sit 2.5 stops darker in a rich contrasting palette (Deep Royal Cobalt Navy #0B1A33, Obsidian #06080E, or Imperial Gold-Amber sky for heritage) with radial spotlight burst & clean dark vignette—zero washed-out grey haze.
+  2. Mandatory Deep Cobalt-Obsidian Studio Contrast (-2.5 EV): NEVER place bright washed-out daytime blue sky behind the headline! Always render a Deep Royal Cobalt-Obsidian twilight/studio backdrop (#071020 to #0C1A33) with a smooth Dark Scrim behind the headline text, golden rim-light on hair/shoulders, and crisp radial spotlight on the proof.
   3. Razor-Sharp Dual Rim Light: Crisp 2px electric gold (#FFD700) or electric cyan (#00D4FF) rim light tracing outer hair, jawline & shoulders for 3D pop-out separation.
 • 3-Layer Photoshop Editorial Depth: Layer 1 (Back) = -2.5 EV true-color graded real photographic backdrop with clean f/2.0 optical bokeh; Layer 2 (Mid) = subtle atmospheric depth haze + authentic real/attached artifact or 2nd person with grounded Contact Shadow & micro-detailing; Layer 3 (Front) = tack-sharp hero Creator Portrait (Dodge & Burn micro-pores, crisp iris catchlights) + ultra-crisp 2-line Khand Bold headline (ZERO dull flat lighting, ZERO plastic CGI look).
-• Negative Constraints: ZERO muddy color cast, ZERO blurry AI faces, ZERO random extra words, ZERO watermarks, ZERO channel logos.
+• Magnifier & Corner Hygiene: If a Magnifier Ring is shown, place it ONLY over the exact distinct detail the finger points to (NEVER duplicate a nearby statue). Keep the bottom-right corner 100% dark and clean with ZERO AI stars, sparkles, watermarks, or channel logos.
 ${heritageBlock}`;
       return heritageSafe ? sanitizePromptForHeritageSafety(rawPrompt) : rawPrompt;
     }
@@ -5414,19 +5422,25 @@ Return strict JSON: {"details": "..."}`;
         ctx.textAlign = 'center';
         ctx.fillText(`EXACT FONT BLUEPRINT: ${spec.fontName.toUpperCase()} (${spec.caseMode.toUpperCase()})`, c.width / 2, 36);
 
-        const l1 = (spec.line1 || 'हड़प्पा में गाय').trim();
-        const l2 = (spec.line2 || 'क्यों नकारी गई?').trim();
+        const l1 = (spec.line1 || 'असली प्रमाण?').trim();
+        const l2 = (spec.line2 || '').trim();
         ctx.shadowColor = 'rgba(0,0,0,0.95)';
         ctx.shadowBlur = 14;
         ctx.shadowOffsetY = 5;
 
-        ctx.fillStyle = '#FFD700';
-        ctx.font = `${spec.weight} 84px ${spec.canvasFont}`;
-        ctx.fillText(l1, c.width / 2, 165, 880);
+        if (!l2) {
+          ctx.fillStyle = '#FFD700';
+          ctx.font = `${spec.weight} 102px ${spec.canvasFont}`;
+          ctx.fillText(l1, c.width / 2, 220, 880);
+        } else {
+          ctx.fillStyle = '#FFD700';
+          ctx.font = `${spec.weight} 84px ${spec.canvasFont}`;
+          ctx.fillText(l1, c.width / 2, 165, 880);
 
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = `${spec.weight} 76px ${spec.canvasFont}`;
-        ctx.fillText(l2, c.width / 2, 265, 880);
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = `${spec.weight} 76px ${spec.canvasFont}`;
+          ctx.fillText(l2, c.width / 2, 265, 880);
+        }
 
         ctx.shadowBlur = 0;
         ctx.shadowOffsetY = 0;
