@@ -1215,11 +1215,11 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
         <div>
           <span class="font-mono text-[10px] uppercase tracking-wider text-tertiary font-bold block">CTR Test</span>
-          <h2 class="font-display text-base sm:text-lg font-extrabold text-white">Thumbnail CTR &amp; 4-View Analyzer (1–3 Images)</h2>
+          <h2 class="font-display text-base sm:text-lg font-extrabold text-white">Thumbnail CTR &amp; 4-View Analyzer (1–6 Images)</h2>
         </div>
         <div class="flex flex-wrap items-center gap-2 shrink-0">
           <label class="cursor-pointer px-3.5 py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-white border border-outline-variant/60 font-display text-xs font-bold transition">
-            <span>🖼️ Upload 1–3</span>
+            <span>🖼️ Upload 1–6</span>
             <input id="ctrCompareFilesInput" type="file" accept="image/*" multiple onchange="handleCtrCompareFilesSelect(this)" class="hidden" />
           </label>
           <button type="button" onclick="analyzeUploadedThumbnailsCTR()" class="px-4 py-2 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container font-display text-xs font-extrabold flex items-center gap-1.5 shadow transition">
@@ -1238,7 +1238,7 @@
         <div class="w-11 h-11 mx-auto rounded-xl bg-tertiary/15 border border-tertiary/30 text-tertiary flex items-center justify-center">
           <span class="material-symbols-outlined text-[24px]">add_photo_alternate</span>
         </div>
-        <p class="font-display text-sm font-bold text-white">Upload 1 Thumbnail (Solo Audit) or 2–3 Thumbnails (A/B/C Winner)</p>
+        <p class="font-display text-sm font-bold text-white">Upload 1–6 Thumbnails (or Auto-Return 6 from ChatGPT + Gemini)</p>
         <p class="font-mono text-[11px] text-outline">Checks Mobile 160px readability, B&amp;W contrast, AI Vision CTR score &amp; 4-View YouTube Preview</p>
       </label>
 
@@ -1412,6 +1412,17 @@
         <div id="winningStyleMemoryBar" class="hidden pt-1 border-t border-outline-variant/30 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]"></div>
       </div>
 
+      <!-- GLOBAL HOOK LANGUAGE LOCK (ALL VARIANTS A/B/C) -->
+      <div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]">
+        <span class="font-bold uppercase text-secondary">🌐 Global Hook Language (A+B+C):</span>
+        <div id="globalHookLangBar" class="flex flex-wrap gap-1.5">
+          <button type="button" data-hlang="mix" onclick="setGlobalHookLanguageLock('mix')" class="hlang-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold">Mix (A/B/C)</button>
+          <button type="button" data-hlang="hindi" onclick="setGlobalHookLanguageLock('hindi')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Hindi Only</button>
+          <button type="button" data-hlang="hinglish" onclick="setGlobalHookLanguageLock('hinglish')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">Hinglish</button>
+          <button type="button" data-hlang="english" onclick="setGlobalHookLanguageLock('english')" class="hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold">English</button>
+        </div>
+      </div>
+
       <div id="preFlightGuardBar" class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 flex flex-wrap items-center gap-2 font-mono text-[10px]">
         <span class="text-outline font-bold uppercase">Pre-Flight Check:</span>
         <span id="pfHookBadge" class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">Hook</span>
@@ -1437,6 +1448,12 @@
             <span>✨</span>
             <span>Send to Gemini</span>
           </button>
+        </div>
+        <div class="pt-2 border-t border-outline-variant/40 grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <button type="button" onclick="dispatchBatchToPlatforms('chatgpt')" class="py-2 px-3 rounded-xl bg-tertiary/20 hover:bg-tertiary/30 text-tertiary border border-tertiary/40 font-mono text-[10px] font-extrabold transition">🚀 Batch A+B+C → ChatGPT</button>
+          <button type="button" onclick="dispatchBatchToPlatforms('gemini')" class="py-2 px-3 rounded-xl bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-mono text-[10px] font-extrabold transition">✨ Batch A+B+C → Gemini</button>
+          <button type="button" onclick="dispatchBatchToPlatforms('both')" class="sm:col-span-2 py-2.5 px-3 rounded-xl bg-gradient-to-r from-tertiary via-primary to-secondary text-slate-950 font-display text-xs font-extrabold shadow hover:brightness-110 transition">⚡ Auto-Pilot Batch A+B+C → BOTH (6 Thumbnails → CTR Winner)</button>
+          <button type="button" onclick="shareStudioBundleOnMobile()" class="sm:col-span-2 py-2 px-3 rounded-xl bg-surface-container-high hover:bg-surface-bright text-white border border-outline-variant/60 font-mono text-[10px] font-bold transition">📲 Mobile Native Share (Photos + Prompt)</button>
         </div>
       </div>
 
@@ -5375,6 +5392,153 @@ Return strict JSON: {"details": "..."}`;
       };
       im.src = imgEl.src;
     }
+    async function autoDetectNicheFormatAndSubStyle(title, desc) {
+      const blob = ((title || '') + ' ' + (desc || '') + ' ' + (__lastExtractedSourceText || '').slice(0, 800)).trim();
+      if (!blob) return;
+      let chosenNiche = null, chosenFmt = null;
+      const fmtKeys = Object.keys(THUMBNAIL_FORMATS_DB || {});
+      const nicheIds = (typeof NICHES !== 'undefined' ? NICHES : []).map(n => n.id);
+
+      if (hasAnyTextAiKey()) {
+        const clsPrompt = `Classify this YouTube video into the single best Niche ID and Format ID.
+Title: "${title}"
+Summary: "${(desc || '').slice(0, 350)}"
+Available Niche IDs: ${nicheIds.join(', ')}
+Available Format IDs: ${fmtKeys.join(', ')}
+Return ONLY JSON: {"nicheId": "...", "formatId": "..."}`;
+        const aiCls = await callGeminiJsonAPI(clsPrompt, false).catch(() => null);
+        if (aiCls && nicheIds.includes(aiCls.nicheId)) chosenNiche = aiCls.nicheId;
+        if (aiCls && fmtKeys.includes(aiCls.formatId)) chosenFmt = aiCls.formatId;
+      }
+
+      if (!chosenNiche) {
+        if (/(वेद|श्लोक|गीता|पुराण|रामायण|महाभारत|धर्म|मंदिर|religion|sanatan)/i.test(blob)) chosenNiche = nicheIds.includes('religion') ? 'religion' : nicheIds[0];
+        else if (/(हड़प्पा|सिंधु|खुदाई|इतिहास|अभिलेख|शिलालेख|सदी|history|archaeology|empire|king)/i.test(blob)) chosenNiche = nicheIds.includes('history') ? 'history' : nicheIds[0];
+        else if (/(ai|tech|software|coding|mobile|gadget|smartphone)/i.test(blob)) chosenNiche = nicheIds.includes('technology') ? 'technology' : nicheIds[0];
+        else if (/(science|space|dna|physics|universe|quantum)/i.test(blob)) chosenNiche = nicheIds.includes('science') ? 'science' : nicheIds[0];
+        else if (/(money|finance|stock|invest|wealth|tax)/i.test(blob)) chosenNiche = nicheIds.includes('finance') ? 'finance' : nicheIds[0];
+        else if (/(geopolitics|war|china|pakistan|russia|border|modi|election)/i.test(blob)) chosenNiche = nicheIds.includes('geopolitics') ? 'geopolitics' : nicheIds[0];
+        else if (/(mystery|secret|hidden|रहस्य|अनसुना)/i.test(blob)) chosenNiche = nicheIds.includes('mystery') ? 'mystery' : nicheIds[0];
+      }
+      if (!chosenFmt) {
+        if (/(बनाम|vs.?|डिबेट|debate|बहस|दावा|जवाब|reply|exposed)/i.test(blob) && fmtKeys.includes('debate')) chosenFmt = 'debate';
+        else if (/(podcast|interview|पॉडकास्ट|बातचीत|संवाद)/i.test(blob) && fmtKeys.includes('podcast')) chosenFmt = 'podcast';
+        else if (fmtKeys.includes('documentary')) chosenFmt = 'documentary';
+      }
+
+      if (chosenNiche && typeof selectNiche === 'function') selectNiche(chosenNiche);
+      if (chosenFmt && typeof selectThumbnailFormat === 'function') selectThumbnailFormat(chosenFmt);
+      const nObj = getActiveNicheObj();
+      const fObj = getActiveFormatObj();
+      showToast(`🤖 Auto-Classified: ${nObj.name} • ${fObj.name}`);
+    }
+
+    function setGlobalHookLanguageLock(lang) {
+      appState.globalHookLangLock = lang || 'mix';
+      document.querySelectorAll('#globalHookLangBar .hlang-btn').forEach(btn => {
+        const active = btn.getAttribute('data-hlang') === appState.globalHookLangLock;
+        btn.className = active
+          ? 'hlang-btn px-2 py-0.5 rounded bg-tertiary text-on-tertiary font-extrabold'
+          : 'hlang-btn px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/50 font-bold';
+      });
+      if (!Array.isArray(appState.variantsList) || !appState.variantsList.length) return;
+      const concept = appState.conceptsList?.[appState.selectedConceptIndex || 0];
+      const niche = getActiveNicheObj();
+      const fmt = getActiveFormatObj();
+      const title = (document.getElementById('videoTitleInput')?.value || '').trim();
+      const desc = (document.getElementById('videoTopicDetailsInput')?.value || '').trim();
+      appState.variantsList.forEach(v => {
+        const targetLang = appState.globalHookLangLock === 'mix' ? v.defaultLang : appState.globalHookLangLock;
+        v.activeLang = targetLang;
+        v.activeHook = v.hooks?.[targetLang] || v.hooks?.hindi || v.activeHook;
+        if (concept) v.promptText = composeFullVariantPrompt(v, concept, niche, fmt, title, desc, '', v.activeHook);
+      });
+      if (typeof renderVariantsComparisonAndCards === 'function') renderVariantsComparisonAndCards();
+      setTimeout(updatePreFlightQualityGuard, 40);
+      showToast(`🌐 All Variants A/B/C locked to: ${appState.globalHookLangLock.toUpperCase()}`);
+    }
+
+    async function dispatchBatchToPlatforms(target) {
+      if (!Array.isArray(appState.variantsList) || !appState.variantsList.length) {
+        showToast('⚠️ Pehle Variants A, B, C generate karen!', true);
+        return;
+      }
+      const prompts = appState.variantsList.slice(0, 3).map(v => ({ code: v.code || v.shortCode, text: v.promptText }));
+      const pptPickedImgs = [...pptxSelectedImageIndices].map(i => pptxExtractedImages[i]?.dataUrl).filter(Boolean);
+      const fontRefImg = getActiveKhandFontRefImage();
+      const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
+      const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
+
+      if (target === 'chatgpt' || target === 'both') {
+        window.postMessage({ type: 'SSIRO_CHATGPT_BATCH', prompts, images: bridgeImgs, ts: Date.now() }, '*');
+        setTimeout(() => window.open('https://chatgpt.com/', '_blank', 'noopener'), 150);
+      }
+      if (target === 'gemini' || target === 'both') {
+        window.postMessage({ type: 'SSIRO_GEMINI_BATCH', prompts, images: bridgeImgs, ts: Date.now() }, '*');
+        setTimeout(() => window.open('https://gemini.google.com/app', '_blank', 'noopener'), target === 'both' ? 450 : 150);
+      }
+      showToast(target === 'both'
+        ? '⚡ Batch Queue (A+B+C) sent to BOTH ChatGPT & Gemini! Generated thumbnails will auto-return to CTR Winner.'
+        : `🚀 Batch Queue (A+B+C) sent to ${target.toUpperCase()}!`);
+    }
+
+    async function shareStudioBundleOnMobile() {
+      const v = appState.variantsList?.[activeStudioVariantIndex || 0];
+      if (!v) return;
+      await copyTextSafe(v.promptText, '📋 Prompt copied!');
+      if (!navigator.share) {
+        showToast('📋 Prompt copied! Mobile Share unsupported in this browser — paste in ChatGPT/Gemini app.');
+        return;
+      }
+      try {
+        const files = [];
+        const addB64File = async (b64, name) => {
+          if (!b64) return;
+          const res = await fetch(b64);
+          const blob = await res.blob();
+          files.push(new File([blob], name, { type: blob.type || 'image/jpeg' }));
+        };
+        await addB64File(studioCreatorPhotoB64, 'creator_face.jpg');
+        if (studioExtraPhotosB64[0]) await addB64File(studioExtraPhotosB64[0], 'reference_proof.jpg');
+        const shareData = { title: `Thumbnail ${v.code}`, text: v.promptText };
+        if (files.length && navigator.canShare && navigator.canShare({ files })) shareData.files = files;
+        await navigator.share(shareData);
+      } catch (e) {}
+    }
+
+    if (typeof window !== 'undefined' && !window.__ssiroReturnListenerBound) {
+      window.__ssiroReturnListenerBound = true;
+      window.addEventListener('message', (event) => {
+        if (event.source !== window || !event.data || event.data.type !== 'SSIRO_RETURN_THUMBNAILS') return;
+        const incoming = Array.isArray(event.data.images) ? event.data.images : [];
+        if (!incoming.length) return;
+        const merged = [...ctrCompareImages];
+        incoming.forEach((im, idx) => {
+          if (im && im.dataUrl && !merged.some(m => m.dataUrl === im.dataUrl)) {
+            merged.push({ name: im.label || `Auto_Thumb_${merged.length + 1}.png`, dataUrl: im.dataUrl });
+          }
+        });
+        ctrCompareImages = merged.slice(0, 6);
+        closeImageStudioModal();
+        if (typeof switchWorkspaceTab === 'function') switchWorkspaceTab('seo');
+        const grid = document.getElementById('ctrThumbsPreviewGrid');
+        const tb = document.getElementById('ctrTinyBwToggleBar');
+        const emptyDz = document.getElementById('ctrEmptyDropzone');
+        const clrBtn = document.getElementById('ctrClearBtn');
+        if (emptyDz) emptyDz.classList.add('hidden');
+        if (clrBtn) clrBtn.classList.remove('hidden');
+        if (tb) tb.classList.remove('hidden');
+        if (grid) {
+          grid.classList.remove('hidden');
+          grid.innerHTML = ctrCompareImages.map((im, i) => `<div class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/50 space-y-1.5"><div class="flex items-center justify-between font-mono text-[10px]"><span class="text-tertiary font-bold">Thumbnail #${i + 1}</span><span class="text-outline truncate max-w-[140px]">${escHtml(im.name)}</span></div><img src="${im.dataUrl}" class="ctr-thumb-img w-full aspect-video object-cover rounded-lg border border-outline-variant/40 transition-all" /></div>`).join('');
+        }
+        renderRealYouTube4Views();
+        document.getElementById('section-step-13')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        analyzeUploadedThumbnailsCTR();
+        showToast(`🏆 ${ctrCompareImages.length} Thumbnails auto-imported! Auditing CTR Winner...`);
+      });
+    }
+
     function sendStudioImageToCtr4View(source) {
       let dataUrl = '';
       if (source === 'stamper') {
@@ -6762,7 +6926,14 @@ Return strict JSON:
         btnEl.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Step 1/2...</span>';
       }
       try {
-        await runThumbnailResearchAndConcepts();
+        if (typeof autoDetectNicheFormatAndSubStyle === 'function') {
+          if (btnEl) btnEl.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Auto-Detect...</span>';
+          await autoDetectNicheFormatAndSubStyle(title, (document.getElementById('videoTopicDetailsInput')?.value || '').trim());
+        }
+        await Promise.all([
+          runThumbnailResearchAndConcepts(),
+          (typeof runSuggestedVideoSeoPack === 'function' ? runSuggestedVideoSeoPack(true).catch(() => {}) : Promise.resolve())
+        ]);
 
         // Auto-lock the highest-scoring Thumbnail Hook before opening Studio
         if (Array.isArray(appState.thumbnailHooksPreview) && appState.thumbnailHooksPreview.length) {
@@ -7707,7 +7878,7 @@ Return strict JSON with ONLY these keys:
     }
 
     function handleCtrCompareFilesSelect(input) {
-      const files = Array.from(input.files || []).slice(0, 3);
+      const files = Array.from(input.files || []).slice(0, 6);
       if (!files.length) return;
       ctrCompareImages = [];
       const grid = document.getElementById('ctrThumbsPreviewGrid');
