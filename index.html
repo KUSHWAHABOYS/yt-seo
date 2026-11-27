@@ -10,6 +10,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="YT SEO" />
   <meta charset="utf-8"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://generativelanguage.googleapis.com https://openrouter.ai https://api.groq.com https://api.mistral.ai https://www.googleapis.com https://en.wikipedia.org https://commons.wikimedia.org https://api.github.com https://gist.githubusercontent.com https://noembed.com https://corsproxy.io; object-src 'none'; base-uri 'self';"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport"/>
   <meta content="web_dashboard" name="shell-type"/>
   <title>YT SEO — Powered by SSIRO • v1.0 | Thumbnail Generator</title>
@@ -2024,6 +2025,7 @@
       'yt_seo_ssiro_mistral_key',
       'yt_seo_ssiro_openrouter_key',
       'yt_seo_ssiro_vault_v2',
+      'yt_seo_ssiro_vault_aes256_v1',
       'yt_seo_ssrio_gemini_model',
       'yt_seo_ssiro_yt_key',
       'yt_seo_ssiro_ai_usage',
@@ -2261,6 +2263,52 @@
       return JSON.parse(json);
     }
 
+    function getSafePostMessageOrigin() {
+      try {
+        return (window.location.origin && window.location.origin !== 'null') ? window.location.origin : '*';
+      } catch (e) { return '*'; }
+    }
+
+    async function deriveAesVaultKey(pinStr, saltBytes) {
+      const enc = new TextEncoder();
+      const baseKey = await window.crypto.subtle.importKey('raw', enc.encode(pinStr + '::SSIRO_AES_2026'), 'PBKDF2', false, ['deriveKey']);
+      return window.crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: saltBytes, iterations: 100000, hash: 'SHA-256' },
+        baseKey,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+    }
+
+    async function encryptVaultPayloadAesGcm(obj) {
+      if (!window.crypto || !window.crypto.subtle) return null;
+      const salt = window.crypto.getRandomValues(new Uint8Array(16));
+      const iv = window.crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveAesVaultKey(getStoredPin(), salt);
+      const cipher = await window.crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(JSON.stringify(obj)));
+      const packed = new Uint8Array(16 + 12 + cipher.byteLength);
+      packed.set(salt, 0);
+      packed.set(iv, 16);
+      packed.set(new Uint8Array(cipher), 28);
+      let bin = '';
+      for (let i = 0; i < packed.length; i++) bin += String.fromCharCode(packed[i]);
+      return 'SSIRO-AES256::' + btoa(bin);
+    }
+
+    async function decryptVaultPayloadAesGcm(token) {
+      if (!token || !token.startsWith('SSIRO-AES256::') || !window.crypto || !window.crypto.subtle) return null;
+      const bin = atob(token.slice('SSIRO-AES256::'.length).trim());
+      const packed = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) packed[i] = bin.charCodeAt(i);
+      const salt = packed.slice(0, 16);
+      const iv = packed.slice(16, 28);
+      const data = packed.slice(28);
+      const key = await deriveAesVaultKey(getStoredPin(), salt);
+      const plain = await window.crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
+      return JSON.parse(new TextDecoder().decode(plain));
+    }
+
     function saveEncryptedApiVault() {
       try {
         let links = { ebook: '', playlist: '', social: '' };
@@ -2280,6 +2328,11 @@
           presets: Array.isArray(presets) ? presets : null
         };
         localStorage.setItem(ENCRYPTED_VAULT_KEY, encryptVaultPayload(payload));
+        if (window.crypto && window.crypto.subtle) {
+          encryptVaultPayloadAesGcm(payload).then(tok => {
+            if (tok) try { localStorage.setItem('yt_seo_ssiro_vault_aes256_v1', tok); } catch (e) {}
+          }).catch(() => {});
+        }
       } catch (e) {}
     }
 
@@ -5377,7 +5430,7 @@ Return strict JSON: {"details": "..."}`;
         const fontRefImg = getActiveKhandFontRefImage();
         const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
         const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
-        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
+        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, getSafePostMessageOrigin());
       } catch (e) {}
     }
 
@@ -5454,7 +5507,7 @@ Return strict JSON: {"details": "..."}`;
       const fixPrompt = map[kind] || map.more_contrast;
       copyTextSafe(fixPrompt, '🚀 Sending follow-up fix to ChatGPT...');
       try {
-        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: fixPrompt, images: [], isFollowUp: true, ts: Date.now() }, '*');
+        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt: fixPrompt, images: [], isFollowUp: true, ts: Date.now() }, getSafePostMessageOrigin());
       } catch (e) {}
       const qParam = fixPrompt.length <= 2800 ? '?q=' + encodeURIComponent(fixPrompt) : '';
       setTimeout(() => { window.open('https://chatgpt.com/' + qParam, '_blank', 'noopener'); }, 200);
@@ -5680,10 +5733,10 @@ Return ONLY JSON: {"nicheId": "...", "formatId": "..."}`;
       const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
 
       if (target === 'chatgpt' || target === 'both') {
-        window.postMessage({ type: 'SSIRO_CHATGPT_BATCH', prompts, images: bridgeImgs, ts: Date.now() }, '*');
+        window.postMessage({ type: 'SSIRO_CHATGPT_BATCH', prompts, images: bridgeImgs, ts: Date.now() }, getSafePostMessageOrigin());
       }
       if (target === 'gemini' || target === 'both') {
-        window.postMessage({ type: 'SSIRO_GEMINI_BATCH', prompts, images: bridgeImgs, ts: Date.now() }, '*');
+        window.postMessage({ type: 'SSIRO_GEMINI_BATCH', prompts, images: bridgeImgs, ts: Date.now() }, getSafePostMessageOrigin());
       }
       showToast((w1 === null && w2 === null)
         ? '⚠️ Browser blocked popup! Click Open ChatGPT / Gemini link below.'
@@ -7286,7 +7339,7 @@ Return strict JSON:
         const fontRefImg = getActiveKhandFontRefImage();
         const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
         const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
-        window.postMessage({ type: 'SSIRO_GEMINI_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, '*');
+        window.postMessage({ type: 'SSIRO_GEMINI_SEND', prompt: promptText, images: bridgeImgs, ts: Date.now() }, getSafePostMessageOrigin());
       } catch (e) {}
     }
 
@@ -8668,7 +8721,7 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
       try {
         const rawImgs = [targetThumb, studioCreatorPhotoB64].filter(Boolean);
         const bridgeImgs = await Promise.all(rawImgs.map(im => compressDataUrlForBridge(im)));
-        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt, images: bridgeImgs, ts: Date.now() }, '*');
+        window.postMessage({ type: 'SSIRO_CHATGPT_SEND', prompt, images: bridgeImgs, ts: Date.now() }, getSafePostMessageOrigin());
       } catch (e) {}
       setTimeout(() => { window.open('https://chatgpt.com/', '_blank', 'noopener'); }, 200);
     }
