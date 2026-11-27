@@ -2413,7 +2413,9 @@
           yt: appState.youtubeApiKey || '',
           model: appState.geminiModel || 'gemini-2.5-flash',
           links: links || { ebook: '', playlist: '', social: '' },
-          presets: Array.isArray(presets) ? presets : null
+          presets: Array.isArray(presets) ? presets : null,
+          myChannel: localStorage.getItem('yt_seo_ssiro_my_channel_v1') || '',
+          winningStyles: (() => { try { return JSON.parse(localStorage.getItem('yt_seo_ssiro_winning_styles_v1') || 'null'); } catch (e) { return null; } })()
         };
         localStorage.setItem(ENCRYPTED_VAULT_KEY, encryptVaultPayload(payload));
         if (window.crypto && window.crypto.subtle) {
@@ -2466,6 +2468,23 @@
         appState.openrouterApiKey = v.or || '';
         appState.youtubeApiKey = v.yt || '';
         if (v.model) appState.geminiModel = v.model;
+        try {
+          if (appState.geminiApiKey) localStorage.setItem('yt_seo_ssrio_gemini_key', appState.geminiApiKey);
+          if (appState.geminiApiKey2) localStorage.setItem('yt_seo_ssiro_gemini_key_2', appState.geminiApiKey2);
+          if (appState.geminiApiKey3) localStorage.setItem('yt_seo_ssiro_gemini_key_3', appState.geminiApiKey3);
+          if (appState.groqApiKey) localStorage.setItem('yt_seo_ssiro_groq_key', appState.groqApiKey);
+          if (appState.mistralApiKey) localStorage.setItem('yt_seo_ssiro_mistral_key', appState.mistralApiKey);
+          if (appState.openrouterApiKey) localStorage.setItem('yt_seo_ssiro_openrouter_key', appState.openrouterApiKey);
+          if (appState.youtubeApiKey) localStorage.setItem('yt_seo_ssiro_yt_key', appState.youtubeApiKey);
+          if (v.model) localStorage.setItem('yt_seo_ssrio_gemini_model', v.model);
+          if (v.myChannel) {
+            localStorage.setItem('yt_seo_ssiro_my_channel_v1', v.myChannel);
+            if (document.getElementById('myChannelHandleInput')) document.getElementById('myChannelHandleInput').value = v.myChannel;
+          }
+          if (v.winningStyles && typeof v.winningStyles === 'object') {
+            localStorage.setItem('yt_seo_ssiro_winning_styles_v1', JSON.stringify(v.winningStyles));
+          }
+        } catch (e) {}
         if (document.getElementById('geminiApiKeyInput')) document.getElementById('geminiApiKeyInput').value = appState.geminiApiKey;
         if (document.getElementById('groqApiKeyInput')) document.getElementById('groqApiKeyInput').value = appState.groqApiKey;
         if (document.getElementById('mistralApiKeyInput')) document.getElementById('mistralApiKeyInput').value = appState.mistralApiKey;
@@ -9369,10 +9388,11 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
         const savedKey = appState.geminiApiKey || localStorage.getItem('yt_seo_ssrio_gemini_key');
         const savedKey2 = localStorage.getItem('yt_seo_ssiro_gemini_key_2') || '';
         const savedKey3 = localStorage.getItem('yt_seo_ssiro_gemini_key_3') || '';
-        appState.geminiApiKey2 = savedKey2; appState.geminiApiKey3 = savedKey3;
-        appState.groqApiKey = (localStorage.getItem('yt_seo_ssiro_groq_key') || '').trim();
-        appState.mistralApiKey = (localStorage.getItem('yt_seo_ssiro_mistral_key') || '').trim();
-        appState.openrouterApiKey = (localStorage.getItem('yt_seo_ssiro_openrouter_key') || '').trim();
+        appState.geminiApiKey2 = (appState.geminiApiKey2 || savedKey2 || '').trim();
+        appState.geminiApiKey3 = (appState.geminiApiKey3 || savedKey3 || '').trim();
+        appState.groqApiKey = (appState.groqApiKey || localStorage.getItem('yt_seo_ssiro_groq_key') || '').trim();
+        appState.mistralApiKey = (appState.mistralApiKey || localStorage.getItem('yt_seo_ssiro_mistral_key') || '').trim();
+        appState.openrouterApiKey = (appState.openrouterApiKey || localStorage.getItem('yt_seo_ssiro_openrouter_key') || '').trim();
         if (document.getElementById('groqApiKeyInput')) document.getElementById('groqApiKeyInput').value = appState.groqApiKey;
         if (document.getElementById('mistralApiKeyInput')) document.getElementById('mistralApiKeyInput').value = appState.mistralApiKey;
         if (document.getElementById('openrouterApiKeyInput')) document.getElementById('openrouterApiKeyInput').value = appState.openrouterApiKey;
