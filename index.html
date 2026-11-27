@@ -760,6 +760,7 @@
             <input
               id="videoTitleInput"
               type="text"
+              oninput="scheduleSmartIntentDetectFromTitle()"
               placeholder="Enter or speak video title..."
               class="flex-1 bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white font-medium focus:outline-none focus:border-tertiary"
             />
@@ -772,6 +773,22 @@
             </button>
           </div>
         </div>
+          <!-- SMART INTENT & CATEGORY DIRECTION BAR (THUMBNAIL + SEO + LINK AUDIT BRAIN) -->
+          <div id="smartIntentBar" class="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/45 space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-1.5 font-mono text-[10px]">
+              <span class="font-bold uppercase text-tertiary">🧠 Video Direction (AI Sense + 1-Click Override):</span>
+              <span id="smartIntentDetectedBadge" class="px-2 py-0.5 rounded bg-secondary/15 text-secondary border border-secondary/30 font-bold">Auto-Detecting from Title</span>
+            </div>
+            <div id="intentDirectionChipBar" class="flex flex-wrap gap-1.5 font-mono text-[10px]">
+              <button type="button" data-intent="auto" onclick="setVideoIntentDirection('auto', true)" class="intent-chip px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-extrabold transition">🤖 Auto (AI)</button>
+              <button type="button" data-intent="exposing" onclick="setVideoIntentDirection('exposing', true)" class="intent-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-bold transition">🔍 Exposing / खंडन</button>
+              <button type="button" data-intent="shock" onclick="setVideoIntentDirection('shock', true)" class="intent-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-bold transition">😱 Shock / रहस्य</button>
+              <button type="button" data-intent="tribute" onclick="setVideoIntentDirection('tribute', true)" class="intent-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-bold transition">🙏 Tribute / प्रशंसा</button>
+              <button type="button" data-intent="debate" onclick="setVideoIntentDirection('debate', true)" class="intent-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-bold transition">⚔️ Debate / Reply</button>
+              <button type="button" data-intent="documentary" onclick="setVideoIntentDirection('documentary', true)" class="intent-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-bold transition">📚 Knowledge / Doc</button>
+            </div>
+          </div>
+
           <div id="step3TitleChoicesBox" class="hidden p-3 rounded-xl bg-surface-container-lowest border border-secondary/40 space-y-2">
             <div class="flex flex-wrap items-center justify-between gap-1.5">
               <span class="font-mono text-[10px] uppercase text-secondary font-bold">✨ Pick 1 of 3 Human-Touch Video Titles (Click to Select):</span>
@@ -5021,6 +5038,66 @@ ${heritageBlock}`;
       return `Video Topic: "${cleanT}". Niche: ${niche.name} (${fmt.name}). Focuses on the core mystery, verified historical/factual evidence, dramatic visual contrast, and high-curiosity storytelling tailored for maximum viewer engagement.`;
     }
 
+    const INTENT_RULES = {
+      exposing: { id: 'exposing', label: 'Exposing / खंडन', mood: 'debate', fmt: 'debate', rule: 'Refuting a false claim or myth using hard primary evidence/proofs.' },
+      shock: { id: 'shock', label: 'Shocking Mystery / रहस्य', mood: 'shock', fmt: 'documentary', rule: 'Revealing a stunned, unexpected historical or scientific discovery.' },
+      tribute: { id: 'tribute', label: 'Tribute / प्रशंसा', mood: 'authority', fmt: 'documentary', rule: 'Respectful, dignified celebration of heritage, scripture, or historical achievement (NO red debunk arrows).' },
+      debate: { id: 'debate', label: 'Open Debate / Reply', mood: 'debate', fmt: 'debate', rule: 'Direct point-by-point reply or ideological clash between two viewpoints.' },
+      documentary: { id: 'documentary', label: 'Knowledge / Documentary', mood: 'curiosity', fmt: 'documentary', rule: 'In-depth educational storytelling and analytical breakdown.' }
+    };
+
+    function detectVideoIntentFromText(title, desc) {
+      const blob = ((title || '') + ' ' + (desc || '')).trim();
+      if (/(गलत|झूठ|धोखा|फर्जी|पर्दाफाश|बेनकाब|खंडन|expose|debunk|fake|myth|lie|false)/i.test(blob)) return 'exposing';
+      if (/(बनाम|vs.?|डिबेट|debate|बहस|जवाब|reply|rebuttal)/i.test(blob)) return 'debate';
+      if (/(महान|गौरव|विरासत|अद्भुत|सम्मान|तारीफ|prashansa|tribute|greatness|glory|genius)/i.test(blob)) return 'tribute';
+      if (/(चौंका|शॉक|रहस्य|गायब|मिला|खतरनाक|shock|mystery|secret|hidden|!)/i.test(blob)) return 'shock';
+      return 'documentary';
+    }
+
+    function getEffectiveVideoIntent(title, desc) {
+      const sel = appState.videoIntentDirection && appState.videoIntentDirection !== 'auto'
+        ? appState.videoIntentDirection
+        : detectVideoIntentFromText(title, desc);
+      return INTENT_RULES[sel] || INTENT_RULES.documentary;
+    }
+
+    let __intentDebounceTimer = null;
+    function scheduleSmartIntentDetectFromTitle() {
+      clearTimeout(__intentDebounceTimer);
+      __intentDebounceTimer = setTimeout(() => {
+        const t = (document.getElementById('videoTitleInput')?.value || '').trim();
+        if (t.length < 4) return;
+        const detectedId = detectVideoIntentFromText(t, '');
+        const rule = INTENT_RULES[detectedId] || INTENT_RULES.documentary;
+        const badge = document.getElementById('smartIntentDetectedBadge');
+        if (badge) badge.textContent = `AI Sense: ${rule.label}`;
+        if (!appState.videoIntentDirection || appState.videoIntentDirection === 'auto') {
+          if (typeof selectExpressionMood === 'function') selectExpressionMood(rule.mood);
+        }
+      }, 550);
+    }
+
+    function setVideoIntentDirection(intentId, userClicked = false) {
+      appState.videoIntentDirection = intentId || 'auto';
+      document.querySelectorAll('#intentDirectionChipBar .intent-chip').forEach(btn => {
+        const active = btn.getAttribute('data-intent') === appState.videoIntentDirection;
+        btn.className = active
+          ? 'intent-chip px-2.5 py-1 rounded-lg bg-tertiary text-on-tertiary font-extrabold transition'
+          : 'intent-chip px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-bold transition';
+      });
+      const title = (document.getElementById('videoTitleInput')?.value || '').trim();
+      const eff = getEffectiveVideoIntent(title, '');
+      const badge = document.getElementById('smartIntentDetectedBadge');
+      if (badge) badge.textContent = appState.videoIntentDirection === 'auto' ? `AI Sense: ${eff.label}` : `Locked: ${eff.label}`;
+      if (typeof selectExpressionMood === 'function') selectExpressionMood(eff.mood);
+      if (userClicked && title && appState.videoIntentDirection !== 'auto') {
+        autoWriteVideoDetailsFromTitle(true);
+        showToast(`🧠 Direction set to "${eff.label}" — Thumbnail Brief & Mood synced!`);
+      }
+      saveStudioState();
+    }
+
     async function autoWriteVideoDetailsFromTitle(silent = false) {
       const seoInpVal = (document.getElementById('seoStandaloneTopicInput')?.value || '').trim();
       const titleEl = document.getElementById('videoTitleInput');
@@ -5034,10 +5111,16 @@ ${heritageBlock}`;
       const fmt = getActiveFormatObj();
       const descEl = document.getElementById('videoTopicDetailsInput');
 
-      if (appState.geminiApiKey) {
-        if (!silent) showToast('✨ AI analyzing Title & writing Video Details...');
-        const pTxt = `Analyze this YouTube video title: "${title}" (Niche: ${niche.name}, Format: ${fmt.name}).
-Write a crisp 2-3 sentence Video Details summary (in the same language as the title—Hindi/Hinglish/English) covering the core story, key characters/subjects, primary evidence or mystery, and visual elements needed for a hyper-realistic thumbnail.
+      const intent = getEffectiveVideoIntent(title, '');
+      if (hasAnyTextAiKey()) {
+        if (!silent) showToast('✨ AI analyzing Title Direction & writing Thumbnail Brief...');
+        const pTxt = `You are a Senior YouTube Thumbnail Art Director (INTERNAL THUMBNAIL BRIEF — NOT a public YouTube description).
+Analyze this Video Title: "${title}"
+Niche: ${niche.name} | Format: ${fmt.name} | Direction/Intent: ${intent.label} (${intent.rule})
+Write a crisp 2-3 sentence INTERNAL THUMBNAIL DIRECTION BRIEF (in the same language as the title) clearly stating:
+1) What direction this video takes (refuting a claim / exposing / praising a heritage figure / revealing a shocking mystery / deep analysis),
+2) Which exact proof/artifact/subject should be the visual focus, and
+3) What facial expression & mood the host should show.
 Return strict JSON: {"details": "..."}`;
         const res = await callGeminiJsonAPI(pTxt, false).catch(() => null);
         if (res && res.details) {
@@ -8126,10 +8209,12 @@ Apply the YOUTUBE TITLE SKILL:
 - Goal: High-CTR titles 100% faithful to the actual video topic (zero fake clickbait).
 - Place the primary search keyword/entity in the first 40 characters, keep total length 55–70 characters, and highlight real evidence (अभिलेख/शिलालेख/पुरातत्त्व/ग्रंथ).
 - STRICT RULE: NEVER include any channel name (like "Sanaatan Samiksha" or "सनातन समीक्षा") inside the Video Titles! Titles must be 100% about the video topic only.
+ROLE SEPARATION RULE: Write 100% VIEWER-FACING YouTube Metadata. Use the Intent Tone ("${getEffectiveVideoIntent(title, desc).label}") to shape the argument/curiosity, but NEVER include internal thumbnail design notes, camera angles, or facial expression directions inside the public YouTube Description or Tags!
 Generate ONLY the requested SEO fields below (to save tokens) for:
 - Topic / Title: "${title}"
-- Summary: "${(desc || title).slice(0, 500)}"
+- Context: "${(desc || title).slice(0, 500)}"
 - Niche: "${niche.name}"
+- Video Direction: "${getEffectiveVideoIntent(title, desc).label}"
 
 Return strict JSON with ONLY these keys:
 {
@@ -8532,6 +8617,11 @@ function extractYouTubeVideoId(url) {
         } catch (e) {}
       }
       if (!vTitle) vTitle = `YouTube Video (${vid})`;
+      const linkIntentId = detectVideoIntentFromText(vTitle, vDesc);
+      const linkIntent = INTENT_RULES[linkIntentId] || INTENT_RULES.documentary;
+      if (!appState.videoIntentDirection || appState.videoIntentDirection === 'auto') {
+        setVideoIntentDirection('auto', false);
+      }
 
       // Compute honest deterministic audit checks
       const issues = [];
@@ -8548,6 +8638,7 @@ function extractYouTubeVideoId(url) {
         const ap = `Watch & audit this YouTube video for CTR, retention & Suggested-Rank SEO:
 Title: "${vTitle}"
 Channel: "${vChannel}"
+Detected Video Direction: "${linkIntent.label} (${linkIntent.rule})"
 Description snippet: "${(vDesc || 'Not available').slice(0, 400)}"
 Tags: "${vTags.slice(0, 12).join(', ') || 'Not available'}"
 Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spoken/shown in the video", "weaknesses": ["...","..."], "fixPlan": "2 crisp sentences on how to improve Thumbnail & SEO"}`;
