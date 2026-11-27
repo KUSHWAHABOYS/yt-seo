@@ -2415,6 +2415,32 @@
       openrouter: { label: 'OpenRouter (:free Auto)', status: 'unconfigured', model: 'openrouter/free', message: 'Not added' }
     };
     let __groqModelsCache = null;
+    let __openrouterFreeCache = null;
+    async function discoverOpenRouterFreeModels() {
+      if (__openrouterFreeCache) return __openrouterFreeCache;
+      const fallback = ['openrouter/free'];
+      try {
+        const r = await fetch('https://openrouter.ai/api/v1/models');
+        if (!r.ok) return fallback;
+        const j = await r.json().catch(() => ({}));
+        const ids = (j?.data || [])
+          .filter(m => m?.id && (m.id.endsWith(':free') || (Number(m?.pricing?.prompt) === 0 && Number(m?.pricing?.completion) === 0)))
+          .map(m => m.id);
+        const preferred = ['qwen', 'llama-3.3-70b', 'deepseek', 'gemma-3-27b', 'mistral'];
+        const ranked = [];
+        preferred.forEach(pat => {
+          ids.forEach(id => {
+            if (id.toLowerCase().includes(pat) && !ranked.includes(id)) ranked.push(id);
+          });
+        });
+        if (!ranked.includes('openrouter/free')) ranked.push('openrouter/free');
+        __openrouterFreeCache = ranked.slice(0, 5);
+        return __openrouterFreeCache;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
     let __mistralModelsCache = null;
     let __globalCompactOn = true;
 
@@ -2767,8 +2793,10 @@
           if (mr) setProviderHealth('mistral', 'ok', mm[0], `Verified (${mm.length} models found)`);
         }
         if (appState.openrouterApiKey) {
-          const or = await callOpenAICompatibleJson('openrouter', 'https://openrouter.ai/api/v1/chat/completions', appState.openrouterApiKey, ['openrouter/free'], 'Return JSON: {"ok": true}', { 'HTTP-Referer': location.origin });
-          if (or) setProviderHealth('openrouter', 'ok', 'openrouter/free', 'Verified live working');
+          __openrouterFreeCache = null;
+          const orModels = await discoverOpenRouterFreeModels();
+          const or = await callOpenAICompatibleJson('openrouter', 'https://openrouter.ai/api/v1/chat/completions', appState.openrouterApiKey, orModels, 'Return JSON: {"ok": true}', { 'HTTP-Referer': location.origin });
+          if (or) setProviderHealth('openrouter', 'ok', or.__modelUsed || orModels[0], `Verified live (${orModels.length} free models ready)`);
         }
         renderAiHealthModal();
       } finally {
@@ -3179,7 +3207,8 @@ function hasAnyTextAiKey() {
         if (mRes) { __aiTopicCache.set(cacheKey, { ts: Date.now(), data: mRes }); return mRes; }
       }
       if (appState.openrouterApiKey) {
-        const oRes = await callOpenAICompatibleJson('openrouter', 'https://openrouter.ai/api/v1/chat/completions', appState.openrouterApiKey, ['openrouter/free'], promptText, { 'HTTP-Referer': location.origin });
+        const orModels = await discoverOpenRouterFreeModels();
+        const oRes = await callOpenAICompatibleJson('openrouter', 'https://openrouter.ai/api/v1/chat/completions', appState.openrouterApiKey, orModels, promptText, { 'HTTP-Referer': location.origin });
         if (oRes) { __aiTopicCache.set(cacheKey, { ts: Date.now(), data: oRes }); return oRes; }
       }
       window.__lastGeminiError = firstErrMsg || 'Request failed';
@@ -7461,8 +7490,28 @@ Return strict JSON:
           if (statusEl) statusEl.textContent = '✅ 8K Thumbnail Generated!';
           return;
         }
-        const errMsg = data?.error?.message || 'Free Gemini tier does not allow image generation for this key.';
-        if (statusEl) statusEl.textContent = `⚠️ ${errMsg.slice(0, 95)} — Click "Copy & Open ChatGPT" to generate free!`;
+        if (appState.openrouterApiKey) {
+          if (statusEl) statusEl.textContent = '⏳ Trying OpenRouter Image fallback...';
+          try {
+            const orResp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + appState.openrouterApiKey, 'HTTP-Referer': location.origin },
+              body: JSON.stringify({ model: 'google/gemini-2.5-flash-image-preview', modalities: ['image', 'text'], messages: [{ role: 'user', content: cleanedPrompt }] })
+            });
+            const orData = await orResp.json().catch(() => ({}));
+            const orImg = orData?.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+            if (orImg) {
+              if (imgEl) { imgEl.src = orImg; imgEl.classList.remove('hidden'); }
+              if (dlEl) { dlEl.href = orImg; dlEl.download = `thumbnail_${v.code}.png`; dlEl.classList.remove('hidden'); }
+              document.getElementById('studioToStamperBtn')?.classList.remove('hidden');
+              document.getElementById('studioToCtrBtn')?.classList.remove('hidden');
+              if (statusEl) statusEl.textContent = '✅ 8K Thumbnail Generated (OpenRouter)!';
+              return;
+            }
+          } catch (e) {}
+        }
+        const errMsg = data?.error?.message || 'Free Gemini/OpenRouter tier does not include image generation.';
+        if (statusEl) statusEl.textContent = `⚠️ ${errMsg.slice(0, 90)} — Use "Send to ChatGPT" or "Send to Gemini" above for FREE!`;
       } catch (e) {
         if (statusEl) statusEl.textContent = '⚠️ Gemini Image API unavailable — Click "Copy & Open ChatGPT"!';
       }
