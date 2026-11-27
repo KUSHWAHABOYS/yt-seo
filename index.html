@@ -1314,9 +1314,13 @@
         <label for="auditYoutubeUrlInput" class="font-display text-xs sm:text-sm font-bold text-white block">Paste Any YouTube Video Link (or Shorts URL) to Audit:</label>
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <input id="auditYoutubeUrlInput" type="url" placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." class="flex-1 bg-surface-container border border-outline-variant/60 rounded-xl px-3.5 py-2.5 font-mono text-xs text-white focus:outline-none focus:border-primary" />
-          <button type="button" onclick="runYouTubeVideoLinkAudit()" class="py-2.5 px-5 rounded-xl bg-primary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 shadow hover:brightness-110 transition shrink-0">
+          <button type="button" onclick="runYouTubeVideoLinkAudit()" class="py-2.5 px-4 rounded-xl bg-primary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 shadow hover:brightness-110 transition shrink-0">
             <span class="material-symbols-outlined text-[17px]">troubleshoot</span>
             <span id="auditLinkBtnText">Audit Video</span>
+          </button>
+          <button type="button" onclick="runViralClipAndMuteScanner()" class="py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-300 to-orange-300 text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 shadow hover:brightness-105 transition shrink-0">
+            <span class="material-symbols-outlined text-[17px]">content_cut</span>
+            <span id="clipScanBtnText">Viral Clips &amp; Mute</span>
           </button>
         </div>
         <div class="pt-1 flex flex-wrap items-center gap-3 text-xs font-mono">
@@ -1329,6 +1333,7 @@
         <p class="font-mono text-[10px] text-outline">Gemini AI directly analyzes the YouTube video URL for real timestamps, audit &amp; ONLY the boxes you ticked above.</p>
       </div>
 
+      <div id="clipScannerResultBox" class="hidden space-y-3"></div>
       <div id="videoAuditResultBox" class="hidden space-y-4"></div>
     </section>
 
@@ -2161,9 +2166,11 @@
     function clearAuditSectionData(notify = true) {
       const u = document.getElementById('auditYoutubeUrlInput');
       const box = document.getElementById('videoAuditResultBox');
+      const cBox = document.getElementById('clipScannerResultBox');
       if (u) u.value = '';
       if (box) { box.classList.add('hidden'); box.innerHTML = ''; }
-      if (notify) showToast('🧹 Link Auditor cleared!');
+      if (cBox) { cBox.classList.add('hidden'); cBox.innerHTML = ''; }
+      if (notify) showToast('🧹 Link Auditor & Clip Scanner cleared!');
     }
 
     function autoCleanUnusedStorage() {
@@ -8699,8 +8706,9 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
           </div>
           <div id="chRevBox_${v.id}" class="hidden p-2.5 rounded-xl bg-surface-container border border-secondary/35 text-[11px] text-on-surface-variant space-y-1.5 leading-relaxed"></div>
           <div class="flex flex-wrap items-center gap-2 pt-1">
-            <button type="button" onclick="reviewChannelVideoWithAI('${v.id}')" class="flex-1 py-1.5 px-2.5 rounded-lg bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-mono text-[10px] font-extrabold transition">🔍 AI Deep Review</button>
-            <button type="button" onclick="sendChannelVideoToStudio('${v.id}')" class="flex-1 py-1.5 px-2.5 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-extrabold hover:brightness-110 transition">🛠️ Fix / Remake</button>
+            <button type="button" onclick="reviewChannelVideoWithAI('${v.id}')" class="flex-1 py-1.5 px-2 rounded-lg bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-mono text-[10px] font-extrabold transition">🔍 Review</button>
+            <button type="button" onclick="openVideoInClipScanner('${v.id}')" class="flex-1 py-1.5 px-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-mono text-[10px] font-extrabold transition">✂️ Clips</button>
+            <button type="button" onclick="sendChannelVideoToStudio('${v.id}')" class="flex-1 py-1.5 px-2 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-extrabold hover:brightness-110 transition">🛠️ Fix</button>
           </div>
         </div>`;
       }).join('');
@@ -8859,6 +8867,149 @@ Return strict JSON:
       switchWorkspaceTab('thumb');
       if (typeof scheduleSmartIntentDetectFromTitle === 'function') scheduleSmartIntentDetectFromTitle();
       showToast('🛠️ Loaded into Thumbnail Studio — click Auto-Pilot to generate a fresh viral version!');
+    }
+
+    let __lastScannedClips = [];
+    let __lastScannedMuteSegments = [];
+    let __lastScannedVideoUrl = '';
+
+    function timeStrToSec(ts) {
+      const parts = String(ts || '0:00').trim().split(':').map(Number);
+      if (parts.some(isNaN)) return 0;
+      if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+      if (parts.length === 2) return parts[0] * 60 + parts[1];
+      return parts[0] || 0;
+    }
+
+    function openVideoInClipScanner(vid) {
+      const url = `https://www.youtube.com/watch?v=${vid}`;
+      const inp = document.getElementById('auditYoutubeUrlInput');
+      if (inp) inp.value = url;
+      switchWorkspaceTab('audit');
+      runViralClipAndMuteScanner();
+    }
+
+    function sendClipToThumbnailStudio(idx) {
+      const clip = __lastScannedClips[idx];
+      if (!clip) return;
+      if (document.getElementById('videoTitleInput')) document.getElementById('videoTitleInput').value = clip.newTitle || '';
+      if (document.getElementById('seoStandaloneTopicInput')) document.getElementById('seoStandaloneTopicInput').value = clip.newTitle || '';
+      if (document.getElementById('videoTopicDetailsInput')) document.getElementById('videoTopicDetailsInput').value = `Clip (${clip.start} - ${clip.end}): ${clip.whyViral || ''}`;
+      appState.customLockedHookText = clip.thumbHook || '';
+      switchWorkspaceTab('thumb');
+      if (typeof scheduleSmartIntentDetectFromTitle === 'function') scheduleSmartIntentDetectFromTitle();
+      showToast('🛠️ Clip loaded into Thumbnail Studio!');
+    }
+
+    function downloadClipCutMuteBat(idx) {
+      const clip = __lastScannedClips[idx];
+      if (!clip || !__lastScannedVideoUrl) return;
+      const cStart = timeStrToSec(clip.start);
+      const cEnd = Math.max(cStart + 5, timeStrToSec(clip.end));
+      const mutes = (__lastScannedMuteSegments || [])
+        .map(m => ({ s: timeStrToSec(m.start) - cStart, e: timeStrToSec(m.end) - cStart }))
+        .filter(m => m.e > 0 && m.s < (cEnd - cStart) && m.e > m.s)
+        .map(m => `volume=enable='between(t,${Math.max(0, m.s).toFixed(1)},${m.e.toFixed(1)})':volume=0`);
+      const afFlag = mutes.length ? `-af "${mutes.join(',')}"` : '';
+      const safeName = `clip_${idx + 1}_${String(clip.type || 'debate').replace(/[^a-z0-9]/gi, '_')}.mp4`;
+      const bat = [
+        '@echo off',
+        'echo ===================================================',
+        'echo YT SEO - SSIRO Auto-Cut ^& Policy-Mute Clip Builder',
+        'echo Requires yt-dlp and ffmpeg installed on Windows PC',
+        'echo ===================================================',
+        `yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" --download-sections "*${clip.start}-${clip.end}" --force-keyframes-at-cuts -o "raw_${safeName}" "${__lastScannedVideoUrl}"`,
+        mutes.length
+          ? `ffmpeg -y -i "raw_${safeName}" ${afFlag} -c:v copy -c:a aac "CLEAN_${safeName}" && del "raw_${safeName}"`
+          : `ren "raw_${safeName}" "CLEAN_${safeName}"`,
+        'echo.',
+        `echo DONE! Clean clip saved as CLEAN_${safeName}`,
+        'pause'
+      ].join('\r\n');
+      const blob = new Blob([bat], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `cut_clip_${idx + 1}.bat`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      showToast(`✂️ Downloaded cut_clip_${idx + 1}.bat (includes ${mutes.length} auto-mute filters)!`);
+    }
+
+    async function runViralClipAndMuteScanner() {
+      const url = (document.getElementById('auditYoutubeUrlInput')?.value || '').trim();
+      const vid = extractYouTubeVideoId(url);
+      if (!vid) { showToast('⚠️ Paste a valid YouTube Video or Live Stream URL first!', true); return; }
+      if (!appState.geminiApiKey) { showToast('⚠️ Connect Gemini API Key in ⚙️ Settings to watch & scan full video!', true); return; }
+
+      const canonicalUrl = `https://www.youtube.com/watch?v=${vid}`;
+      __lastScannedVideoUrl = canonicalUrl;
+      const box = document.getElementById('clipScannerResultBox');
+      const btnTxt = document.getElementById('clipScanBtnText');
+      if (btnTxt) btnTxt.textContent = '⏳ Scanning Stream...';
+      if (box) {
+        box.classList.remove('hidden');
+        box.innerHTML = '<div class="p-4 rounded-xl bg-surface-container-lowest border border-amber-400/40 text-xs font-mono text-amber-300">⏳ Gemini AI is watching the full Video / Live Stream to extract Viral Clips (Shorts / 10-20m / 1h Debate) &amp; Policy-Risk / Offensive Timestamps...</div>';
+      }
+
+      const prompt = `Watch this entire YouTube Video / Live Stream carefully (including audio/transcript & debate flow).
+1. Identify the 4 BEST stand-alone segments worth re-uploading (mix of 45-60s Viral Shorts, 10-20m Deep Segments, and 30m-1.5h Strong Debates). Give exact HH:MM:SS or MM:SS start & end timestamps, viral reason in Hindi, a high-CTR Hindi Video Title, and a 2-3 word Thumbnail Hook.
+2. Scan for ANY offensive, abusive, unconstitutional, harassing, or YouTube-policy-risky spoken moments that should be muted/beeped or trimmed before re-uploading (return empty array if completely clean).
+Return ONLY strict JSON:
+{
+  "overallStreamVerdict": "2 crisp Hindi sentences summarizing the stream quality & best re-upload opportunity",
+  "clips": [
+    {"start": "00:12:15", "end": "00:24:40", "type": "12m Debate", "whyViral": "...", "newTitle": "...", "thumbHook": "..."}
+  ],
+  "muteSegments": [
+    {"start": "00:18:40", "end": "00:18:45", "reason": "Harsh/offensive word to mute"}
+  ]
+}`;
+
+      const res = await callGeminiYouTubeVideoAPI(canonicalUrl, prompt);
+      if (btnTxt) btnTxt.textContent = 'Viral Clips & Mute';
+      if (!res || !Array.isArray(res.clips)) {
+        if (box) box.innerHTML = '<div class="p-4 rounded-xl bg-error-container/30 border border-error/40 text-xs text-red-200">⚠️ Could not scan video (Gemini Video API quota or private/unavailable stream). Try again or check AI Status.</div>';
+        return;
+      }
+
+      __lastScannedClips = res.clips || [];
+      __lastScannedMuteSegments = Array.isArray(res.muteSegments) ? res.muteSegments : [];
+
+      const mutesHtml = __lastScannedMuteSegments.length
+        ? __lastScannedMuteSegments.map(m => `<div class="px-2.5 py-1.5 rounded-lg bg-red-500/15 border border-red-500/35 text-[11px] text-red-200 flex items-center justify-between gap-2"><span class="font-mono font-bold">🔇 ${escHtml(m.start)} – ${escHtml(m.end)}</span><span>${escHtml(m.reason || 'Policy/Offensive check')}</span></div>`).join('')
+        : '<div class="px-2.5 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/35 text-[11px] text-emerald-200 font-mono">✅ Clean Audio! No offensive/policy-risk timestamps detected.</div>';
+
+      const clipsHtml = __lastScannedClips.map((c, idx) => `
+        <div class="p-3.5 rounded-xl bg-surface-container border border-amber-400/35 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]">
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-extrabold">⏱️ ${escHtml(c.start)} – ${escHtml(c.end)}</span>
+            <span class="px-2 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold">${escHtml(c.type || 'Highlight')}</span>
+          </div>
+          <h4 class="font-display text-xs sm:text-sm font-extrabold text-white">${escHtml(c.newTitle || '')}</h4>
+          <p class="text-[11px] text-on-surface-variant leading-relaxed">${escHtml(c.whyViral || '')}</p>
+          <div class="font-mono text-[10px] text-secondary font-bold">🎯 Thumb Hook: ${escHtml(c.thumbHook || '')}</div>
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <button type="button" onclick="sendClipToThumbnailStudio(${idx})" class="px-3 py-1.5 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-extrabold">🛠️ Make Thumbnail &amp; Title</button>
+            <button type="button" onclick="downloadClipCutMuteBat(${idx})" class="px-3 py-1.5 rounded-lg bg-secondary/20 text-secondary border border-secondary/40 font-mono text-[10px] font-extrabold">✂️ PC Auto-Cut &amp; Mute (.bat)</button>
+          </div>
+        </div>`).join('');
+
+      if (box) {
+        box.innerHTML = `
+          <div class="p-4 rounded-2xl bg-surface-container-lowest border border-amber-400/45 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-display text-sm font-extrabold text-amber-300">🎬 AI Viral Clip &amp; Policy-Mute Report</span>
+              <span class="font-mono text-[10px] text-outline">${__lastScannedClips.length} Clips Found</span>
+            </div>
+            <p class="text-xs text-white leading-relaxed">${escHtml(res.overallStreamVerdict || '')}</p>
+            <div class="space-y-1.5">
+              <span class="font-mono text-[10px] uppercase font-bold text-red-300 block">🛡️ Offensive / Policy-Mute Timestamps:</span>
+              ${mutesHtml}
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">${clipsHtml}</div>
+          </div>`;
+      }
+      showToast(`🎬 Found ${__lastScannedClips.length} viral clips &amp; ${__lastScannedMuteSegments.length} mute checkpoints!`);
     }
 
 function extractYouTubeVideoId(url) {
