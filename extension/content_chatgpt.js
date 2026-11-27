@@ -74,7 +74,7 @@
     }
     const sendBtn =
       document.querySelector('button[data-testid="send-button"]') ||
-      document.querySelector('button[aria-label*="Send"]');
+      document.querySelector('button[aria-label*="Send"]') || document.querySelector('#composer-submit-button');
     if (sendBtn && !sendBtn.disabled) {
       sendBtn.click();
       if (onSent) onSent();
@@ -231,6 +231,7 @@
 
   if (isAlive()) {
     chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local' && changes.ssiro_chatgpt_queue && changes.ssiro_chatgpt_queue.newValue) { queueRunning = false; }
       if (area === 'local' && ((changes.ssiro_pending_prompt && changes.ssiro_pending_prompt.newValue) || (changes.ssiro_chatgpt_queue && changes.ssiro_chatgpt_queue.newValue))) {
         checkStorage();
       }

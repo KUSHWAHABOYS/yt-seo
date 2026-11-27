@@ -1436,9 +1436,9 @@
             <span class="material-symbols-outlined text-[16px] text-primary">bolt</span>
             <span>In-App Gemini Image API</span>
           </button>
-          <button type="button" onclick="dispatchBatchToPlatforms('both')" class="py-2.5 px-3 rounded-xl bg-tertiary/15 hover:bg-tertiary/25 text-tertiary border border-tertiary/40 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 transition">
+          <button type="button" onclick="dispatchBatchToPlatforms('chatgpt')" class="py-2.5 px-3 rounded-xl bg-tertiary/15 hover:bg-tertiary/25 text-tertiary border border-tertiary/40 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 transition">
             <span>⚡</span>
-            <span>Batch All 3 (A+B+C)</span>
+            <span>Batch A+B+C (ChatGPT)</span>
           </button>
         </div>
         <div id="studioPopupFallbackBar" class="hidden p-2.5 rounded-xl bg-amber-500/10 border border-amber-400/40 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px]">
@@ -1446,6 +1446,7 @@
           <div class="flex flex-wrap gap-2">
             <a href="https://chatgpt.com/" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-emerald-400 text-slate-950 font-extrabold">Open ChatGPT ↗</a>
             <a href="https://gemini.google.com/app" target="_blank" rel="noopener" class="px-2.5 py-1 rounded-lg bg-amber-300 text-slate-950 font-extrabold">Open Gemini ↗</a>
+            <button type="button" onclick="dispatchBatchToPlatforms('gemini')" class="px-2.5 py-1 rounded-lg bg-secondary/30 text-secondary border border-secondary/50 font-extrabold">Batch A+B+C (Gemini)</button>
           </div>
         </div>
       </div>
@@ -4448,7 +4449,7 @@ STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
 • ONCE UPLOADED:
   1. 99% BIOMETRIC IDENTITY LOCK (IMAGE #1 = CREATOR FACE ANCHOR): Attached **IMAGE #1** is the Creator's real portrait; **IMAGE #2** is the Typography Blueprint; **IMAGES #3+** are historical artifacts/evidence. You MUST preserve the EXACT face from IMAGE #1 (eye spacing, glasses frame, nose bridge, jawline, beard stubble, hairline, skin tone) with 99% biometric fidelity. NEVER redesign, beautify, or swap IMAGE #1's face with a generic lookalike!
   1B. TOPIC-MATCHED EXPRESSION & DYNAMIC BODY LANGUAGE (NO FROZEN STICKER CUTOUT): While keeping the person's 99% biometric identity & bone structure locked, DO NOT paste them as a stiff, emotionless passport photo! Naturally animate their facial expression (eyebrows, focused eyes, authentic mouth/brow tension) and upper-body language (head tilt, angled shoulders, expressive hand gesture pointing or presenting the proof) to match the topic mood: ${getSelectedMoodDirective(v)}.
-  2. STRICT AS-IS ATTACHED PHOTO COMPOSITING LOCK (DO NOT REGENERATE ATTACHED PHOTOS): For EVERY uploaded/attached reference photo (Creator Portrait, 2nd Person, Statue, Monument, Book Front Cover, or Artifact), USE THAT EXACT ATTACHED PHOTOGRAPH AS-IS inside the Photoshop composition—NEVER redraw, re-imagine, or replace it with a generic AI-generated version! Simply isolate/crop out any slide/page borders, match perspective, apply Camera Raw true-color grading + Contact Shadows + 2px Atmospheric Edge Light-Wrap, and composite it seamlessly into the scene.
+  2. SACRED ZERO-MODIFICATION ASSET LOCK (IMAGES #3+ — COLOR-GRADE ONLY, NEVER REDRAW): Every uploaded artifact, temple, statue, inscription, manuscript, or object (IMAGES #3+) is REAL EVIDENCE. You MUST cut out and composite the EXACT pixels of IMAGES #3+ AS-IS—ONLY apply Adobe Camera Raw color grading, exposure/shadow matching, Contact Shadows, and 2px Edge Light-Wrap. STRICTLY FORBIDDEN: NEVER redraw, re-sculpt, alter carvings, rewrite inscriptions, or replace IMAGES #3+ with an AI-reimagined version!
   3. REAL FOOTAGE & AUTHENTIC PHOTOGRAPH PRIORITY (ZERO FAKE AI SCENES): Prioritize REAL-WORLD PHOTOGRAPHS, real documentary/archival footage stills, Wikimedia/museum archives, real excavation/monument photos, and user-uploaded reference photos as the photographic base layers—composited like a senior Photoshop editor. For any real-world monument, temple, book cover, inscription, or site NOT uploaded by the user, USE YOUR WEB SEARCH TOOL FIRST to fetch authentic photographic references so every detail is 100% original and real—never invent generic fake AI buildings or cartoon props.
 ${refDetailsLine}
 ===================================================================
@@ -5480,23 +5481,28 @@ Return strict JSON: {"details": "..."}`;
 
     const MOOD_DIRECTIVES = {
       auto: '',
-      curiosity: '99% identical facial bone structure & features from uploaded photo, paired with natural investigative curiosity—slightly raised/furrowed brow, sharp attentive eyes, subtle head tilt, and a forward-leaning hand gesture toward the evidence.',
-      shock: '99% identical facial bone structure & features from uploaded photo (zero cartoonish distortion), paired with authentic stunned-by-evidence expression—alert eyes, raised eyebrows, subtle parted-lip disbelief, angled shoulders, and a dramatic pointing/reactive hand gesture.',
-      debate: '99% identical facial bone structure & features for BOTH people from uploaded photos, paired with assertive debate expression—intense focused eye contact, firm brow, and a confident challenging hand gesture.',
-      authority: '99% identical facial bone structure & features from uploaded photo, paired with calm, commanding documentary authority—composed focused gaze, poised shoulders, and clean studio posture.'
+      curiosity: '99% identical facial bone structure from IMAGE #1, animated with CLEAR INVESTIGATIVE CURIOSITY: one eyebrow noticeably raised, narrowed sharp analytical eyes locked on the viewer, slight 8-degree head tilt, leaning forward gesturing toward the proof.',
+      shock: '99% identical facial bone structure from IMAGE #1 (zero cartoonish distortion), animated with UNMISTAKABLE SHOCK & STUNNED REVELATION: eyebrows raised high, eyes wide open with bright catchlights, mouth slightly parted in genuine disbelief, shoulders angled forward, hand pointing/reacting toward the evidence.',
+      debate: '99% identical facial bone structure from IMAGE #1 (and 2nd person if attached), animated with SHARP DEBATE INTENSITY: knitted furrowed eyebrows, intense challenging stare straight into the lens, firm assertive mouth, confident pointing/rebuttal hand gesture.',
+      authority: '99% identical facial bone structure from IMAGE #1, animated with COMMANDING DOCUMENTARY GRAVITAS: intense focused eyes, slightly lowered determined brow, poised 3/4 chest-up posture.'
     };
+
+    function detectTopicMoodAuto(title, desc, hookStr) {
+      const blob = ((title || '') + ' ' + (desc || '') + ' ' + (hookStr || '')).trim();
+      if (/(शॉक|चौंका|होश|हैरान|बड़ा खुलासा|पर्दाफाश|खतरनाक|गायब|मिला|फेल|गजब|shock|shocking|stunned|exposed|busted|secret|banned|!)/i.test(blob)) return 'shock';
+      if (/(बनाम|vs.?|डिबेट|debate|बहस|गलत|दावा|जवाब|झूठ|reply|claim|false)/i.test(blob)) return 'debate';
+      if (/(क्यों|कैसे|कौन|क्या|रहस्य|सवाल|कहानी|why|how|mystery|who|untold|\?)/i.test(blob)) return 'curiosity';
+      return 'authority';
+    }
 
     function getSelectedMoodDirective(v) {
       const m = appState.selectedMood || 'auto';
       if (m !== 'auto' && MOOD_DIRECTIVES[m]) return MOOD_DIRECTIVES[m];
-      const hookStr = (v?.activeHook || v?.hooks?.hindi || document.getElementById('videoTitleInput')?.value || '').trim();
-      if (/[!]|मदिरा|मांस|धोखा|चौंका|खतरनाक|झूठ|खुलासा|shock|secret|banned/i.test(hookStr)) {
-        return '99% identical real facial bone structure & likeness from uploaded photo, naturally animated with stunned revelation expression (alert eyes, raised brow, subtle disbelief), angled shoulders, and hand gesturing toward the proof (never a stiff passport cutout).';
-      }
-      if (/[?]|क्यों|कैसे|कौन|क्या|रहस्य|why|how|mystery/i.test(hookStr)) {
-        return '99% identical real facial bone structure & likeness from uploaded photo, naturally animated with investigative curiosity (furrowed brow, sharp eye contact, subtle head tilt), leaning forward with a hand gesture toward the artifact/book.';
-      }
-      return '99% identical real facial bone structure & likeness for every uploaded person, naturally animated with topic-matched facial expression & dynamic upper-body/hand posture (never a stiff pasted cutout).';
+      const title = (typeof document !== 'undefined' ? document.getElementById('videoTitleInput')?.value : '') || '';
+      const desc = (typeof document !== 'undefined' ? document.getElementById('videoTopicDetailsInput')?.value : '') || '';
+      const hookStr = (v?.activeHook || v?.hooks?.hindi || '').trim();
+      const autoMood = detectTopicMoodAuto(title, desc, hookStr);
+      return MOOD_DIRECTIVES[autoMood] || MOOD_DIRECTIVES.curiosity;
     }
 
     function selectExpressionMood(moodId) {
@@ -5726,6 +5732,11 @@ Return ONLY JSON: {"nicheId": "...", "formatId": "..."}`;
 
       if (chosenNiche && typeof selectNiche === 'function') selectNiche(chosenNiche);
       if (chosenFmt && typeof selectThumbnailFormat === 'function') selectThumbnailFormat(chosenFmt);
+      if (typeof detectTopicMoodAuto === 'function' && typeof selectExpressionMood === 'function') {
+        appState.selectedMood = 'auto';
+        const detectedMood = detectTopicMoodAuto(title, desc, '');
+        if (detectedMood && MOOD_DIRECTIVES[detectedMood]) selectExpressionMood(detectedMood);
+      }
       const nObj = getActiveNicheObj();
       const fObj = getActiveFormatObj();
       showToast(`🤖 Auto-Classified: ${nObj.name} • ${fObj.name}`);
@@ -5766,6 +5777,7 @@ Return ONLY JSON: {"nicheId": "...", "formatId": "..."}`;
       const fontRefImg = getActiveKhandFontRefImage();
       const rawImgs = [studioCreatorPhotoB64, fontRefImg, ...pptPickedImgs, ...studioExtraPhotosB64].filter(Boolean).slice(0, 6);
 
+      // Compact each image <= 720px synchronously or pass pre-compressed refs so chrome.storage.local NEVER overflows
       if (target === 'chatgpt' || target === 'both') {
         window.postMessage({ type: 'SSIRO_CHATGPT_BATCH', prompts, images: rawImgs, ts: Date.now() }, getSafePostMessageOrigin());
       }
