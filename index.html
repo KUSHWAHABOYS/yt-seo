@@ -583,6 +583,10 @@
           <span class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-secondary border border-secondary/30 font-bold">
             Ref-Image-First • Khand Bold
           </span>
+          <button type="button" onclick="clearThumbnailInputSection(true)" title="Clear this section (Keep API Keys, Face & Links)" class="px-2.5 py-1 rounded-lg bg-error-container/50 hover:bg-error-container text-on-error-container border border-error/30 font-mono text-[10px] font-bold flex items-center gap-1 transition">
+            <span class="material-symbols-outlined text-[14px]">delete_sweep</span>
+            <span>Clear</span>
+          </button>
         </div>
       </div>
 
@@ -1078,10 +1082,16 @@
           <span class="font-mono text-[10px] uppercase tracking-wider text-secondary font-bold block">Title SEO</span>
           <h2 class="font-display text-base sm:text-lg font-extrabold text-white">YouTube Rank &amp; Suggested SEO Pack</h2>
         </div>
-        <button type="button" onclick="runSuggestedVideoSeoPack()" class="px-4 py-2.5 rounded-xl bg-secondary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 shadow hover:brightness-110 transition shrink-0">
-          <span class="material-symbols-outlined text-[17px]">trending_up</span>
-          <span id="seoPackBtnText">Generate Suggested SEO Pack</span>
-        </button>
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <button type="button" onclick="runSuggestedVideoSeoPack()" class="px-4 py-2.5 rounded-xl bg-secondary text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 shadow hover:brightness-110 transition">
+            <span class="material-symbols-outlined text-[17px]">trending_up</span>
+            <span id="seoPackBtnText">Generate Suggested SEO Pack</span>
+          </button>
+          <button type="button" onclick="clearSeoSectionData(true)" title="Clear SEO output (Keep Saved Links)" class="px-3 py-2.5 rounded-xl bg-error-container/50 hover:bg-error-container text-on-error-container border border-error/30 font-mono text-xs font-bold flex items-center gap-1 transition">
+            <span class="material-symbols-outlined text-[15px]">delete_sweep</span>
+            <span>Clear</span>
+          </button>
+        </div>
       </div>
 
       <!-- INDEPENDENT TOPIC / TITLE INPUT FOR TITLE & DESCRIPTION SEO -->
@@ -1273,7 +1283,13 @@
           <span class="font-mono text-[10px] uppercase tracking-wider text-primary font-bold block">Link SEO</span>
           <h2 class="font-display text-base sm:text-lg font-extrabold text-white">YouTube Video Link Auditor &amp; 1-Click Fix</h2>
         </div>
-        <span class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-secondary/15 text-secondary border border-secondary/30 font-bold">No OAuth • Free Public Audit</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-secondary/15 text-secondary border border-secondary/30 font-bold">No OAuth • Free Public Audit</span>
+          <button type="button" onclick="clearAuditSectionData(true)" title="Clear Link Audit" class="px-2.5 py-1 rounded-lg bg-error-container/50 hover:bg-error-container text-on-error-container border border-error/30 font-mono text-[10px] font-bold flex items-center gap-1 transition">
+            <span class="material-symbols-outlined text-[14px]">delete_sweep</span>
+            <span>Clear</span>
+          </button>
+        </div>
       </div>
 
       <div class="p-4 rounded-xl bg-surface-container-lowest border border-primary/40 space-y-3">
@@ -2019,8 +2035,53 @@
       'yt_seo_ssiro_history_v30',
       'yt_seo_ssiro_presets_v30', 'yt_seo_ssiro_channel_links_v1',
       'yt_seo_ssiro_creator_face_v31',
-      'yt_seo_ssiro_chatgpt_chat_url_v32'
+      'yt_seo_ssiro_chatgpt_chat_url_v32',
+      'yt_seo_ssiro_winning_styles_v1',
+      'yt_seo_ssiro_last_project_done'
     ]);
+
+    function markProjectWorkflowCompleted() {
+      try { localStorage.setItem('yt_seo_ssiro_last_project_done', String(Date.now())); } catch (e) {}
+    }
+
+    function clearThumbnailInputSection(notify = true) {
+      const vt = document.getElementById('videoTitleInput');
+      const vd = document.getElementById('videoTopicDetailsInput');
+      if (vt) vt.value = '';
+      if (vd) vd.value = '';
+      if (typeof clearPptxExtractedData === 'function') clearPptxExtractedData(false);
+      if (typeof clearExtraStudioPhotos === 'function') clearExtraStudioPhotos();
+      appState.conceptsList = [];
+      appState.variantsList = [];
+      appState.thumbnailHooksPreview = [];
+      appState.researchInsights = null;
+      appState.lockedThumbnailHookIdx = null;
+      appState.customLockedHookText = '';
+      ['section-step-6', 'section-step-7-8', 'section-step-9-11', 'liveProgressPanel'].forEach(id => {
+        document.getElementById(id)?.classList.add('hidden');
+      });
+      try { localStorage.removeItem(STUDIO_STATE_STORAGE_KEY); } catch (e) {}
+      if (notify) showToast('🧹 Thumbnail Generator cleared! (API Keys, Face & Links safe)');
+    }
+
+    function clearSeoSectionData(notify = true) {
+      const inp = document.getElementById('seoStandaloneTopicInput');
+      if (inp) inp.value = '';
+      document.getElementById('suggestedSeoOutputBox')?.classList.add('hidden');
+      ['seoTitlesList', 'seoBlueprintBox', 'seoDescriptionPre', 'seoTagsPre', 'seoOpeningHookPre', 'seoPinnedCommentPre'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '';
+      });
+      if (notify) showToast('🧹 Title SEO cleared! (Saved Channel Links safe)');
+    }
+
+    function clearAuditSectionData(notify = true) {
+      const u = document.getElementById('auditYoutubeUrlInput');
+      const box = document.getElementById('videoAuditResultBox');
+      if (u) u.value = '';
+      if (box) { box.classList.add('hidden'); box.innerHTML = ''; }
+      if (notify) showToast('🧹 Link Auditor cleared!');
+    }
 
     function autoCleanUnusedStorage() {
       try {
@@ -2030,6 +2091,18 @@
           if (k && !ESSENTIAL_STORAGE_KEYS.has(k)) toRemove.push(k);
         }
         toRemove.forEach(k => localStorage.removeItem(k));
+        // Smart AI Staleness Sense: if previous project was completed & >= 6 hours passed, auto-refresh temp workspace
+        const doneTs = Number(localStorage.getItem('yt_seo_ssiro_last_project_done') || '0');
+        if (doneTs && (Date.now() - doneTs) > 6 * 60 * 60 * 1000) {
+          localStorage.removeItem('yt_seo_ssiro_last_project_done');
+          clearThumbnailInputSection(false);
+          clearSeoSectionData(false);
+          if (typeof clearCtrTestData === 'function') clearCtrTestData(false);
+          clearAuditSectionData(false);
+          setTimeout(() => {
+            if (typeof showToast === 'function') showToast('🧹 Smart Auto-Clean: Old completed project cleared • Essentials Safe!');
+          }, 900);
+        }
         localStorage.setItem('yt_seo_ssiro_last_clean', String(Date.now()));
       } catch (e) {}
     }
@@ -6774,6 +6847,7 @@ Return strict JSON:
       const a = document.createElement('a');
       a.href = canvas.toDataURL('image/png');
       a.download = 'thumbnail_khand_exact.png';
+      markProjectWorkflowCompleted();
       a.click();
       showToast('✅ Downloaded 100% Typo-Free Thumbnail PNG!');
     }
@@ -8568,9 +8642,11 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
       return `=== THUMBNAIL PUNCHLINE (2-4 WORDS) ===\n${thumbHook}\n\n=== TITLES ===\n${titles}\n\n=== OPENING 15S HOOK ===\n${hook}\n\n=== DESCRIPTION ===\n${desc}\n\n=== TAGS ===\n${tags}\n\n=== PINNED COMMENT ===\n${pin}`;
     }
     function copyFullYouTubeUploadPack() {
+      markProjectWorkflowCompleted();
       copyTextSafe(buildFullYouTubeUploadKitText(), '📋 Full YouTube Upload Kit copied!');
     }
     function downloadFullYouTubeUploadKit() {
+      markProjectWorkflowCompleted();
       const txt = buildFullYouTubeUploadKitText();
       const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
       const a = document.createElement('a');
