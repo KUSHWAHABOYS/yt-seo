@@ -1332,6 +1332,61 @@
       <div id="videoAuditResultBox" class="hidden space-y-4"></div>
     </section>
 
+    <!-- ==================== TAB 4: MASTER CHANNEL X-RAY & DEAD-VIDEO REVIVER (NO OAUTH) ==================== -->
+    <section id="section-tab-channel" class="hidden bg-surface-container-low rounded-xl p-4 sm:p-5 space-y-4 shadow-md border border-outline-variant/25 fade-slide-up">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/40 pb-3">
+        <div>
+          <span class="font-mono text-[10px] uppercase tracking-wider text-emerald-300 font-bold block">Channel X-Ray • No OAuth</span>
+          <h2 class="font-display text-base sm:text-lg font-extrabold text-white">📡 Master Channel Analyzer &amp; Dead-Video Reviver</h2>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="channelLastSyncBadge" class="font-mono text-[10px] px-2.5 py-1 rounded-lg bg-surface-container text-outline border border-outline-variant/40">Not synced yet</span>
+          <button type="button" onclick="clearChannelAnalyzerData(true)" title="Clear Channel Scan Cache" class="px-2.5 py-1 rounded-lg bg-error-container/50 hover:bg-error-container text-on-error-container border border-error/30 font-mono text-[10px] font-bold flex items-center gap-1 transition">
+            <span class="material-symbols-outlined text-[14px]">delete_sweep</span>
+            <span>Clear</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-surface-container-lowest border border-emerald-500/35 space-y-3">
+        <label for="myChannelHandleInput" class="font-display text-xs sm:text-sm font-bold text-white block">Your YouTube Channel Handle, URL, or Channel ID (Saved Permanently • 0 Password/OAuth):</label>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          <input id="myChannelHandleInput" type="text" placeholder="@YourChannelHandle or https://youtube.com/@YourChannel" class="flex-1 bg-surface-container border border-outline-variant/60 rounded-xl px-3.5 py-2.5 font-mono text-xs text-white focus:outline-none focus:border-emerald-400" />
+          <button type="button" onclick="scanMyYouTubeChannel(false)" class="py-2.5 px-5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-300 text-slate-950 font-display text-xs font-extrabold flex items-center justify-center gap-1.5 shadow hover:brightness-105 transition shrink-0">
+            <span class="material-symbols-outlined text-[17px]">radar</span>
+            <span id="channelScanBtnText">Scan My Channel</span>
+          </button>
+        </div>
+        <p class="font-mono text-[10px] text-outline leading-relaxed">100% Safe Read-Only (YouTube Data API v3 + Gemini Video Review). Shows real Thumbnails, Views, Likes, Comments, Engagement %, Live Streams &amp; Dead/Revivable status. <em>(Note: Private Studio CTR% requires YouTube OAuth or Studio CSV; without OAuth we compute Engagement + AI CTR Potential.)</em></p>
+      </div>
+
+      <div id="channelDashboardBox" class="hidden space-y-4">
+        <!-- Bento Channel Stats -->
+        <div id="channelBentoStatsGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+
+        <!-- Mistake-Blocker Memory Card -->
+        <div id="channelMistakeMemoryCard" class="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/35 space-y-1.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="font-mono text-[11px] font-extrabold text-amber-300">🧠 Channel Mistake-Blocker Memory (Auto-Applied to Future Videos)</span>
+            <span class="font-mono text-[9px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-200">Active Guard</span>
+          </div>
+          <div id="channelMistakeMemoryList" class="text-xs text-on-surface-variant leading-relaxed"></div>
+        </div>
+
+        <!-- Filter Pills -->
+        <div id="channelFilterBar" class="flex flex-wrap items-center gap-1.5 font-mono text-[10px]">
+          <button type="button" data-cfilter="all" onclick="filterChannelVideos('all')" class="cfilter-btn px-3 py-1.5 rounded-lg bg-tertiary text-on-tertiary font-extrabold">All Videos</button>
+          <button type="button" data-cfilter="dead" onclick="filterChannelVideos('dead')" class="cfilter-btn px-3 py-1.5 rounded-lg bg-surface-container text-red-300 border border-red-500/35 font-bold">💀 Dead / Remake</button>
+          <button type="button" data-cfilter="revivable" onclick="filterChannelVideos('revivable')" class="cfilter-btn px-3 py-1.5 rounded-lg bg-surface-container text-amber-300 border border-amber-500/35 font-bold">⚡ Revivable (Fix)</button>
+          <button type="button" data-cfilter="winner" onclick="filterChannelVideos('winner')" class="cfilter-btn px-3 py-1.5 rounded-lg bg-surface-container text-emerald-300 border border-emerald-500/35 font-bold">🔥 Top Winners</button>
+          <button type="button" data-cfilter="live" onclick="filterChannelVideos('live')" class="cfilter-btn px-3 py-1.5 rounded-lg bg-surface-container text-sky-300 border border-sky-500/35 font-bold">🔴 Live / Long (>20m)</button>
+        </div>
+
+        <!-- Videos Grid -->
+        <div id="channelVideosGrid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+      </div>
+    </section>
+
   </main>
 
   <!-- ==================== TOAST NOTIFICATION ==================== -->
@@ -1669,6 +1724,12 @@
         <span class="material-symbols-outlined text-[21px]">shield_with_heart</span>
         <span class="font-sans text-[10px] font-semibold tracking-tight leading-none">Link &amp; Audit</span>
         <span class="font-mono text-[8px] text-outline leading-none uppercase mt-0.5">No OAuth</span>
+      </button>
+
+      <button type="button" id="mainTabBtn_channel" onclick="switchWorkspaceTab('channel')" class="flex flex-col items-center justify-center gap-0.5 flex-1 h-13 py-1.5 rounded-xl transition-all text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined text-[21px]">radar</span>
+        <span class="font-sans text-[10px] font-semibold tracking-tight leading-none">Channel</span>
+        <span class="font-mono text-[8px] text-emerald-300 leading-none uppercase mt-0.5">X-Ray</span>
       </button>
     </div>
   </nav>
@@ -2057,7 +2118,9 @@
       'yt_seo_ssiro_creator_face_v31',
       'yt_seo_ssiro_chatgpt_chat_url_v32',
       'yt_seo_ssiro_winning_styles_v1',
-      'yt_seo_ssiro_last_project_done'
+      'yt_seo_ssiro_last_project_done',
+      'yt_seo_ssiro_my_channel_v1',
+      'yt_seo_ssiro_channel_mistakes_v1'
     ]);
 
     function markProjectWorkflowCompleted() {
@@ -8532,6 +8595,7 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
 
       const seoIds = ['section-step-12', 'section-step-13'];
       const auditIds = ['section-tab-audit'];
+      const channelIds = ['section-tab-channel'];
 
       const setVis = (ids, show) => ids.forEach(id => {
         const el = document.getElementById(id);
@@ -8548,8 +8612,9 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
         setVis(seoIds, false);
       }
       setVis(auditIds, tab === 'audit');
+      setVis(channelIds, tab === 'channel');
 
-      ['thumb', 'seo', 'audit'].forEach(k => {
+      ['thumb', 'seo', 'audit', 'channel'].forEach(k => {
         const b = document.getElementById('mainTabBtn_' + k);
         if (!b) return;
         b.className = (k === tab)
@@ -8557,6 +8622,243 @@ Return strict JSON: {"winnerIndex": 0, "summary": "...", "audits": [{"index": 0,
           : 'flex flex-col items-center justify-center gap-0.5 flex-1 h-13 py-1.5 rounded-xl transition-all text-on-surface-variant hover:text-on-surface';
       });
       updateSidebarActiveState();
+    }
+
+    const MY_CHANNEL_STORAGE_KEY = 'yt_seo_ssiro_my_channel_v1';
+    const CHANNEL_MISTAKE_MEMORY_KEY = 'yt_seo_ssiro_channel_mistakes_v1';
+    let __channelScanCache = null;
+    let __activeChannelFilter = 'all';
+
+    function parseIsoDurationMins(iso) {
+      const m = String(iso || '').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+      if (!m) return 0;
+      return (Number(m[1] || 0) * 60) + Number(m[2] || 0) + (Number(m[3] || 0) / 60);
+    }
+
+    function clearChannelAnalyzerData(notify = true) {
+      __channelScanCache = null;
+      document.getElementById('channelDashboardBox')?.classList.add('hidden');
+      const badge = document.getElementById('channelLastSyncBadge');
+      if (badge) badge.textContent = 'Not synced yet';
+      if (notify) showToast('🧹 Channel scan view cleared! (Saved handle & Mistake Memory kept)');
+    }
+
+    function getChannelMistakeMemory() {
+      try { return JSON.parse(localStorage.getItem(CHANNEL_MISTAKE_MEMORY_KEY) || '[]') || []; } catch (e) { return []; }
+    }
+
+    function saveChannelMistakeMemory(rules) {
+      try { localStorage.setItem(CHANNEL_MISTAKE_MEMORY_KEY, JSON.stringify((rules || []).slice(0, 6))); } catch (e) {}
+    }
+
+    function filterChannelVideos(mode) {
+      __activeChannelFilter = mode || 'all';
+      document.querySelectorAll('#channelFilterBar .cfilter-btn').forEach(btn => {
+        const active = btn.getAttribute('data-cfilter') === __activeChannelFilter;
+        btn.className = active
+          ? 'cfilter-btn px-3 py-1.5 rounded-lg bg-tertiary text-on-tertiary font-extrabold'
+          : 'cfilter-btn px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant border border-outline-variant/40 font-bold';
+      });
+      renderChannelVideosGrid();
+    }
+
+    function renderChannelVideosGrid() {
+      const grid = document.getElementById('channelVideosGrid');
+      if (!grid || !__channelScanCache) return;
+      const list = (__channelScanCache.videos || []).filter(v => {
+        if (__activeChannelFilter === 'all') return true;
+        if (__activeChannelFilter === 'live') return v.isLiveOrLong;
+        return v.tier === __activeChannelFilter;
+      });
+      if (!list.length) {
+        grid.innerHTML = '<div class="md:col-span-2 p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/40 text-center font-mono text-xs text-outline">No videos match this filter.</div>';
+        return;
+      }
+      grid.innerHTML = list.map(v => {
+        const tierBadge = v.tier === 'winner'
+          ? '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">🔥 Top Winner</span>'
+          : (v.tier === 'revivable'
+            ? '<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">⚡ Revivable</span>'
+            : '<span class="px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/40 font-bold">💀 Dead / Remake</span>');
+        const liveTag = v.isLiveOrLong ? '<span class="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 font-bold">🔴 Live/Long</span>' : '';
+        return `<div class="p-3 rounded-2xl bg-surface-container-lowest border border-outline-variant/45 space-y-2.5 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="relative aspect-video rounded-xl overflow-hidden bg-black border border-outline-variant/30">
+              <img src="${v.thumb}" alt="Thumb" class="w-full h-full object-cover" />
+              <div class="absolute top-1.5 left-1.5 flex items-center gap-1 font-mono text-[9px]">${tierBadge}${liveTag}</div>
+              <span class="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/85 text-white font-mono text-[10px] font-bold">${v.durationLabel}</span>
+            </div>
+            <h4 class="font-display text-xs sm:text-sm font-bold text-white leading-snug line-clamp-2">${escHtml(v.title)}</h4>
+            <div class="flex flex-wrap items-center gap-2 font-mono text-[10px] text-on-surface-variant">
+              <span>👁️ ${v.views.toLocaleString('en-IN')}</span>
+              <span>👍 ${v.likes.toLocaleString('en-IN')}</span>
+              <span>💬 ${v.comments.toLocaleString('en-IN')}</span>
+              <span class="text-tertiary font-bold">Eng: ${v.engRate}%</span>
+              <span class="text-outline">• ${v.title.length}ch</span>
+            </div>
+          </div>
+          <div id="chRevBox_${v.id}" class="hidden p-2.5 rounded-xl bg-surface-container border border-secondary/35 text-[11px] text-on-surface-variant space-y-1.5 leading-relaxed"></div>
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <button type="button" onclick="reviewChannelVideoWithAI('${v.id}')" class="flex-1 py-1.5 px-2.5 rounded-lg bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 font-mono text-[10px] font-extrabold transition">🔍 AI Deep Review</button>
+            <button type="button" onclick="sendChannelVideoToStudio('${v.id}')" class="flex-1 py-1.5 px-2.5 rounded-lg bg-tertiary text-on-tertiary font-mono text-[10px] font-extrabold hover:brightness-110 transition">🛠️ Fix / Remake</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    async function scanMyYouTubeChannel(silent = false) {
+      const inp = document.getElementById('myChannelHandleInput');
+      const rawHandle = (inp?.value || localStorage.getItem(MY_CHANNEL_STORAGE_KEY) || '').trim();
+      if (!rawHandle) {
+        if (!silent) showToast('⚠️ Enter your YouTube @Handle or Channel URL first!', true);
+        return;
+      }
+      if (inp && !inp.value) inp.value = rawHandle;
+      try { localStorage.setItem(MY_CHANNEL_STORAGE_KEY, rawHandle); } catch (e) {}
+
+      if (!appState.youtubeApiKey) {
+        if (!silent) showToast('⚠️ Add your YouTube Data API v3 Key in ⚙️ API Settings to scan your full channel!', true);
+        return;
+      }
+
+      const btnTxt = document.getElementById('channelScanBtnText');
+      if (btnTxt) btnTxt.textContent = '⏳ Scanning...';
+      try {
+        const ytHost = ['https://www', 'googleapis', 'com/youtube/v3'].join('.');
+        const clean = rawHandle.replace(/^https?:\/\/(www\.)?youtube\.com\//i, '').replace(/\/.*$/, '').trim();
+        let chParam = '';
+        if (/^UC[A-Za-z0-9_-]{20,}$/.test(clean)) chParam = `id=${encodeURIComponent(clean)}`;
+        else chParam = `forHandle=${encodeURIComponent(clean.startsWith('@') ? clean : '@' + clean)}`;
+
+        const chRes = await fetch(`${ytHost}/channels?part=snippet,statistics,contentDetails&${chParam}&key=${encodeURIComponent(appState.youtubeApiKey)}`);
+        const chData = await chRes.json().catch(() => ({}));
+        let chItem = (chData.items || [])[0];
+        if (!chItem && !chParam.startsWith('id=')) {
+          const sRes = await fetch(`${ytHost}/search?part=snippet&type=channel&maxResults=1&q=${encodeURIComponent(clean)}&key=${encodeURIComponent(appState.youtubeApiKey)}`);
+          const sJ = await sRes.json().catch(() => ({}));
+          const cid = sJ?.items?.[0]?.id?.channelId;
+          if (cid) {
+            const ch2 = await fetch(`${ytHost}/channels?part=snippet,statistics,contentDetails&id=${cid}&key=${encodeURIComponent(appState.youtubeApiKey)}`);
+            const ch2J = await ch2.json().catch(() => ({}));
+            chItem = (ch2J.items || [])[0];
+          }
+        }
+        if (!chItem) {
+          if (!silent) showToast('❌ Channel not found! Check @Handle or YouTube API Key.', true);
+          return;
+        }
+
+        const uploadsPid = chItem.contentDetails?.relatedPlaylists?.uploads;
+        const plRes = await fetch(`${ytHost}/playlistItems?part=contentDetails&maxResults=24&playlistId=${uploadsPid}&key=${encodeURIComponent(appState.youtubeApiKey)}`);
+        const plData = await plRes.json().catch(() => ({}));
+        const vIds = (plData.items || []).map(it => it.contentDetails?.videoId).filter(Boolean);
+        if (!vIds.length) { if (!silent) showToast('No public videos found on channel.'); return; }
+
+        const vRes = await fetch(`${ytHost}/videos?part=snippet,statistics,contentDetails&id=${vIds.join(',')}&key=${encodeURIComponent(appState.youtubeApiKey)}`);
+        const vData = await vRes.json().catch(() => ({}));
+        const rawVideos = vData.items || [];
+        const avgViews = Math.max(1, Math.round(rawVideos.reduce((s, x) => s + Number(x.statistics?.viewCount || 0), 0) / rawVideos.length));
+
+        const videos = rawVideos.map(v => {
+          const views = Number(v.statistics?.viewCount || 0);
+          const likes = Number(v.statistics?.likeCount || 0);
+          const comments = Number(v.statistics?.commentCount || 0);
+          const mins = parseIsoDurationMins(v.contentDetails?.duration);
+          const tier = views >= avgViews * 1.35 ? 'winner' : (views >= avgViews * 0.35 ? 'revivable' : 'dead');
+          return {
+            id: v.id,
+            title: v.snippet?.title || 'Untitled',
+            desc: v.snippet?.description || '',
+            tags: v.snippet?.tags || [],
+            thumb: `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`,
+            views,
+            likes,
+            comments,
+            engRate: views > 0 ? (((likes + comments) / views) * 100).toFixed(1) : '0.0',
+            mins,
+            durationLabel: mins >= 60 ? `${Math.floor(mins/60)}h ${Math.round(mins%60)}m` : `${Math.max(1, Math.round(mins))}m`,
+            isLiveOrLong: mins >= 20 || /live|stream|लाइव/i.test(v.snippet?.title || ''),
+            tier
+          };
+        });
+
+        __channelScanCache = {
+          channelTitle: chItem.snippet?.title || rawHandle,
+          subs: Number(chItem.statistics?.subscriberCount || 0),
+          totalViews: Number(chItem.statistics?.viewCount || 0),
+          totalVideos: Number(chItem.statistics?.videoCount || 0),
+          avgViews,
+          videos,
+          syncedAt: Date.now()
+        };
+
+        // Build deterministic Mistake-Blocker Memory from weak/dead videos
+        const deadOrWeak = videos.filter(v => v.tier !== 'winner');
+        const rules = [];
+        const longTitles = deadOrWeak.filter(v => v.title.length > 72).length;
+        if (longTitles >= 2) rules.push(`⚠️ Avoid long titles (>72 chars) — ${longTitles} weak videos truncated on mobile.`);
+        const weakLive = deadOrWeak.filter(v => v.isLiveOrLong).length;
+        if (weakLive >= 1) rules.push(`🔴 Long/Live Streams (${weakLive} underperforming): Start with a 30s visual hook & clear timestamp chapters.`);
+        rules.push('🎯 Keep thumbnail text 1–3 punchy words with high-contrast Dark Cobalt backdrop & strong emotional expression.');
+        saveChannelMistakeMemory(rules);
+
+        document.getElementById('channelDashboardBox')?.classList.remove('hidden');
+        const badge = document.getElementById('channelLastSyncBadge');
+        if (badge) badge.textContent = `✓ Synced ${videos.length} videos`;
+        const bento = document.getElementById('channelBentoStatsGrid');
+        if (bento) {
+          const deadCnt = videos.filter(x => x.tier === 'dead').length;
+          bento.innerHTML = [
+            { l: 'Subscribers', val: __channelScanCache.subs.toLocaleString('en-IN'), c: 'text-emerald-300' },
+            { l: 'Avg Views (24)', val: avgViews.toLocaleString('en-IN'), c: 'text-tertiary' },
+            { l: 'Total Videos', val: __channelScanCache.totalVideos.toLocaleString('en-IN'), c: 'text-white' },
+            { l: 'Dead / Remake', val: `${deadCnt} / ${videos.length}`, c: 'text-red-300' }
+          ].map(x => `<div class="p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40"><span class="font-mono text-[9px] uppercase text-outline block">${x.l}</span><span class="font-display text-sm sm:text-base font-extrabold ${x.c}">${x.val}</span></div>`).join('');
+        }
+        const mList = document.getElementById('channelMistakeMemoryList');
+        if (mList) mList.innerHTML = rules.map(r => `<p>• ${escHtml(r)}</p>`).join('');
+        filterChannelVideos('all');
+        if (!silent) showToast(`📡 Scanned ${videos.length} videos from ${__channelScanCache.channelTitle}!`);
+      } catch (e) {
+        if (!silent) showToast('⚠️ Channel scan failed: ' + (e?.message || 'Try again'), true);
+      } finally {
+        if (btnTxt) btnTxt.textContent = 'Scan My Channel';
+      }
+    }
+
+    async function reviewChannelVideoWithAI(vid) {
+      const v = __channelScanCache?.videos?.find(x => x.id === vid);
+      const box = document.getElementById('chRevBox_' + vid);
+      if (!v || !box) return;
+      box.classList.remove('hidden');
+      box.innerHTML = '<span class="font-mono text-[10px] text-secondary">⏳ AI watching/analyzing video &amp; performance...</span>';
+      const url = `https://www.youtube.com/watch?v=${vid}`;
+      const prompt = `Act as an honest human YouTube Strategist reviewing this ${v.isLiveOrLong ? 'LONG LIVE STREAM / VIDEO' : 'VIDEO'} on a History/Archaeology/Debate channel:
+Title: "${v.title}"
+Views: ${v.views} (Channel Avg: ${__channelScanCache.avgViews}) | Likes: ${v.likes} | Comments: ${v.comments} | Duration: ${v.durationLabel}
+Return strict JSON:
+{"verdict": "REPACKAGE (Fix Title + Thumb)" OR "REMAKE FRESH (Dead Video)", "openingAndEndingReview": "2 crisp Hindi sentences critiquing how the opening, pacing/live stream flow, and ending likely hurt retention", "whyLowOrHigh": "2 crisp Hindi sentences on Title & Thumbnail flaws", "fixedTitle": "Better 55-68 char Hindi title", "fixedThumbHook": "2-3 word punchline"}`;
+      const res = (await callGeminiYouTubeVideoAPI(url, prompt)) || (await callGeminiJsonAPI(prompt, false).catch(() => null));
+      if (!res) {
+        box.innerHTML = '<span class="text-red-300">⚠️ Connect Gemini/Groq/OpenRouter API Key to run Deep Review.</span>';
+        return;
+      }
+      box.innerHTML = `
+        <div class="font-mono text-[10px] font-extrabold text-tertiary">Verdict: ${escHtml(res.verdict || 'REPACKAGE')}</div>
+        <p><strong class="text-white">Opening &amp; Ending Review:</strong> ${escHtml(res.openingAndEndingReview || '')}</p>
+        <p><strong class="text-white">Title/Thumb Diagnosis:</strong> ${escHtml(res.whyLowOrHigh || '')}</p>
+        <p class="text-emerald-300"><strong>Suggested Fix Title:</strong> ${escHtml(res.fixedTitle || '')} • <strong>Thumb Hook:</strong> ${escHtml(res.fixedThumbHook || '')}</p>
+      `;
+    }
+
+    function sendChannelVideoToStudio(vid) {
+      const v = __channelScanCache?.videos?.find(x => x.id === vid);
+      if (!v) return;
+      if (document.getElementById('videoTitleInput')) document.getElementById('videoTitleInput').value = v.title;
+      if (document.getElementById('seoStandaloneTopicInput')) document.getElementById('seoStandaloneTopicInput').value = v.title;
+      switchWorkspaceTab('thumb');
+      if (typeof scheduleSmartIntentDetectFromTitle === 'function') scheduleSmartIntentDetectFromTitle();
+      showToast('🛠️ Loaded into Thumbnail Studio — click Auto-Pilot to generate a fresh viral version!');
     }
 
 function extractYouTubeVideoId(url) {
@@ -8897,6 +9199,13 @@ Return strict JSON: {"videoSummary": "2-sentence summary of what is actually spo
     // ==================== 13. INITIALIZATION ====================
     window.addEventListener('DOMContentLoaded', () => {
       initThemeMode();
+      try {
+        const savedCh = localStorage.getItem('yt_seo_ssiro_my_channel_v1');
+        if (savedCh && document.getElementById('myChannelHandleInput')) {
+          document.getElementById('myChannelHandleInput').value = savedCh;
+          if (appState.youtubeApiKey) setTimeout(() => scanMyYouTubeChannel(true), 1800);
+        }
+      } catch (e) {}
       getTodayUsageCount(false);
       if (window.location.search.includes('updated=')) {
         setTimeout(() => showToast(`✅ App Updated Successfully to ${CURRENT_APP_VERSION}!`), 500);
