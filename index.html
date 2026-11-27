@@ -3943,9 +3943,38 @@ Ensure "concepts" contains EXACTLY 6 distinct concepts and "observedViralVideos"
       return `FORENSIC VISUAL CUES & EVIDENCE CALLOUTS (PRO EDITORIAL): ${cues.join(' ')}`;
     }
 
+    function getGlossyPoseAndPatternSpec(v, fmt, niche, pCtx) {
+      const sc = (v?.shortCode || 'A').toUpperCase();
+      const isDebate = (fmt?.id === 'debate' || fmt?.id === 'podcast' || (pCtx && pCtx.mode === 'reply_two_person'));
+      const isHeritage = ['history', 'religion', 'ancient', 'mythology', 'documentary'].includes((niche?.id || '').toLowerCase());
+
+      if (sc === 'B') {
+        return [
+          'DESIGN PATTERN (3-PANEL YELLOW DIAGONAL SPLIT + 3D OVERLAP): Split the frame into 3 distinct color-coded story zones using razor-sharp diagonal #FFD700 Golden-Yellow divider bars (approx 6-8px clean graphic line), with the Hero Subject breaking IN FRONT of the dividers (3D foreground overlap!) for instant scroll-stopping depth.',
+          isDebate
+            ? 'DETAILED POSE, EYES & HANDS: Host centered/foreground in 30° 3/4 chest-up posture leaning slightly forward; intense wide-eyed analytical gaze locked straight into the lens with crisp white iris catchlights; raised eyebrows + parted lips mid-rebuttal; one hand raised/pointing sharply toward the right claim panel (natural 5-finger anatomy, zero severed/floating arms).'
+            : 'DETAILED POSE, EYES & HANDS: Hero Subject centered in bold chest-up 3D overlap pose (subtle 6° head tilt, expressive hands framing face or presenting key evidence cleanly inside frame); eyes sharp with bright specular catchlights, furrowed brow showing shock/discovery.'
+        ].join(' ');
+      }
+      if (sc === 'C') {
+        return [
+          'DESIGN PATTERN (LOW-ANGLE 24mm FACE-OFF / 3-LAYER MONUMENTAL SCALE): Shoot with dramatic 24mm wide-angle perspective pitting Foreground Proof/Monument on the Left-Center against the Hero Subject on the Right Third, with rich volumetric light rays and atmospheric sky/backdrop behind.',
+          'DETAILED POSE, EYES & HANDS: Authoritative 3/4 chest-up stance (shoulders angled 35° toward center, chin slightly lifted, dignified yet intense gaze toward the viewer or key artifact); crisp iris catchlights, natural micro-expression (awe/gravitas), hands cleanly resting on chest/desk or gesturing toward the monument.'
+        ].join(' ');
+      }
+      return [
+        isHeritage && !isDebate
+          ? 'DESIGN PATTERN (IMPERIAL 3-LAYER HERITAGE + STUDIO GLOSS): Foreground-Left features crisp historical monument/artifact; Midground-Center holds architectural/archival scene; Foreground-Right anchors Hero Portrait with warm golden rim-light and clean dark/amber sky on Upper-Left for text.'
+          : 'DESIGN PATTERN (ULTRA-CLOSE STUDIO TENSION): Massive foreground close-up portrait on one third (filling 55-65% frame height) balanced against high-contrast dark navy/obsidian backdrop + primary proof/2nd subject on the opposite side.',
+        isDebate
+          ? 'DETAILED POSE, EYES & HANDS: Tight shoulder-up close-up facing straight into camera; eyebrows raised/knitted in sharp disbelief, crisp white catchlights in both pupils, slight assertive smirk/questioning mouth tension, shoulders squared with decisive debating presence.'
+          : 'DETAILED POSE, EYES & HANDS: 85mm chest-up portrait angled 25° toward the proof; intense focused eyes with bright specular catchlights, natural skin pores & individual beard/hair strands, one hand subtly gesturing toward the magnified evidence.'
+      ].join(' ');
+    }
+
     function getCategoryColorGradingSpec(niche) {
       const nId = (niche?.id || 'history').toLowerCase();
-      const baseDslr = 'PRO CREATOR ADOBE PHOTOSHOP + 85mm f/2.0 DSLR MASTER GRADE (DHRUV RATHEE / MAGNATESMEDIA / NATGEO STANDARD): (1) TRUE-COLOR VIBRANCY & 5400K ISOLATED SKIN KEY-LIGHT — render rich, punchy, true-to-life colors with deep dynamic range; keep human skin 100% natural with real micro-pores, individual hair/beard strands, and crisp iris catchlights (ZERO waxy/plastic AI sheen, ZERO muddy orange/green cast on skin); (2) -2.5 EV BACKDROP SEPARATION — keep background 2.5 stops darker than the hero subject with clean f/2.0 optical bokeh so every foreground element pops on mobile; (3) PHOTOSHOP COMPOSITING PHYSICS — add realistic Contact Shadows, Ambient Occlusion where objects/hands meet, subtle mid-layer atmospheric depth haze, and crisp 2px Edge Light-Wrap around hair & shoulders; (4) MATERIAL MICRO-IMPERFECTIONS — authentic weathered book paper grain, carved stone texture, fabric weave, and natural metallic speculars so nothing looks synthetic.';
+      const baseDslr = 'GLOSSY PURE-HD COMMERCIAL STUDIO GRADE (VIRAL DOCUMENTARY + ADOBE CAMERA RAW S-CURVE STANDARD): (1) GLOSSY S-CURVE MICRO-CONTRAST & SPECULAR CATCHLIGHTS — deliver crisp, vibrant, glossy commercial photography punch (deep rich blacks #05070B, luminous specular highlights, bright white eye catchlights in every pupil, ZERO dull/flat/muddy grey haze); (2) TRUE-COLOR 5400K SKIN & NATURAL PORES — keep human skin 100% authentic with real micro-pores, natural satin sheen, and individual hair/beard strands (NEVER waxy/plastic CGI smoothing, NEVER muddy orange/green cast); (3) DUAL-TONE 3D RIM SEPARATION — pair a -2.5 EV dark contrasting backdrop with crisp 2px Electric Cyan (#00D4FF) or Royal Gold (#FFD700) rim-light tracing hair & shoulders so foreground subjects pop off the screen; (4) FULL-FRAME MICRO-DETAILING — razor-sharp weathered manuscript grain, carved stone patina, fabric weave, and metallic gold/brass reflections.';
       const moodMap = {
         history: 'Rich Deep Royal Cobalt-Obsidian backdrop (#081020 to #0C1A33) contrasted with True-Gold Amber Rim Light (#FFB347 / #FFD700) on hair/shoulders and crisp museum-lit sandstone/bronze artifact detail.',
         religion: 'Deep Midnight Indigo-Obsidian backdrop (#090E1C) with Radiant Sacred Gold Rim Glow (#FFA726 / #FFD700) and true-color ceremonial silk/ivory highlights (zero muddy sepia wash).',
@@ -4138,8 +4167,8 @@ function buildThreeDistinctVariantsForConcept(concept, regenSeed = 0) {
         }
       }
 
-      const rawPrompt = `You are a Senior YouTube Thumbnail Designer & Adobe Photoshop CC Compositor (real DSLR studio photography + Camera Raw color grading — NEVER glossy/plastic AI CGI art).
-Create an authentic, Photoshop-composited, EXACT ${sz.ratio} (${sz.resolution}px, ${sz.orientation}) ${sz.platform} Thumbnail for:
+      const rawPrompt = `You are a Senior YouTube Thumbnail Designer & Adobe Photoshop CC Compositor (Glossy Pure-HD Commercial Studio Photography + Camera Raw S-Curve Color Grading — NEVER dull/flat/plastic AI CGI).
+Create an authentic, Photoshop-composited, ultra-detailed, EXACT ${sz.ratio} (${sz.resolution}px, ${sz.orientation}) ${sz.platform} Thumbnail for:
 • Niche: ${niche.name}
 • Thumbnail Format & Style: ${fmt.name} — ${concept.subStyleName} (${v.name})
 • Video Title: "${title}"
@@ -4161,7 +4190,7 @@ STEP 0 — SMART THUMBNAIL TITLE RANKING GATE (DO THIS FIRST!):
 PHOTOSHOP & DSLR HUMANIZED REALISM LOCK (ZERO AI-PLASTIC LOOK):
 ===================================================================
 • ${getCategoryColorGradingSpec(niche)}
-• PHOTOSHOP COMPOSITING & LIGHT-WRAP BLENDING (ZERO CUTOUT LOOK): Natural Adobe Camera Raw color grading, authentic human skin pores & fine beard/hair strands (ZERO waxy/plastic AI skin, ZERO CGI sheen). Apply realistic Atmospheric Edge Light-Wrap & shadow matching across the host's jacket/shoulders/hair edges so the host blends 100% seamlessly into the scene's lighting—NEVER look like a bright studio cutout pasted onto a dark background!
+• GLOSSY HD COMPOSITING & LIGHT-WRAP BLENDING (ZERO CUTOUT LOOK): Crisp Adobe Camera Raw S-Curve contrast with glossy commercial punch, authentic human skin pores, bright white iris catchlights & fine beard/hair strands (ZERO waxy/plastic AI skin, ZERO dull matte haze). Apply realistic Contact Shadows, Ambient Occlusion, and 2px Atmospheric Edge Light-Wrap across the host's jacket/shoulders/hair edges so every subject blends 100% seamlessly into the scene!
 • STRICT 3-ELEMENT MAXIMUM & ZERO TINY BACKGROUND FACES: Keep the entire thumbnail clean and uncluttered with AT MOST 3 main visual elements: (1) Expressive Host Portrait, (2) ONE large, sharp, mobile-readable Primary Proof/Book Cover/Artifact, and (3) ONE clean atmospheric background scene. STRICTLY FORBIDDEN: NO crowds, NO tiny background people with distorted faces, NO busy background clutter. Keep the bottom-right corner dark/clear for the YouTube timestamp badge.
 • FULL-FRAME MICRO-DETAILING: Render crisp photographic texture on every foreground & midground element (carved stone, brass/metal grain, weathered book cover paper, fabric weave) with natural f/2.2 optical depth falloff only in the far distance.
 • ZERO DECORATIVE CLUTTER ON TEXT: Render ONLY ultra-clean 2-line Khand Bold typography (Line 1 #FFD700 Yellow, Line 2 #FFFFFF White, subtle soft drop shadow). STRICTLY FORBIDDEN: NO red brush strokes, NO underlines, NO neon outlines, NO boxes behind text.${pptPlacementSection}${personRelationSection}${forensicCueSection}
@@ -4177,7 +4206,7 @@ STEP 1 — MANDATORY YOUTUBER PHOTO + REFERENCE WORKFLOW (DO NOT SKIP!):
   1. 99% BIOMETRIC IDENTITY LOCK (FOR ALL UPLOADED PEOPLE — HOST & ANY 2ND PERSON): Keep EVERY attached person's exact biometric facial structure 99% identical to their uploaded photo—exact eye spacing & shape, nose bridge & tip, cheekbones, jawline, skin tone, hairline, glasses, and beard/mustache pattern. Treat them as the EXACT SAME real human actor on set—NEVER replace them with a lookalike!
   1B. TOPIC-MATCHED EXPRESSION & DYNAMIC BODY LANGUAGE (NO FROZEN STICKER CUTOUT): While keeping the person's 99% biometric identity & bone structure locked, DO NOT paste them as a stiff, emotionless passport photo! Naturally animate their facial expression (eyebrows, focused eyes, authentic mouth/brow tension) and upper-body language (head tilt, angled shoulders, expressive hand gesture pointing or presenting the proof) to match the topic mood: ${getSelectedMoodDirective(v)}.
   2. STRICT AS-IS ATTACHED PHOTO COMPOSITING LOCK (DO NOT REGENERATE ATTACHED PHOTOS): For EVERY uploaded/attached reference photo (Creator Portrait, 2nd Person, Statue, Monument, Book Front Cover, or Artifact), USE THAT EXACT ATTACHED PHOTOGRAPH AS-IS inside the Photoshop composition—NEVER redraw, re-imagine, or replace it with a generic AI-generated version! Simply isolate/crop out any slide/page borders, match perspective, apply Camera Raw true-color grading + Contact Shadows + 2px Atmospheric Edge Light-Wrap, and composite it seamlessly into the scene.
-  3. REAL-WORLD WEB REFERENCE RULE (NO FAKE BUILDINGS OR INVENTED ARTIFACTS): For any real-world monument, temple, book cover, inscription, or historical site NOT uploaded by the user, USE YOUR WEB SEARCH TOOL FIRST to look up real, authentic photographs/Wikimedia references of that exact site/book so every architectural detail and proportion is 100% historically real—never invent generic fake temples or fictional objects.
+  3. REAL FOOTAGE & AUTHENTIC PHOTOGRAPH PRIORITY (ZERO FAKE AI SCENES): Prioritize REAL-WORLD PHOTOGRAPHS, real documentary/archival footage stills, Wikimedia/museum archives, real excavation/monument photos, and user-uploaded reference photos as the photographic base layers—composited like a senior Photoshop editor. For any real-world monument, temple, book cover, inscription, or site NOT uploaded by the user, USE YOUR WEB SEARCH TOOL FIRST to fetch authentic photographic references so every detail is 100% original and real—never invent generic fake AI buildings or cartoon props.
 ${refDetailsLine}
 ===================================================================
 STEP 2 — VARIANT ${v.code} VISUAL ARCHITECTURE (100% DISTINCT DIRECTION):
@@ -4189,7 +4218,8 @@ STEP 2 — VARIANT ${v.code} VISUAL ARCHITECTURE (100% DISTINCT DIRECTION):
 • Subject Placement & Hierarchy: ${v.placement}
 • Platform Safe-Zone Rule: ${sz.textSafeZone}
 • Visual Storytelling Angle: ${v.storytelling}
-• Facial Expression & Body Language: ${getSelectedMoodDirective(v)} (${v.expression})
+• Pose, Eye-Line & Hand Posture Architecture (DETAILED DIRECTION): ${getGlossyPoseAndPatternSpec(v, fmt, niche, pCtx)}
+• Facial Expression & Mood Lock: ${getSelectedMoodDirective(v)} (${v.expression})
 • Foreground & Background Arrangement: ${v.fgBgArrangement}
 • Background Treatment: ${v.background}
 • Cinematic Lighting & Color Grading: ${v.lighting}
@@ -4208,14 +4238,14 @@ STEP 3 — LOCKED TYPOGRAPHY & BRAND RULES (KHAND BOLD • YELLOW & WHITE):
 • Do NOT add any other random words, gibberish text, or extra labels anywhere on the image.
 
 ===================================================================
-STEP 4 — VIRAL EDITORIAL 8K SHARPNESS, COLOR SEPARATION & 3-LAYER DEPTH LOCK:
+STEP 4 — GLOSSY PURE-HD 8K SHARPNESS, COLOR ACCURACY & 3-LAYER DEPTH LOCK:
 ===================================================================
 • Format & Resolution Lock: Exact ${sz.ratio} aspect ratio (${sz.resolution}px, ${sz.orientation}) for ${sz.platform}.
-• Studio Color Separation (Pro Editorial Standard):
-  1. Subject Skin Key Light: Clean, neutral-natural daylight studio key light on the face (ZERO yellow/brown color cast on skin).
-  2. Contrasting Cool/Dark Backdrop: Background MUST sit 2–3 stops darker in a cool/contrasting palette (Deep Royal Cobalt Navy #0B1A33, Charcoal Obsidian #0A0D14, or Deep Slate-Teal with subtle radial spotlight burst & dark vignette)—never wash the scene in muddy beige/sepia.
-  3. Razor-Sharp Edge Rim Light: Crisp 2px electric gold (#FFD700) or cool cyan/white rim light tracing ONLY outer hair & shoulders.
-• 3-Layer Photoshop Editorial Depth: Layer 1 (Back) = -2.5 EV true-color graded backdrop with smooth f/2.0 optical bokeh & subtle radial spotlight; Layer 2 (Mid) = subtle atmospheric depth haze + authentic attached artifact/2nd person with grounded Contact Shadow; Layer 3 (Front) = tack-sharp hero Creator Portrait (Dodge & Burn micro-pores) + ultra-crisp 2-line Khand Bold headline (ZERO plastic CGI sheen, ZERO fake lens flare).
+• Glossy Studio Color Accuracy (Pro Commercial Standard):
+  1. Subject Skin Key Light: Clean 5400K neutral-natural daylight studio softbox on the face with authentic satin skin sheen, crisp white eye catchlights, and ZERO muddy yellow/brown color cast.
+  2. Contrasting Cool/Dark Backdrop: Background MUST sit 2.5 stops darker in a rich contrasting palette (Deep Royal Cobalt Navy #0B1A33, Obsidian #06080E, or Imperial Gold-Amber sky for heritage) with radial spotlight burst & clean dark vignette—zero washed-out grey haze.
+  3. Razor-Sharp Dual Rim Light: Crisp 2px electric gold (#FFD700) or electric cyan (#00D4FF) rim light tracing outer hair, jawline & shoulders for 3D pop-out separation.
+• 3-Layer Photoshop Editorial Depth: Layer 1 (Back) = -2.5 EV true-color graded real photographic backdrop with clean f/2.0 optical bokeh; Layer 2 (Mid) = subtle atmospheric depth haze + authentic real/attached artifact or 2nd person with grounded Contact Shadow & micro-detailing; Layer 3 (Front) = tack-sharp hero Creator Portrait (Dodge & Burn micro-pores, crisp iris catchlights) + ultra-crisp 2-line Khand Bold headline (ZERO dull flat lighting, ZERO plastic CGI look).
 • Negative Constraints: ZERO muddy color cast, ZERO blurry AI faces, ZERO random extra words, ZERO watermarks, ZERO channel logos.
 ${heritageBlock}`;
       return heritageSafe ? sanitizePromptForHeritageSafety(rawPrompt) : rawPrompt;
